@@ -23,7 +23,7 @@ def ReverseDetection(x):
 			if GPIO.input(x) == GPIO.HIGH:
 				break
 
-GPIO.add_event_detect(19, GPIO.FALLING, callback=ReverseDetection, bouncetime=100)
+GPIO.add_event_detect(19, GPIO.FALLING, callback=ReverseDetection, bouncetime=5000)
 
 while True:
 	try:
@@ -37,6 +37,7 @@ while True:
 		exit()	
 		
 GPIO.cleanup()	
+
 
 
 
