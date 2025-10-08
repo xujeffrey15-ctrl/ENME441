@@ -12,12 +12,16 @@ for x in pwmpins:
 	GPIO.setup(x,GPIO.OUT)
 	pwms[f"pwm{x}"] = GPIO.PWM(x,500)
 
+def ReverseDirection(x):
+	print("Reversed")
+
+GPIO.add_event_detect(19, GPIO.FALLING,callback=ReverseDirection,bouncetime=100)	
 
 while True:
 	try:
 		counter = 0
 		t = time.time()
-		if GPIO.add_event_detect(19, GPIO.FALLING,bouncetime=100) == True:
+		if GPIO.input(19) == GPIO.HIGH:
 			for y in pwmpins:
 				pwms[f"pwm{y}"].start((math.sin(2*math.pi*Freq*t-(counter*math.pi/11)))**2)
 				counter += 1
@@ -30,6 +34,7 @@ while True:
 		exit()	
 		
 GPIO.cleanup()	
+
 
 
 
