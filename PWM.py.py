@@ -19,7 +19,7 @@ def ReverseDetection(x):
 		counter = 9
 		for z in pwmpins:
 			pwms[f"pwm{z}"].start((math.sin(2*math.pi*Freq*t-(counter*math.pi/11)))**2)
-			counter1 -= 1
+			counter -= 1
 			if GPIO.input(x) == GPIO.HIGH:
 				break
 
@@ -37,6 +37,7 @@ while True:
 		exit()	
 		
 GPIO.cleanup()	
+
 
 
 
