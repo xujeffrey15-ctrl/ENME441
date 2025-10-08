@@ -1,5 +1,6 @@
 import RPi.GPIO as GPIO
 import math
+import time
 
 GPIO.setmode(GPIO.BCM)
 pwmpins =[4,17,27,22,10,9,11,5,6,13]
@@ -24,7 +25,6 @@ GPIO.add_event_detect(19, GPIO.FALLING, callback=ReverseDetection, bouncetime=10
 
 while True:
 	try:
-		import time
 		counter = 0
 		time = time.time()
 		for y in pwmpins:
@@ -36,6 +36,7 @@ while True:
 		GPIO.cleanup()
 		exit()
 		
+
 
 
 
