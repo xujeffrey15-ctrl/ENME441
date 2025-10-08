@@ -14,11 +14,11 @@ for x in pwmpins:
 
 def ReverseDetection(x):
 	print("Reversed!")
-	time = time.time()
+	t = time.time()
 	counter = 0
 	while GPIO.input(x) == GPIO.LOW:
 		for z in pwmpins:
-			pwms[f"pwm{z}"].start((math.sin(2*math.pi*Freq*time+(counter*math.pi/11)))**2)
+			pwms[f"pwm{z}"].start((math.sin(2*math.pi*Freq*t+(counter*math.pi/11)))**2)
 			counter += 1
 
 GPIO.add_event_detect(19, GPIO.FALLING, callback=ReverseDetection, bouncetime=100)
@@ -26,16 +26,16 @@ GPIO.add_event_detect(19, GPIO.FALLING, callback=ReverseDetection, bouncetime=10
 while True:
 	try:
 		counter = 0
-		time = time.time()
+		t = time.time()
 		for y in pwmpins:
-			pwms[f"pwm{y}"].start((math.sin(2*math.pi*Freq*time-(counter*math.pi/11)))**2)
+			pwms[f"pwm{y}"].start((math.sin(2*math.pi*Freq*t-(counter*math.pi/11)))**2)
 			counter += 1
 	except KeyboardInterrupt:
 		print("Code Stopped!")
-		pwm.stop()
-		GPIO.cleanup()
-		exit()
+		exit()	
 		
+GPIO.cleanup()	
+
 
 
 
