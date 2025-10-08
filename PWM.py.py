@@ -11,7 +11,7 @@ for x in pwmpins:
 	GPIO.setup(x,GPIO.OUT)
 	pwms[f"pwm{x}"] = GPIO.PWM(x,500)
 
-def ReverseDetection(x=19):
+def ReverseDetection(x):
 	print("Reversed!")
 	while GPIO.input(x) == GPIO.LOW:
 		for z in pwmpins:
@@ -24,7 +24,7 @@ while True:
 		import time
 		counter = 0
 		time = time.time()
-		if GPIO.add_event_detect(19, GPIO.RISING, callback=fn, bouncetime=t_ms) == True:
+		if GPIO.add_event_detect(19, GPIO.RISING, callback=ReverseDetection, bouncetime=100) == True:
 			for y in pwmpins:
 				pwms[f"pwm{y}"].start((math.sin(2*math.pi*Freq*time-(counter*math.pi/11)))**2)
 				counter += 1
@@ -37,4 +37,5 @@ while True:
 pwm.stop()
 
 GPIO.cleanup()
+
 
