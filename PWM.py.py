@@ -24,7 +24,7 @@ while True:
 		import time
 		counter = 0
 		time = time.time()
-		if GPIO.add_event_detect(19, GPIO.RISING, callback=ReverseDetection, bouncetime=100) == True:
+		if GPIO.add_event_detect(19, GPIO.RISING, callback=ReverseDetection, bouncetime=100):
 			for y in pwmpins:
 				pwms[f"pwm{y}"].start((math.sin(2*math.pi*Freq*time-(counter*math.pi/11)))**2)
 				counter += 1
@@ -37,6 +37,7 @@ while True:
 pwm.stop()
 
 GPIO.cleanup()
+
 
 
 
