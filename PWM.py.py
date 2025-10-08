@@ -19,7 +19,7 @@ def ReverseDetection():
 		pwms[f"pwm{z}"].start((math.sin(2*math.pi*Freq*time+(counter*math.pi/11)))**2)
 		counter += 1
 
-GPIO.add_event_detect(19, GPIO.FALLING, callback=ReverseDetection, bouncetime=100):
+GPIO.add_event_detect(19, GPIO.FALLING, callback=ReverseDetection, bouncetime=100)
 
 while True:
 	try:
@@ -34,6 +34,7 @@ while True:
 
 pwm.stop()
 GPIO.cleanup()
+
 
 
 
