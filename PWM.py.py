@@ -14,9 +14,9 @@ for x in pwmpins:
 
 def ReverseDetection(x):
 	print("Reversed!")
-	t = time.time()
-	counter = 0
 	while GPIO.input(x) == GPIO.LOW:
+		t = time.time()
+		counter = 0
 		for z in pwmpins:
 			pwms[f"pwm{z}"].start((math.sin(2*math.pi*Freq*t+(counter*math.pi/11)))**2)
 			counter += 1
@@ -35,6 +35,7 @@ while True:
 		exit()	
 		
 GPIO.cleanup()	
+
 
 
 
