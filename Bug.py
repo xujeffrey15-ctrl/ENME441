@@ -7,13 +7,14 @@ Testing = Shifter.shifter(23,24,25,b)
 while True:
 	jumper = random.randint(1,2)
 	if jumper == 1:
-		Testing.shiftByte()
+		Testing.shiftByte(b)
 		b = b<<1
 		time.sleep(0.5)
 	elif jumper == 2:
-		Testing.shiftByte()
+		Testing.shiftByte(b)
 		b = b>>1
 		time.sleep(0.5)
+
 
 
 
