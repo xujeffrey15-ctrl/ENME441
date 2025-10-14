@@ -1,5 +1,5 @@
 import random
-import Shifter
+import Shifter.py
 
 b = 8
 
@@ -13,3 +13,4 @@ while True:
 		Shifter(23,24,25,b)
 		b = b>>1
 		time.sleep(0.5)
+
