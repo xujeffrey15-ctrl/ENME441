@@ -1,4 +1,4 @@
-class Shifter():
+class Shifter:
   import RPi.GPIO as GPIO
   import time
   
@@ -23,6 +23,7 @@ class Shifter():
       GPIO.output(serialPin, b & (1<<i))
       __ping(clockPin)
     __ping(latchPin)
+
 
 
 
