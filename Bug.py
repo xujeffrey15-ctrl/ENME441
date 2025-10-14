@@ -9,7 +9,8 @@ while True:
 	Testing.shiftByte(b)
 	b = b<<1
 	print('1')
-	time.sleep(0,5)
+	time.sleep(0.5)
+
 
 
 
