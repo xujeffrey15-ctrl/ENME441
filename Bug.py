@@ -3,9 +3,9 @@ import time
 import Shifter
 
 b = 8
-Testing = Shifter.shifter(23,24,25,b)
 
 while True:
+	Testing = Shifter.shifter(23,24,25,b)
 	jumper = random.randint(1,2)
 	if jumper == 1:
 		Testing.shiftByte()
@@ -15,6 +15,7 @@ while True:
 		Testing.shiftByte()
 		b = b>>1
 		time.sleep(0.5)
+
 
 
 
