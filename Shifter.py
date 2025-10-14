@@ -1,3 +1,6 @@
+serialPin = 23
+clockPin = 25
+latchPin = 24
 class Shifter(serialPin,clockPin,latchPin,b):
   import RPi.GPIO as GPIO
   import time
@@ -26,4 +29,5 @@ while True:
   if jump == 1:
     Shifter(23,24,25,b<<1)
   elif jump == 0:
+
     Shifter(23,24,25,b>>1)
