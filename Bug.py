@@ -9,12 +9,15 @@ while True:
 	jumper = random.randint(1,2)
 	if jumper == 1:
 		Testing.shiftByte(b)
-		b<<1
 		time.sleep(0.5)
+		b = b<<1
+		print(b)
 	if jumper == 2:
 		Testing.shiftByte(b)
-		b>>1
 		time.sleep(0.5)
+		b = b>>1
+		print(b)
+
 
 
 
