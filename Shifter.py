@@ -27,12 +27,19 @@ while True:
   jump = random.randint(0,1)
   if jump == 1:
     shiftByte(b)
-    b = b<<1
+    if b !=128:
+      b = b<<1
+    else:
+      pass
     time.sleep(0.5)
   elif jump == 0:
     shiftByte(b)
-    b = b>>1
+    if b!=1:
+      b = b>>1
+    else:
+      pass
     time.sleep(0.5)
+
 
 
 
