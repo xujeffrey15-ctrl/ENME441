@@ -27,9 +27,12 @@ class Shifter(b):
 while True:
   jump = random.randint(0,1)
   if jump == 1:
-    Shifter(b<<1)
+    Shifter(b)
+    b = b<<1
   elif jump == 0:
-    Shifter(b>>1)
+    Shifter(b)
+    b = b>>1
+
 
 
 
