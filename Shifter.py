@@ -2,7 +2,7 @@ serialPin = 23
 clockPin = 25
 latchPin = 24
 import random
-b = random.randint(0,256)
+b = 8
 
 import RPi.GPIO as GPIO
 import time
@@ -33,6 +33,7 @@ while True:
     shiftByte(b)
     b = b>>1
     time.sleep(0.5)
+
 
 
 
