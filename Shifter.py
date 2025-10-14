@@ -28,11 +28,12 @@ while True:
   if jump == 1:
     shiftByte(b)
     b = b<<1
-    time.stop(0.5)
+    time.sleep(0.5)
   elif jump == 0:
     shiftByte(b)
     b = b>>1
-    time.stop(0.5)
+    time.sleep(0.5)
+
 
 
 
