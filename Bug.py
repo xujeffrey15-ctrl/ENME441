@@ -1,4 +1,5 @@
 import random
+import time
 import Shifter
 
 b = 8
@@ -14,6 +15,7 @@ while True:
 		Testing.shiftByte(b)
 		b = b>>1
 		time.sleep(0.5)
+
 
 
 
