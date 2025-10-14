@@ -12,7 +12,7 @@ class shifter:
     GPIO.setup(latchPin, GPIO.OUT, initial=0)
     GPIO.setup(clockPin, GPIO.OUT, initial=0)  
 
-  def __ping(self,p):
+  def ping(self,p):
     GPIO.output(p,1)
     time.sleep(0)
     GPIO.output(p,0)
@@ -20,8 +20,9 @@ class shifter:
   def shiftByte(self,b):
     for i in range(8):
       GPIO.output(self.serialPin, self.b & (1<<i))
-      __ping(self.clockPin)
-    __ping(self.latchPin)
+      ping(self.clockPin)
+    ping(self.latchPin)
+
 
 
 
