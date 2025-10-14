@@ -6,6 +6,7 @@ class shifter:
     self.serialPin = serialPin
     self.clockPin = clockPin
     self.latchPin = latchPin
+    self.b = b
     GPIO.setmode(GPIO.BCM)
     GPIO.setup(serialPin, GPIO.OUT)
     GPIO.setup(latchPin, GPIO.OUT, initial=0)
@@ -21,6 +22,7 @@ class shifter:
       GPIO.output(self.serialPin, self.b & (1<<i))
       __ping(self.clockPin)
     __ping(self.latchPin)
+
 
 
 
