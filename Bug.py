@@ -10,11 +10,16 @@ while True:
 	if jumper == 0:
 		b = b << 1
 		print(b)
+		print(jumper)
+		time.sleep(1)
 	elif jumper == 1:
 		b = b >> 1
 		print(b)
+		print(jumper)
+		time.sleep(1)
 		
 	
+
 
 
 
