@@ -1,7 +1,7 @@
 serialPin = 23
 clockPin = 25
 latchPin = 24
-class Shifter():
+class Shifter(b):
   import RPi.GPIO as GPIO
   import time
   GPIO.setmode(GPIO.BCM)
@@ -30,5 +30,6 @@ while True:
     Shifter(b<<1)
   elif jump == 0:
     Shifter(b>>1)
+
 
 
