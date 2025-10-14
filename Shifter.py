@@ -2,11 +2,10 @@ import RPi.GPIO as GPIO
 import time
 
 class shifter:
-  def __init__ (self,serialPin,clockPin,latchPin,b):
+  def __init__ (self,serialPin,clockPin,latchPin):
     self.serialPin = serialPin
     self.clockPin = clockPin
     self.latchPin = latchPin
-    self.b = b
     GPIO.setmode(GPIO.BCM)
     GPIO.setup(serialPin, GPIO.OUT)
     GPIO.setup(latchPin, GPIO.OUT, initial=0)
@@ -19,12 +18,10 @@ class shifter:
 
   def shiftByte(self,b):
     for i in range(8):
-      GPIO.output(self.serialPin, self.b & (1<<i))
-      print('3')
+      GPIO.output(self.serialPin, b & (1<<i))
       self.ping(self.clockPin)
-      print('4')
-      print(b)
     self.ping(self.latchPin)
+
 
 
 
