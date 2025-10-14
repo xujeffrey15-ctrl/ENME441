@@ -8,6 +8,9 @@ Testing = Shifter.shifter(23,24,25,b)
 while True:
 	Testing.shiftByte(b)
 	b = b<<1
+	print('1')
+	time.sleep(0,5)
+
 
 
 
