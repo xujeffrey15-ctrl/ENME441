@@ -25,7 +25,7 @@ class bug():
 					b = b>>1
 					time.sleep(self.timestep)
 			if self.isWrapOn == True:
-				if b <= 2:
+				if b <= 4:
 					if jumper == 0:
 						pass
 					elif jumper == 1:
@@ -50,6 +50,7 @@ class bug():
 
 Test = bug()
 Test.bugging()
+
 
 
 
