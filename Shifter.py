@@ -15,13 +15,19 @@ class shifter:
     print("I'm running")
     print(b)
     for i in range(8):
+      print(self.serialPin)
+      print(b)
+      print(GPIO.output(self.serialPin, b & (1<<i)))
       GPIO.output(self.serialPin, b & (1<<i))
+      print(self.clockPin)
       GPIO.output(self.clockPin,1)
       time.sleep(0)
       GPIO.output(self.clockPin,0)
     GPIO.output(self.latchPin,1)
+    print(self.latchPin)
     time.sleep(0)
     GPIO.output(self.latchPin,0) 
+
 
 
 
