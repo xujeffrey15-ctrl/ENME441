@@ -12,7 +12,6 @@ class bug():
 		self.x = x
 
 	def ShiftCall(self,b):
-		self.LightningBug = Shifter.shifter(23,25,24)
 		self.LightningBug.shiftByte(b)
 		time.sleep(self.timestep)
 
@@ -49,8 +48,9 @@ class bug():
 						b = b>>1
 						self.ShiftCall(b)
 
-Test = bug()
+Test = bug(Shifter.shifter(23,25,24))
 Test.bugging()
+
 
 
 
