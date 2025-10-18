@@ -3,14 +3,14 @@ import Shifter
 import time
 
 LEDS = {"1":1,"2":2,"3":4,"4":8,"5":16,"6":32,"7":64,"8":128}
-LightningBug = Shifter.shifter(23,25,24)
 
 class bug():
 	def __init__(self,LightningBug,timestep=0.05,x=3,isWrapOn=False):
-		self.LightningBug = Shifter.shifter(23,25,24)
+		self.LightningBug = LightningBug
 		self.timestep = timestep
 		self.isWrapOn = isWrapOn
 		self.x = x
+		LightningBug = Shifter.shifter(23,25,24)
 
 	def ShiftCall(self,b):
 		self.LightningBug.shiftByte(b)
@@ -51,6 +51,7 @@ class bug():
 
 Test = bug()
 Test.bugging()
+
 
 
 
