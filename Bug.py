@@ -6,7 +6,7 @@ LEDS = {"0":0,"1":1,"2":2,"3":4,"4":8,"5":16,"6":32,"7":64}
 LightningBug = Shifter.shifter(23,25,24)
 
 class bug():
-	def __init__(self,timestep=0.5,x=3,isWrapOn=False):
+	def __init__(self,timestep=0.5,x=7,isWrapOn=False):
 		self.timestep = timestep
 		self.isWrapOn = isWrapOn
 		self.x = x
@@ -52,6 +52,7 @@ class bug():
 
 Test = bug()
 Test.bugging()
+
 
 
 
