@@ -10,9 +10,9 @@ class bug():
 		self.timestep = timestep
 		self.isWrapOn = isWrapOn
 		self.x = x
-		LightningBug = Shifter.shifter(23,25,24)
 
 	def ShiftCall(self,b):
+		self.LightningBug = Shifter.shifter(23,25,24)
 		self.LightningBug.shiftByte(b)
 		time.sleep(self.timestep)
 
@@ -51,6 +51,7 @@ class bug():
 
 Test = bug()
 Test.bugging()
+
 
 
 
