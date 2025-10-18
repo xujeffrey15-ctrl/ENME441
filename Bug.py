@@ -38,8 +38,10 @@ class bug():
 			if self.isWrapOn == True:
 				if b < 1:
 					b = 128
+					self.ShiftCall(b)
 				if b > 128:
 					b = 1
+					self.ShiftCall(b)
 				else:
 					if jumper == 1:
 						b = b<<1
@@ -50,6 +52,7 @@ class bug():
 
 Test = bug(Shifter.shifter(23,25,24))
 Test.bugging()
+
 
 
 
