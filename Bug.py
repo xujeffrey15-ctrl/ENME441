@@ -25,7 +25,7 @@ class bug():
 					b = b>>1
 					time.sleep(self.timestep)
 			if self.isWrapOn == True:
-				if b <= 1:
+				if b == 2:
 					if jumper == 0:
 						LightningBug.shiftByte(b)
 						time.sleep(self.timestep)
@@ -33,7 +33,7 @@ class bug():
 						LightningBug.shiftByte(b)
 						b = b<<1
 						time.sleep(self.timestep)
-				if b >= 32:
+				if b == 64:
 					if jumper == 0:
 						LightningBug.shiftByte(b)
 						b = b>>1
@@ -52,6 +52,7 @@ class bug():
 
 Test = bug()
 Test.bugging()
+
 
 
 
