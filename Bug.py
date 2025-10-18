@@ -6,7 +6,10 @@ Testing = Shifter.shifter(23,24,25)
 
 while True:
 	Testing.shiftByte(8)
+	print("1")
+	time.sleep(1)
 	
+
 
 
 
