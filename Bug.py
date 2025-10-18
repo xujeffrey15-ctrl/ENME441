@@ -1,14 +1,19 @@
 import random
 import Shifter
-import time
 
-Testing = Shifter.shifter(23,25,24)
+b = 8
 
-try:
-	Testing.shiftByte(8)   # test out the new function
-	while 1: pass
-except:
- 	GPIO.cleanup()
+while True:
+	jumper = random.randint(1,2)
+	if jumper == 1:
+		Shifter(23,24,25)
+		b = b<<1
+		time.sleep(0.5)
+	elif jumper == 2:
+		Shifter(23,24,25)
+		b = b>>1
+		time.sleep(0.5)
+
 
 
 
