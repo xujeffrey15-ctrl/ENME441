@@ -20,13 +20,14 @@ class bug():
 					LightningBug.shiftByte(b)
 					b = b<<1
 					time.sleep(self.timestep)
-				elif jumper == 2:
+				elif jumper == 0:
 					LightningBug.shiftByte(b)
 					b = b>>1
 					time.sleep(self.timestep)
 
 Test = bug()
 Test.bugging()
+
 
 
 
