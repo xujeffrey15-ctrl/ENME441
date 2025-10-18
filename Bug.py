@@ -2,19 +2,33 @@ import random
 import Shifter
 import time
 
-b = 8
-Shift = Shifter.shifter(23,25,24)
+LEDS = {"1":1,"2":2,"3":4,"4":8,"5":16,"6":32,"7":64,"8":128}
+LightningBug = Shifter.shifter(23,25,24)
 
-while True:
-	jumper = random.randint(1,2)
-	if jumper == 1:
-		Shift.shiftByte(b)
-		b = b<<1
-		time.sleep(0.5)
-	elif jumper == 2:
-		Shift.shiftByte(b)
-		b = b>>1
-		time.sleep(0.5)
+class bug():
+	def __init__(self,timestep=0.05,x=3,isWrapOn=False)
+		self.timestep = timestep
+		self.isWrapOn = isWrapOn
+		self.x = x
+
+	def bugging(self):
+		b = LEDS[str(self.x)]
+		while True:
+			jumper = random.randint(0,1)
+			if self.isWrapOn == False:
+				if jumper == 1:
+					LightningBug.shiftByte(b)
+					b = b<<1
+					time.sleep(self.timestep)
+				elif jumper == 2:
+					LightningBug.shiftByte(b)
+					b = b>>1
+					time.sleep(self.timestep)
+
+Test = bug()
+Test.bugging()
+
+
 
 
 
