@@ -8,8 +8,8 @@ class shifter:
     self.clockPin = clockPin
     self.latchPin = latchPin
     GPIO.setup(serialPin, GPIO.OUT)
-    GPIO.setup(latchPin, GPIO.OUT, initial=0)
-    GPIO.setup(clockPin, GPIO.OUT, initial=0)  
+    GPIO.setup(latchPin, GPIO.OUT)
+    GPIO.setup(clockPin, GPIO.OUT)  
 
   def shiftByte(self,b):
     print("I'm running")
@@ -27,6 +27,7 @@ class shifter:
     print(self.latchPin)
     time.sleep(0)
     GPIO.output(self.latchPin,0) 
+
 
 
 
