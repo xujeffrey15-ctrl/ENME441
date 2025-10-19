@@ -59,9 +59,6 @@ class Bug():
 			if self.isWrapOn == True:
 				self.UnboundedJump(jumper)
 
-	BugThread = threading.Thread(target=Bugging)
-	BugThread.daemon = True
-
 	def stop(self):
 		BugThread.join()
 		self.ShiftCall(0)
@@ -78,6 +75,8 @@ class Bug():
 		Bug.isWrapOn = boo
 
 BugSet = Bug(Shifter.shifter(23,25,24))
+BugThread = threading.Thread(target=BugSet.Bugging)
+BugThread.daemon = True
 
 if GPIO.input(s1) == 1:
 	BugSet.start()
@@ -91,6 +90,7 @@ if GPIO.input(s3) == 1:
 	BugSet.ChangeWrap(True)
 if GPIO.input(s3) == 0:
 	BugSet.ChangeWrap(False)
+
 
 
 
