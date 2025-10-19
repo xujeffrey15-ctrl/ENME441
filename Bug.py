@@ -59,7 +59,7 @@ class Bug():
 			if self.isWrapOn == True:
 				self.UnboundedJump(jumper)
 
-	BugThread = threading.Thread(target=self.Bugging)
+	BugThread = threading.Thread(target=Bugging)
 	BugThread.daemon = True
 
 	def stop(self):
@@ -91,6 +91,7 @@ if GPIO.input(s3) == 1:
 	BugSet.ChangeWrap(True)
 if GPIO.input(s3) == 0:
 	BugSet.ChangeWrap(False)
+
 
 
 
