@@ -73,7 +73,7 @@ class Bug():
 	def ChangeWrap(self,boo):
 		Bug.isWrapOn = boo
 		
-def Switches()
+def Switches():
 	if GPIO.input(s1) == 1:
 		BugSet.start()
 	if GPIO.input(s1) == 0:
@@ -91,6 +91,7 @@ BugSet = Bug(Shifter.shifter(23,25,24))
 BugThread = threading.Thread(target=Switches)
 BugThread.daemon = True
 BugThread.start()
+
 
 
 
