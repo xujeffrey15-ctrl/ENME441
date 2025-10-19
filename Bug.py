@@ -1,6 +1,7 @@
 import random
 import Shifter
 import time
+import RPi.GPIO as GPIO
 
 LEDS = {"1":1,"2":2,"3":4,"4":8,"5":16,"6":32,"7":64,"8":128}
 LightningBug = Shifter.shifter(23,25,24)
@@ -65,6 +66,7 @@ class Bug():
 s1 = 17
 s2 = 27
 s3 = 22
+GPIO.setmode(GPIO.BCM)  
 GPIO.setup(s1, GPIO.IN)
 GPIO.setup(s2, GPIO.IN)
 GPIO.setup(s3, GPIO.IN)
@@ -82,6 +84,7 @@ if GPIO.INPUT(s3,1):
 	BugSet.ChangeWrap(True)
 if GPIO.INPUT(s3,0):
 	BugSet.ChangeWrap(False)
+
 
 
 
