@@ -14,8 +14,8 @@ while True:
 	print(GPIO.input(s1))
 	if GPIO.input(s1) == 0:
 		Buggg.stop()
-	if GPIO.input(s1) == 1:
-		Buggg.start()
+
+
 
 
 
