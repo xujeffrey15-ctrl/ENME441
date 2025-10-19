@@ -6,15 +6,15 @@ import threading
 LEDS = {"1":1,"2":2,"3":4,"4":8,"5":16,"6":32,"7":64,"8":128}
 
 class Bugg():
-	def __init__(self,LightningBug=Shifter.shifter(23,25,24), timestep = 0.05, x = 3, isWrapOn = False):
-		self.LightningBug = LightningBug
+	def __init__(self, timestep = 0.05, x = 3, isWrapOn = False):
 		self.timestep = timestep
 		self.isWrapOn = isWrapOn
 		self.x = x
+		self.__Shifter = Shifter.shifter(23,25,24)
 		self.ThreadBug = threading.Thread(target = self.Bugging, daemon = True)
 
 	def ShiftCall(self,bytedata):
-		self.LightningBug.shiftByte(bytedata)
+		self.__Shifter.shiftByte(bytedata)
 		time.sleep(self.timestep)
 
 	def BoundedJump(self,jumper):
@@ -59,6 +59,7 @@ class Bugg():
 	def stop(self):
 		self.ThreadBug.join()
 		self.ShiftCall(0)
+
 
 
 
