@@ -11,7 +11,7 @@ class Bugg():
 		self.timestep = timestep
 		self.isWrapOn = isWrapOn
 		self.x = x
-		self.ThreadBug = threading.Thread(target = self.Bugging(), daemon = True)
+		self.ThreadBug = threading.Thread(target = self.Bugging, daemon = True)
 
 	def ShiftCall(self,bytedata):
 		self.LightningBug.shiftByte(bytedata)
@@ -59,6 +59,7 @@ class Bugg():
 	def stop(self):
 		self.ThreadBug.join()
 		self.ShiftCall(0)
+
 
 
 
