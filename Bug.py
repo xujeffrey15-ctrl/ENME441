@@ -78,7 +78,7 @@ class Bug():
 
 BugSet = Bug(Shifter.shifter(23,25,24))
 
-while True
+while True:
 	if GPIO.input(s1) == 1:
 		BugSet.start()
 	if GPIO.input(s1) == 0:
@@ -91,6 +91,7 @@ while True
 		BugSet.ChangeWrap(True)
 	if GPIO.input(s3) == 0:
 		BugSet.ChangeWrap(False)
+
 
 
 
