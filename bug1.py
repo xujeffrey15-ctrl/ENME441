@@ -1,6 +1,7 @@
 import threading
 import RPi.GPIO as GPIO
 import Bug
+import Shifter
 
 (s1,s2,s3) = (17,27,22)
 Buggg = Bug.Bugg(Shifter.shifter(23,25,24))
@@ -14,4 +15,5 @@ while True:
 		Buggg.stop()
 	if GPIO.input(s1) == 1:
 		Buggg.start()
+
 
