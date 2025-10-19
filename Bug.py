@@ -56,12 +56,10 @@ class Bugg():
 	def ChangeWrap(self,b):
 		self.isWrapOn = b
 
-	def start(self):
-		self.ThreadBug.start()
-
 	def stop(self):
 		self.ThreadBug.join()
 		self.ShiftCall(0)
+
 
 
 
