@@ -18,7 +18,8 @@ class Bug():
 		self.timestep = timestep
 		self.isWrapOn = isWrapOn
 		self.x = x
-		
+
+
 	def ShiftCall(self,bytedata):
 		self.LightningBug.shiftByte(bytedata)
 		time.sleep(self.timestep)
@@ -57,21 +58,27 @@ class Bug():
 			if self.isWrapOn == True:
 				self.UnboundedJump(jumper)
 
+	BugThread = threading.Thread(target=(self.Bugging))
+	BugThread.daemon = True
+
 	def stop(self):
+		BugThread.join()
 		self.ShiftCall(0)
 		print("Stopped")
 		
 	def start(self):
 		print("Started")
-		self.Bugging()
+		BugThread.start()
 
 	def ChangeSpeed(self,r):
-		self.timestep = self.timestep/r
+		Bug.timestep = self.timestep/r
 
 	def ChangeWrap(self,boo):
-		self.isWrapOn = boo
-		
-def Switches():
+		Bug.isWrapOn = boo
+
+BugSet = Bug(Shifter.shifter(23,25,24))
+
+while True
 	if GPIO.input(s1) == 1:
 		BugSet.start()
 	if GPIO.input(s1) == 0:
@@ -84,97 +91,6 @@ def Switches():
 		BugSet.ChangeWrap(True)
 	if GPIO.input(s3) == 0:
 		BugSet.ChangeWrap(False)
-
-BugSet = Bug(Shifter.shifter(23,25,24))
-BugThread = threading.Thread(target=Switches)
-BugThread.daemon = True
-BugThread.start()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
