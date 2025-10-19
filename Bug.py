@@ -10,6 +10,7 @@ class Bugg():
 		self.timestep = timestep
 		self.isWrapOn = isWrapOn
 		self.x = x
+		self.ThreadBug = threading.Thread(target = self.Bugging(), daemon = True)
 
 	def ShiftCall(self,bytedata):
 		self.LightningBug.shiftByte(bytedata)
@@ -48,10 +49,7 @@ class Bugg():
 				self.BoundedJump(jumper)
 			if self.isWrapOn == True:
 				self.UnboundedJump(jumper)
-
-	def BugThread(self):
-		ThreadBug = threading.Thread(target = self.Bugging(), daemon = True)
-
+				
 	def ChangeSpeed(self,r):
 		self.timestep = 0.05/r
 
@@ -64,6 +62,7 @@ class Bugg():
 	def stop(self):
 		self.ThreadBug.join()
 		self.ShiftCall(0)
+
 
 
 
