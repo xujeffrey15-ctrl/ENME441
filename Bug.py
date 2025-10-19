@@ -44,7 +44,6 @@ class Bugg():
 	def Bugging(self):
 		self.ShiftCall(LEDS[str(self.x)])
 		while True:
-			print(self.isWrapOn)
 			jumper = random.randint(0,1)
 			if self.isWrapOn == False:
 				self.BoundedJump(jumper)
@@ -63,6 +62,7 @@ class Bugg():
 	def stop(self):
 		self.ThreadBug.join()
 		self.ShiftCall(0)
+
 
 
 
