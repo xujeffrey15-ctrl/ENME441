@@ -12,9 +12,10 @@ LTB = Bugg()
 
 while True:
   if GPIO.input(s1) == 1:
-    LTB.start()
+    LTB.Started()
   if GPIO.input(s1) == 0:
     LTB.stop()
+
 
 
 
