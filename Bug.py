@@ -68,10 +68,10 @@ class Bug():
 		self.Bugging()
 
 	def ChangeSpeed(self,r):
-		Bug.timestep = self.timestep/r
+		self.timestep = self.timestep/r
 
 	def ChangeWrap(self,boo):
-		Bug.isWrapOn = boo
+		self.isWrapOn = boo
 		
 def Switches():
 	if GPIO.input(s1) == 1:
@@ -87,10 +87,12 @@ def Switches():
 	if GPIO.input(s3) == 0:
 		BugSet.ChangeWrap(False)
 
-BugSet = Bug(Shifter.shifter(23,25,24))
+BugSet = Bug()
 BugThread = threading.Thread(target=Switches)
 BugThread.daemon = True
 BugThread.start()
+
+
 
 
 
