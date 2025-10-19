@@ -6,7 +6,7 @@ import threading
 LEDS = {"1":1,"2":2,"3":4,"4":8,"5":16,"6":32,"7":64,"8":128}
 
 class Bugg():
-	def __init__(self,LightningBug = Shifter.shifter(23,25,24), timestep = 0.05, x = 3, isWrapOn = False):
+	def __init__(self,LightningBug, timestep = 0.05, x = 3, isWrapOn = False):
 		self.LightningBug = LightningBug
 		self.timestep = timestep
 		self.isWrapOn = isWrapOn
@@ -59,6 +59,7 @@ class Bugg():
 	def stop(self):
 		self.ThreadBug.join()
 		self.ShiftCall(0)
+
 
 
 
