@@ -11,9 +11,11 @@ GPIO.setup(s2, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(s3, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 
 while True:
+	print(GPIO.input(s1))
 	if GPIO.input(s1) == 0:
 		Buggg.stop()
 	if GPIO.input(s1) == 1:
 		Buggg.start()
+
 
 
