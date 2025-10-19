@@ -74,22 +74,13 @@ class Bug():
 		Bug.isWrapOn = boo
 
 BugSet = Bug(Shifter.shifter(23,25,24))
-BugThread = threading.Thread(target=(Bugset.Bugging))
+BugThread = threading.Thread(target=(BugSet.Bugging))
 BugThread.daemon = True
 
 while True:
-	if GPIO.input(s1) == 1:
-		BugSet.start()
-	if GPIO.input(s1) == 0:
-		BugSet.stop()
-	if GPIO.input(s2) == 1:
-		BugSet.ChangeSpeed(3)
-	if GPIO.input(s2) == 0:
-		BugSet.ChangeSpeed(1)
-	if GPIO.input(s3) == 1:
-		BugSet.ChangeWrap(True)
-	if GPIO.input(s3) == 0:
-		BugSet.ChangeWrap(False)
+	GPIO.add_event_detect(s1, GPIO.RISING, callback=BugSet.start(), bouncetime = 500)
+	GPIO.add_event_detect(s1, GPIO.FALLING, callback=BugSet.stop(), bouncetime = 500)
+
 
 
 
