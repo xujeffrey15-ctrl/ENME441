@@ -77,9 +77,9 @@ BugSet = Bug(Shifter.shifter(23,25,24))
 BugThread = threading.Thread(target=(BugSet.Bugging))
 BugThread.daemon = True
 
-while True:
-	GPIO.add_event_detect(s1, GPIO.RISING, callback=BugSet.start(), bouncetime = 500)
-	GPIO.add_event_detect(s1, GPIO.FALLING, callback=BugSet.stop(), bouncetime = 500)
+GPIO.add_event_detect(s1, GPIO.RISING, callback=BugSet.start(), bouncetime = 500)
+GPIO.add_event_detect(s1, GPIO.FALLING, callback=BugSet.stop(), bouncetime = 500)
+
 
 
 
