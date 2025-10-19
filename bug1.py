@@ -10,11 +10,12 @@ GPIO.setup(s1, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(s2, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(s3, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 
-LTB = Bug()
+LTB = Bugg()
 
 while True:
   if GPIO.input(s1) == 0:
     LTB.stop()
+
 
 
 
