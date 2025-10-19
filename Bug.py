@@ -43,7 +43,7 @@ class Bug():
 				self.ShiftCall(self.x)
 
 	def Bugging(self):
-		ShiftCall(LEDS[str(self.x)])
+		self.ShiftCall(LEDS[str(self.x)])
 		while True:
 			jumper = random.randint(0,1)
 			if self.isWrapOn == False:
@@ -86,6 +86,7 @@ if GPIO.input(s3) == 1:
 	BugSet.ChangeWrap(True)
 if GPIO.input(s3) == 0:
 	BugSet.ChangeWrap(False)
+
 
 
 
