@@ -1,6 +1,7 @@
 import random
 import Shifter
 import time
+import threading
 
 LEDS = {"1":1,"2":2,"3":4,"4":8,"5":16,"6":32,"7":64,"8":128}
 
@@ -62,6 +63,7 @@ class Bugg():
 	def stop(self):
 		self.ThreadBug.join()
 		self.ShiftCall(0)
+
 
 
 
