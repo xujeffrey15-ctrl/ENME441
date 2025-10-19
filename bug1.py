@@ -15,6 +15,9 @@ if GPIO.input(s1):
 else:
   LTB.stop()
 
+while True:
+  pass
+
 
 
 
