@@ -60,36 +60,39 @@ class Bug():
 				self.UnboundedJump(jumper)
 
 	def stop(self):
-		BugThread.join()
 		self.ShiftCall(0)
 		print("Stopped")
 		
 	def start(self):
 		print("Started")
-		BugThread.start()
+		self.Bugging()
 
 	def ChangeSpeed(self,r):
 		Bug.timestep = self.timestep/r
 
 	def ChangeWrap(self,boo):
 		Bug.isWrapOn = boo
+		
+def Switches()
+	if GPIO.input(s1) == 1:
+		BugSet.start()
+	if GPIO.input(s1) == 0:
+		BugSet.stop()
+	if GPIO.input(s2) == 1:
+		BugSet.ChangeSpeed(3)
+	if GPIO.input(s2) == 0:
+		BugSet.ChangeSpeed(1)
+	if GPIO.input(s3) == 1:
+		BugSet.ChangeWrap(True)
+	if GPIO.input(s3) == 0:
+		BugSet.ChangeWrap(False)
 
 BugSet = Bug(Shifter.shifter(23,25,24))
-BugThread = threading.Thread(target=BugSet.Bugging)
+BugThread = threading.Thread(target=Switches)
 BugThread.daemon = True
+BugThread.start()
 
-if GPIO.input(s1) == 1:
-	BugSet.start()
-if GPIO.input(s1) == 0:
-	BugSet.stop()
-if GPIO.input(s2) == 1:
-	BugSet.ChangeSpeed(3)
-if GPIO.input(s2) == 0:
-	BugSet.ChangeSpeed(1)
-if GPIO.input(s3) == 1:
-	BugSet.ChangeWrap(True)
-if GPIO.input(s3) == 0:
-	BugSet.ChangeWrap(False)
+
 
 
 
