@@ -50,14 +50,6 @@ class Bug():
 						b = b>>1
 						self.ShiftCall(b)
 
-	def stop(self):
-		self.Bugging(0)
-		print("Stopped")
-		
-	def start(self):
-		print("Started")
-		self.Bugging(b)
-
 	def ChangeSpeed(self,r):
 		timestep = timestep/r
 
@@ -67,15 +59,10 @@ s1 = 17
 s2 = 27
 s3 = 22
 GPIO.setmode(GPIO.BCM)  
-GPIO.setup(s1, GPIO.IN)
 GPIO.setup(s2, GPIO.IN)
 GPIO.setup(s3, GPIO.IN)
 BugSet = Bug(Shifter.shifter(23,25,24))
 
-if GPIO.input(s1)==1:
-	BugSet.input()
-if GPIO.input(s1)==0:
-	BugSet.stop()
 if GPIO.input(s2)==1:
 	BugSet.ChangeSpeed(3)
 if GPIO.input(s2)==0:
@@ -84,6 +71,7 @@ if GPIO.input(s3)==1:
 	BugSet.ChangeWrap(True)
 if GPIO.input(s3)==0:
 	BugSet.ChangeWrap(False)
+
 
 
 
