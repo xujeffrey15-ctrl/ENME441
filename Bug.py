@@ -1,7 +1,14 @@
 import random
 import Shifter
 import time
+import threading
 import RPi.GPIO as GPIO
+
+(s1,s2,s3) = (17,27,22)
+GPIO.setmode(GPIO.BCM) 
+GPIO.setup(s1, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+GPIO.setup(s2, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+GPIO.setup(s3, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 
 LEDS = {"1":1,"2":2,"3":4,"4":8,"5":16,"6":32,"7":64,"8":128}
 LightningBug = Shifter.shifter(23,25,24)
@@ -46,20 +53,23 @@ class Bug():
 		self.ShiftCall(LEDS[str(self.x)])
 		while True:
 			print(self.isWrapOn)
-			print(self.timestep)
 			jumper = random.randint(0,1)
 			if self.isWrapOn == False:
 				self.BoundedJump(jumper)
 			if self.isWrapOn == True:
 				self.UnboundedJump(jumper)
 
+	BugThread = threading.Thread(target=BugSet.Bugging())
+	BugThread.daemon = True
+
 	def stop(self):
+		BugThread.join()
 		self.ShiftCall(0)
 		print("Stopped")
 		
 	def start(self):
 		print("Started")
-		self.Bugging()
+		BugThread.start()
 
 	def ChangeSpeed(self,r):
 		Bug.timestep = self.timestep/r
@@ -67,13 +77,6 @@ class Bug():
 	def ChangeWrap(self,boo):
 		Bug.isWrapOn = boo
 
-s1 = 17
-s2 = 27
-s3 = 22
-GPIO.setmode(GPIO.BCM)  
-GPIO.setup(s1, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-GPIO.setup(s2, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-GPIO.setup(s3, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 BugSet = Bug(Shifter.shifter(23,25,24))
 
 if GPIO.input(s1) == 1:
@@ -88,6 +91,7 @@ if GPIO.input(s3) == 1:
 	BugSet.ChangeWrap(True)
 if GPIO.input(s3) == 0:
 	BugSet.ChangeWrap(False)
+
 
 
 
