@@ -62,10 +62,10 @@ class Bug():
 		self.Bugging()
 
 	def ChangeSpeed(self,r):
-		self.timestep = self.timestep/r
+		Bug.timestep = self.timestep/r
 
 	def ChangeWrap(self,boo):
-		self.isWrapOn = boo
+		Bug.isWrapOn = boo
 
 s1 = 17
 s2 = 27
@@ -88,6 +88,7 @@ if GPIO.input(s3) == 1:
 	BugSet.ChangeWrap(True)
 if GPIO.input(s3) == 0:
 	BugSet.ChangeWrap(False)
+
 
 
 
