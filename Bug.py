@@ -57,7 +57,7 @@ class Bug():
 		
 	def start(self):
 		print("Started")
-		self.Bugging(self.x)
+		self.Bugging()
 
 	def ChangeSpeed(self,r):
 		self.timestep = self.timestep/r
@@ -86,6 +86,7 @@ if GPIO.input(s3) == 1:
 	BugSet.ChangeWrap(True)
 if GPIO.input(s3) == 0:
 	BugSet.ChangeWrap(False)
+
 
 
 
