@@ -74,7 +74,7 @@ BugSet = Bug(Shifter.shifter(23,25,24))
 
 if GPIO.input(s1)==1:
 	BugSet.input()
-if GPIO.INPUT(s1)==0:
+if GPIO.input(s1)==0:
 	BugSet.stop()
 if GPIO.input(s2)==1:
 	BugSet.ChangeSpeed(3)
@@ -84,6 +84,7 @@ if GPIO.input(s3)==1:
 	BugSet.ChangeWrap(True)
 if GPIO.input(s3)==0:
 	BugSet.ChangeWrap(False)
+
 
 
 
