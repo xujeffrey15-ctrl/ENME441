@@ -52,7 +52,6 @@ class Bug():
 	def stop(self):
 		self.Bugging(0)
 		print("Stopped")
-		break
 		
 	def start(self):
 		print("Started")
@@ -83,6 +82,7 @@ if GPIO.INPUT(s3,1):
 	BugSet.ChangeWrap(True)
 if GPIO.INPUT(s3,0):
 	BugSet.ChangeWrap(False)
+
 
 
 
