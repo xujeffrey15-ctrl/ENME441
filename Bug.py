@@ -1,7 +1,6 @@
 import random
 import Shifter
 import time
-import RPi.GPIO as GPIO
 
 LEDS = {"1":1,"2":2,"3":4,"4":8,"5":16,"6":32,"7":64,"8":128}
 LightningBug = Shifter.shifter(23,25,24)
@@ -12,66 +11,80 @@ class Bug():
 		self.timestep = timestep
 		self.isWrapOn = isWrapOn
 		self.x = x
-		global b
-		b = LEDS[str(self.x)]
 
-	def ShiftCall(self,a):
-		self.LightningBug.shiftByte(a)
+
+	def ShiftCall(self,bytedata):
+		self.LightningBug.shiftByte(bytedata)
 		time.sleep(self.timestep)
 
+	def BoundedJump(self,jumper):
+		RightBoundedShift = lambda rbx: max(rbx>>1,2)
+		LeftBoundedShift = lambda lbx: min(lbx<<1,64)
+
+		if jumper == 0:
+			self.x = LeftBoundedShift(self.x)
+			self.ShiftCall(self.x)
+		if jumper == 1:
+			self.x = RightBoundedShift(self.x)
+			self.ShiftCall(self.x)
+
+	def UnboundedJump(self,jumper):
+		if self.x < 1:
+			self.x = 128
+		if self.x > 128:
+			self.x = 1
+		else:
+			if jumper == 1:
+				self.x = self.x<<1
+				self.ShiftCall(self.x)
+			elif jumper == 0:
+				self.x = self.x>>1
+				self.ShiftCall(self.x)
+
 	def Bugging(self):
+		ShiftCall(LEDS[str(self.x)])
 		while True:
 			jumper = random.randint(0,1)
 			if self.isWrapOn == False:
-				if b <= 2:
-					b = b<<1
-					self.ShiftCall(b)
-				if b >= 64:
-					b = b>>1
-					self.ShiftCall(b)
-				else:
-					if jumper == 1:
-						b = b<<1
-						self.ShiftCall(b)
-					elif jumper == 0:
-						b = b>>1
-						self.ShiftCall(b)
-
+				self.BoundedJump(jumper)
 			if self.isWrapOn == True:
-				if b < 1:
-					b = 128
-				if b > 128:
-					b = 1
-				else:
-					if jumper == 1:
-						b = b<<1
-						self.ShiftCall(b)
-					elif jumper == 0:
-						b = b>>1
-						self.ShiftCall(b)
+				self.UnboundedJump(jumper)
+
+	def stop(self):
+		self.ShiftCall(0)
+		print("Stopped")
+		
+	def start(self):
+		print("Started")
+		self.Bugging(self.x)
 
 	def ChangeSpeed(self,r):
-		timestep = 0.05/r
+		self.timestep = self.timestep/r
 
 	def ChangeWrap(self,boo):
-		isWrapOn = boo
+		self.isWrapOn = boo
+
 s1 = 17
 s2 = 27
 s3 = 22
-GPIO.setmode(GPIO.BCM)  
-GPIO.setup(s2, GPIO.IN)
-GPIO.setup(s3, GPIO.IN)
+GPIO.setup(s1, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+GPIO.setup(s2, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+GPIO.setup(s3, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 BugSet = Bug(Shifter.shifter(23,25,24))
 
-BugSet.Bugging()
-if GPIO.input(s2)==1:
+if GPIO.input(s1) == 1:
+	BugSet.start()
+if GPIO.input(s1) == 0:
+	BugSet.stop()
+if GPIO.input(s2) == 1:
 	BugSet.ChangeSpeed(3)
-if GPIO.input(s2)==0:
+if GPIO.input(s2) == 0:
 	BugSet.ChangeSpeed(1)
-if GPIO.input(s3)==1:
+if GPIO.input(s3) == 1:
 	BugSet.ChangeWrap(True)
-if GPIO.input(s3)==0:
+if GPIO.input(s3) == 0:
 	BugSet.ChangeWrap(False)
+
 
 
 
