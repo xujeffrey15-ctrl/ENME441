@@ -51,7 +51,7 @@ class Bug():
 						self.ShiftCall(b)
 
 	def ChangeSpeed(self,r):
-		timestep = timestep/r
+		timestep = 0.05/r
 
 	def ChangeWrap(self,boo):
 		isWrapOn = boo
@@ -71,6 +71,7 @@ if GPIO.input(s3)==1:
 	BugSet.ChangeWrap(True)
 if GPIO.input(s3)==0:
 	BugSet.ChangeWrap(False)
+
 
 
 
