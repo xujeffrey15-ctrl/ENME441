@@ -11,7 +11,6 @@ GPIO.setup(s2, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(s3, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 
 LEDS = {"1":1,"2":2,"3":4,"4":8,"5":16,"6":32,"7":64,"8":128}
-LightningBug = Shifter.shifter(23,25,24)
 
 class Bug():
 	def __init__(self,LightningBug, timestep = 0.05, x = 3, isWrapOn = False):
@@ -19,8 +18,7 @@ class Bug():
 		self.timestep = timestep
 		self.isWrapOn = isWrapOn
 		self.x = x
-
-
+		
 	def ShiftCall(self,bytedata):
 		self.LightningBug.shiftByte(bytedata)
 		time.sleep(self.timestep)
@@ -87,10 +85,11 @@ def Switches():
 	if GPIO.input(s3) == 0:
 		BugSet.ChangeWrap(False)
 
-BugSet = Bug()
+BugSet = Bug(Shifter.shifter(23,25,24))
 BugThread = threading.Thread(target=Switches)
 BugThread.daemon = True
 BugThread.start()
+
 
 
 
