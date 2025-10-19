@@ -2,8 +2,6 @@ import threading
 import RPi.GPIO as GPIO
 from Bug import Bugg
 
-GPIO.cleanup()
-
 (s1,s2,s3) = (17,27,22)
 GPIO.setmode(GPIO.BCM) 
 GPIO.setup(s1, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
@@ -15,6 +13,7 @@ LTB = Bugg()
 while True:
   if GPIO.input(s1) == 0:
     LTB.stop()
+
 
 
 
