@@ -4,8 +4,8 @@ import RPi.GPIO as GPIO
 from Bug import Bugg
 
 s1 = 17
-s2 = 27
-s3 = 22
+s2 = 19
+s3 = 26
 GPIO.setmode(GPIO.BCM) 
 GPIO.setup(s1, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(s2, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
@@ -43,6 +43,7 @@ try:
 except KeyboardInterrupt:
    GPIO.cleanup()
   
+
 
 
 
