@@ -55,11 +55,13 @@ class Bugg():
 		if self.isWrapOn == True:
 			self.UnboundedJump(jumper)
 
-	def ChangeSpeed(r):
-		Bugg.self.timestep = 0.5/r
+	def ChangeSpeed(self,r):
+		self.timestep = 0.5/r
+		return self.timestep
 		
-	def ChangeWrap(b):
-		Bugg.self.isWrapOn = b
+	def ChangeWrap(self,b):
+		self.isWrapOn = b
+		return self.isWrapOn
 
 	def Start(self):
 		while GPIO.input(s1):
@@ -69,6 +71,7 @@ class Bugg():
 		self.ShiftCall(0)
 		while GPIO.input(s1) == False:
 			pass
+
 
 
 
