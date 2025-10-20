@@ -14,8 +14,6 @@ GPIO.setup(s3, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 LTB = Bugg()
 
 def sensor1(v):
-   if GPIO.input(v) == True:
-      LTB.Start()
    while GPIO.input(v) == False:
       LTB.stop()
       
@@ -35,16 +33,17 @@ def sensor3(g):
       LTB.ChangeWrap(False)
       print(4)
       
-GPIO.add_event_detect(s1, GPIO.BOTH, callback=sensor1, bouncetime=30)
-GPIO.add_event_detect(s2, GPIO.BOTH, callback=sensor2, bouncetime=30)
-GPIO.add_event_detect(s3, GPIO.BOTH, callback=sensor3, bouncetime=30)
+GPIO.add_event_detect(s1, GPIO.FALLING, callback=sensor1, bouncetime=300)
+GPIO.add_event_detect(s2, GPIO.BOTH, callback=sensor2, bouncetime=300)
+GPIO.add_event_detect(s3, GPIO.BOTH, callback=sensor3, bouncetime=300)
 
 try:
    while True:
-      LTB.Bugging()
+      LTB.start()
 except KeyboardInterrupt:
    GPIO.cleanup()
   
+
 
 
 
