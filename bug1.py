@@ -11,17 +11,12 @@ GPIO.setup(s3, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 
 LTB = Bugg()
 
-def sensor1(v):
-   if GPIO.input(v):
-      LTB.Start()
-   else:
-      LTB.stop()
-
-GPIO.add_event_detect(s1, GPIO.BOTH, callback=sensor1, bouncetime=200)
+GPIO.add_event_detect(s1, GPIO.FALLING, callback=LTB.stop, bouncetime=200)
 
 while True:
-   time.sleep(1)
+   LTB.Start()
   
+
 
 
 
