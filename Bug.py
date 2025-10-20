@@ -13,9 +13,9 @@ GPIO.setup(s3, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 
 class Bugg():
 	def __init__(self, timestep = 0.5, x = 3, isWrapOn = False):
-		self.timestep = timestep
-		self.isWrapOn = isWrapOn
-		self.x = x
+		cls.timestep = timestep
+		cls.isWrapOn = isWrapOn
+		cls.x = x
 		self.__Shifter = Shifter.shifter(23,25,24)
 
 	def ShiftCall(self,bytedata):
@@ -54,13 +54,14 @@ class Bugg():
 			self.BoundedJump(jumper)
 		if self.isWrapOn == True:
 			self.UnboundedJump(jumper)
-
+			
+	@classmethod
 	def ChangeSpeed(self,r):
-		self.timestep = 0.5/r
-		return self.timestep
-		
+		cls.timestep = 0.5/r
+
+	@classmethod
 	def ChangeWrap(self,b):
-		self.isWrapOn = b
+		cls.isWrapOn = b
 		return self.isWrapOn
 
 	def Start(self):
@@ -71,6 +72,7 @@ class Bugg():
 		self.ShiftCall(0)
 		while GPIO.input(s1) == False:
 			pass
+
 
 
 
