@@ -20,8 +20,9 @@ def sensor1(v):
 GPIO.add_event_detect(s1, GPIO.BOTH, callback=sensor1, bouncetime=100)
 
 while True:
-   LTB.Start()
+   time.sleep(1)
   
+
 
 
 
