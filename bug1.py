@@ -16,11 +16,12 @@ def sensor1():
    else:
       LTB.stop()
 
-GPIO.add_event_detect(s1, GPIO.BOTH, callback=sensor1, bouncetime=10000)
+GPIO.add_event_detect(s1, GPIO.BOTH, callback=sensor1, bouncetime=1000)
 
 while True:
    pass
   
+
 
 
 
