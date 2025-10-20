@@ -16,7 +16,7 @@ LTB = Bugg()
 def sensor1(v):
    if GPIO.input(v) == True:
       LTB.Start()
-   if GPIO.input(v) == False:
+   while GPIO.input(v) == False:
       LTB.stop()
       
 def sensor2(n):
@@ -45,6 +45,7 @@ try:
 except KeyboardInterrupt:
    GPIO.cleanup()
   
+
 
 
 
