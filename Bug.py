@@ -61,7 +61,8 @@ class Bugg():
 	def stop(self):
 		self.ShiftCall(0)
 		while True:
-			pass
+			time.stop(1)
+
 
 
 
