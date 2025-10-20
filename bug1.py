@@ -36,8 +36,8 @@ def sensor3(g):
       print(4)
       
 GPIO.add_event_detect(s1, GPIO.BOTH, callback=sensor1, bouncetime=300)
-GPIO.add_event_detect(s2, GPIO.BOTH, callback=sensor2, bouncetime=200)
-GPIO.add_event_detect(s3, GPIO.BOTH, callback=sensor3, bouncetime=100)
+GPIO.add_event_detect(s2, GPIO.BOTH, callback=sensor2, bouncetime=300)
+GPIO.add_event_detect(s3, GPIO.BOTH, callback=sensor3, bouncetime=300)
 
 try:
    while True:
@@ -45,6 +45,7 @@ try:
 except KeyboardInterrupt:
    GPIO.cleanup()
   
+
 
 
 
