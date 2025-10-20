@@ -41,10 +41,11 @@ GPIO.add_event_detect(s3, GPIO.BOTH, callback=sensor3, bouncetime=30)
 
 try:
    while True:
-      Bugg.Bugging()
+      LTB.Bugging()
 except KeyboardInterrupt:
    GPIO.cleanup()
   
+
 
 
 
