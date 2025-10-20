@@ -37,11 +37,13 @@ def sensor3():
       
 try:
    while True:
+      sensor1()
       sensor2()
       sensor3()
 except KeyboardInterrupt:
    GPIO.cleanup()
   
+
 
 
 
