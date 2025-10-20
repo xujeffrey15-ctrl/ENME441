@@ -27,7 +27,7 @@ def sensor3(g):
    if GPIO.input(g) == True:
       LTB.ChangeWrap(True)
    if GPIO.input(g) == False:
-      LTB.ChangeSpeed(False)
+      LTB.ChangeWrap(False)
       
 GPIO.add_event_detect(s1, GPIO.BOTH, callback=sensor1, bouncetime=100)
 GPIO.add_event_detect(s2, GPIO.BOTH, callback=sensor2, bouncetime=100)
@@ -36,6 +36,7 @@ GPIO.add_event_detect(s3, GPIO.BOTH, callback=sensor3, bouncetime=100)
 while True:
    time.sleep(1)
   
+
 
 
 
