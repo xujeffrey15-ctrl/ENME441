@@ -32,12 +32,16 @@ def sensor3(g):
       LTB.ChangeWrap(False)
       
 GPIO.add_event_detect(s1, GPIO.BOTH, callback=sensor1, bouncetime=300)
-GPIO.add_event_detect(s2, GPIO.BOTH, callback=sensor2, bouncetime=300)
-GPIO.add_event_detect(s3, GPIO.BOTH, callback=sensor3, bouncetime=300)
+GPIO.add_event_detect(s2, GPIO.BOTH, callback=sensor2, bouncetime=200)
+GPIO.add_event_detect(s3, GPIO.BOTH, callback=sensor3, bouncetime=100)
 
-while True:
-   time.sleep(1)
+try:
+   while True:
+      time.sleep(1)
+except KeyboardInterrupt:
+   GPIO.cleanup()
   
+
 
 
 
