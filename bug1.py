@@ -16,18 +16,14 @@ LTB = Bugg()
 def sensor2():
    if GPIO.input(s2) == True:
       LTB.ChangeSpeed(1)
-      print(1)
    if GPIO.input(s2) == False:
       LTB.ChangeSpeed(10)
-      print(3)
 
 def sensor3():
    if GPIO.input(s3) == True:
       LTB.ChangeWrap(True)
-      print(2)
    if GPIO.input(s3) == False:
       LTB.ChangeWrap(False)
-      print(4)
       
 try:
    while True:
@@ -40,6 +36,7 @@ try:
 except KeyboardInterrupt:
    GPIO.cleanup()
   
+
 
 
 
