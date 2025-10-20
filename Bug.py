@@ -62,13 +62,10 @@ class Bugg():
 		return self.isWrapOn
 
 	def Start(self):
-		while GPIO.input(s1):
-			self.Bugging()
+		self.Bugging()
 				
 	def stop(self):
 		self.ShiftCall(0)
-		while GPIO.input(s1) == False:
-			pass
 
 
 
