@@ -25,6 +25,7 @@ def sensor2(n):
       print(1)
    if GPIO.input(n) == False:
       LTB.ChangeSpeed(10)
+      print(3)
 
 def sensor3(g):
    if GPIO.input(g) == True:
@@ -32,6 +33,7 @@ def sensor3(g):
       print(2)
    if GPIO.input(g) == False:
       LTB.ChangeWrap(False)
+      print(4)
       
 GPIO.add_event_detect(s1, GPIO.BOTH, callback=sensor1, bouncetime=300)
 GPIO.add_event_detect(s2, GPIO.BOTH, callback=sensor2, bouncetime=200)
@@ -43,6 +45,7 @@ try:
 except KeyboardInterrupt:
    GPIO.cleanup()
   
+
 
 
 
