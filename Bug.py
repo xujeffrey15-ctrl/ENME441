@@ -50,18 +50,19 @@ class Bugg():
 			if self.isWrapOn == True:
 				self.UnboundedJump(jumper)
 				
-	def ChangeSpeed(self,r):
+	def ChangeSpeed(r):
 		self.timestep = 0.05/r
 
-	def ChangeWrap(self,b):
+	def ChangeWrap(b):
 		self.isWrapOn = b
 
-	def Started(self):
+	def Started():
 		self.ThreadBug.start()
 
-	def stop(self):
+	def stop():
 		self.ThreadBug.join()
 		self.ShiftCall(0)
+
 
 
 
