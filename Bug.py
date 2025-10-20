@@ -66,6 +66,8 @@ class Bugg():
 				
 	def stop(self):
 		self.ShiftCall(0)
+		pass
+
 
 
 
