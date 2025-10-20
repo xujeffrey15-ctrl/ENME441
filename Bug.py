@@ -11,7 +11,7 @@ GPIO.setup(s1, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 
 class Bugg():
 	@classmethod
-	def __init__(self, timestep = 0.5, x = 3, isWrapOn = False):
+	def __init__(self, timestep = 0.5, x = LEDS[str(3)], isWrapOn = False):
 		Bugg.timestep = timestep
 		Bugg.isWrapOn = isWrapOn
 		Bugg.x = x
@@ -66,6 +66,7 @@ class Bugg():
 		self.ShiftCall(0)
 		while GPIO.input(s1) == False:
 			pass
+
 
 
 
