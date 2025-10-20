@@ -19,8 +19,9 @@ def sensor1:
 GPIO.add_event_detect(s1, GPIO.BOTH, callback=sensor1, bouncetime=10000)
 
 while True:
-   LTB.Bugging()
+   pass
   
+
 
 
 
