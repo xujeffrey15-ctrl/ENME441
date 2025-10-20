@@ -28,10 +28,10 @@ class Bugg():
 		LeftBoundedShift = lambda lbx: min(lbx<<1,64)
 
 		if jumper == 0:
-			Bugg.ShiftCall(self.x)
+			self.ShiftCall(self.x)
 			Bugg.x = LeftBoundedShift(Bugg.x)
 		if jumper == 1:
-			Bugg.ShiftCall(self.x)
+			self.ShiftCall(self.x)
 			Bugg.x = RightBoundedShift(Bugg.x)
 
 	def UnboundedJump(self,jumper):
@@ -41,18 +41,18 @@ class Bugg():
 			Bugg.x = 1
 		else:
 			if jumper == 1:
-				Bugg.ShiftCall(Bugg.x)
+				self.ShiftCall(Bugg.x)
 				Bugg.x = Bugg.x<<1
 			elif jumper == 0:
-				Bugg.ShiftCall(Bugg.x)
+				self.ShiftCall(Bugg.x)
 				Bugg.x = Bugg.x>>1
 
 	def Bugging(self):
 		jumper = random.randint(0,1)
 		if Bugg.isWrapOn == False:
-			Bugg.BoundedJump(jumper)
+			self.BoundedJump(jumper)
 		if Bugg.isWrapOn == True:
-			Bugg.UnboundedJump(jumper)
+			self.UnboundedJump(jumper)
 			
 	def ChangeSpeed(self,r):
 		Bugg.timestep = 0.5/r
@@ -69,6 +69,7 @@ class Bugg():
 		self.ShiftCall(0)
 		while GPIO.input(s1) == False:
 			pass
+
 
 
 
