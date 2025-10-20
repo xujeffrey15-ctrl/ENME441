@@ -1,4 +1,5 @@
 import threading
+import time
 import RPi.GPIO as GPIO
 from Bug import Bugg
 
@@ -23,6 +24,7 @@ while True:
    print('running')
    time.sleep(0.5)
   
+
 
 
 
