@@ -17,32 +17,33 @@ def sensor1(v):
    while GPIO.input(v) == False:
       LTB.stop()
       
-def sensor2(n):
-   if GPIO.input(n) == True:
+def sensor2():
+   if GPIO.input() == True:
       LTB.ChangeSpeed(1)
       print(1)
-   if GPIO.input(n) == False:
+   if GPIO.input() == False:
       LTB.ChangeSpeed(10)
       print(3)
 
-def sensor3(g):
-   if GPIO.input(g) == True:
+def sensor3():
+   if GPIO.input() == True:
       LTB.ChangeWrap(True)
       print(2)
-   if GPIO.input(g) == False:
+   if GPIO.input() == False:
       LTB.ChangeWrap(False)
       print(4)
       
 GPIO.add_event_detect(s1, GPIO.FALLING, callback=sensor1, bouncetime=300)
-GPIO.add_event_detect(s2, GPIO.BOTH, callback=sensor2, bouncetime=300)
-GPIO.add_event_detect(s3, GPIO.BOTH, callback=sensor3, bouncetime=300)
 
 try:
    while True:
       LTB.Start()
+      sensor2()
+      sensor3()
 except KeyboardInterrupt:
    GPIO.cleanup()
   
+
 
 
 
