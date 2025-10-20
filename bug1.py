@@ -12,8 +12,7 @@ GPIO.setup(s3, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 LTB = Bugg()
 
 def sensor1(v):
-   print(v)
-   if GPIO.input(v) == True:
+   if GPIO.input(v):
       LTB.Start()
    else:
       LTB.stop()
@@ -24,6 +23,7 @@ while True:
    print('running')
    time.sleep(0.5)
   
+
 
 
 
