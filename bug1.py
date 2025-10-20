@@ -3,7 +3,9 @@ import time
 import RPi.GPIO as GPIO
 from Bug import Bugg
 
-(s1,s2,s3) = (17,27,22)
+s1 = 17
+s2 = 27
+s3 = 22
 GPIO.setmode(GPIO.BCM) 
 GPIO.setup(s1, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(s2, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
@@ -41,6 +43,7 @@ try:
 except KeyboardInterrupt:
    GPIO.cleanup()
   
+
 
 
 
