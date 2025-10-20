@@ -17,11 +17,12 @@ def sensor1(v):
    if GPIO.input(v) == False:
       LTB.stop()
 
-GPIO.add_event_detect(s1, GPIO.FALLING, callback=sensor1, bouncetime=100)
+GPIO.add_event_detect(s1, GPIO.BOTH, callback=sensor1, bouncetime=100)
 
 while True:
    LTB.Start()
   
+
 
 
 
