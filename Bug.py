@@ -11,7 +11,6 @@ class Bugg():
 		self.isWrapOn = isWrapOn
 		self.x = x
 		self.__Shifter = Shifter.shifter(23,25,24)
-		self.ThreadBug = threading.Thread(target = self.Bugging, daemon = True)
 
 	def ShiftCall(self,bytedata):
 		self.__Shifter.shiftByte(bytedata)
@@ -56,12 +55,14 @@ class Bugg():
 	def ChangeWrap(self,b):
 		self.isWrapOn = b
 
-	def Started(self):
-		self.ThreadBug.start()
+	def Start(self):
+		self.Bugging()
 
 	def stop(self):
-		self.ThreadBug.join()
 		self.ShiftCall(0)
+		while True:
+			pass
+
 
 
 
