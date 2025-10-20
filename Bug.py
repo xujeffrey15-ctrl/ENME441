@@ -2,6 +2,7 @@ import random
 import Shifter
 import time
 import threading
+import RPi.GPIO as GPIO
 
 LEDS = {"1":1,"2":2,"3":4,"4":8,"5":16,"6":32,"7":64,"8":128}
 (s1,s2,s3) = (17,27,22)
@@ -66,6 +67,7 @@ class Bugg():
 		self.ShiftCall(0)
 		while GPIO.input(s1) == False:
 			pass
+
 
 
 
