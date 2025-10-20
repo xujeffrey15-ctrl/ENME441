@@ -21,48 +21,44 @@ class Bugg():
 
 	def ShiftCall(self,bytedata):
 		self.__Shifter.shiftByte(bytedata)
-		time.sleep(self.timestep)
+		time.sleep(Bugg.timestep)
 
 	def BoundedJump(self,jumper):
 		RightBoundedShift = lambda rbx: max(rbx>>1,2)
 		LeftBoundedShift = lambda lbx: min(lbx<<1,64)
 
 		if jumper == 0:
-			self.ShiftCall(self.x)
-			self.x = LeftBoundedShift(self.x)
+			Bugg.ShiftCall(self.x)
+			Bugg.x = LeftBoundedShift(Bugg.x)
 		if jumper == 1:
-			self.ShiftCall(self.x)
-			self.x = RightBoundedShift(self.x)
+			Bugg.ShiftCall(self.x)
+			Bugg.x = RightBoundedShift(Bugg.x)
 
 	def UnboundedJump(self,jumper):
-		if self.x < 1:
-			self.x = 128
-		if self.x > 128:
-			self.x = 1
+		if Bugg.x < 1:
+			Bugg.x = 128
+		if Bugg.x > 128:
+			Bugg.x = 1
 		else:
 			if jumper == 1:
-				self.ShiftCall(self.x)
-				self.x = self.x<<1
+				Bugg.ShiftCall(Bugg.x)
+				Bugg.x = Bugg.x<<1
 			elif jumper == 0:
-				self.ShiftCall(self.x)
-				self.x = self.x>>1
+				Bugg.ShiftCall(Bugg.x)
+				Bugg.x = Bugg.x>>1
 
 	def Bugging(self):
 		jumper = random.randint(0,1)
-		print(self.isWrapOn)
-		print(self.timestep)
-		if self.isWrapOn == False:
-			self.BoundedJump(jumper)
-		if self.isWrapOn == True:
-			self.UnboundedJump(jumper)
+		if Bugg.isWrapOn == False:
+			Bugg.BoundedJump(jumper)
+		if Bugg.isWrapOn == True:
+			Bugg.UnboundedJump(jumper)
 			
-	@classmethod
 	def ChangeSpeed(self,r):
-		cls.timestep = 0.5/r
+		Bugg.timestep = 0.5/r
 
-	@classmethod
 	def ChangeWrap(self,b):
-		cls.isWrapOn = b
+		Bugg.isWrapOn = b
 		return self.isWrapOn
 
 	def Start(self):
@@ -73,6 +69,7 @@ class Bugg():
 		self.ShiftCall(0)
 		while GPIO.input(s1) == False:
 			pass
+
 
 
 
