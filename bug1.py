@@ -10,13 +10,11 @@ GPIO.setup(s3, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 
 LTB = Bugg()
 
-if GPIO.input(s1):
-  LTB.Started()
-else:
-  LTB.stop()
-
 while True:
-  pass
+   GPIO.add_event_detect(s1, GPIO.RISING, callback=Bugg.start(), bouncetime=1000)
+   GPIO.add_event_detect(s1, GPIO.FALLING, callback=Bugg.stop(), bouncetime=1000)
+  
+
 
 
 
