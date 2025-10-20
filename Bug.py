@@ -5,11 +5,9 @@ import threading
 import RPi.GPIO as GPIO
 
 LEDS = {"1":1,"2":2,"3":4,"4":8,"5":16,"6":32,"7":64,"8":128}
-(s1,s2,s3) = (17,27,22)
+s1 = 17
 GPIO.setmode(GPIO.BCM) 
 GPIO.setup(s1, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-GPIO.setup(s2, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-GPIO.setup(s3, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 
 class Bugg():
 	@classmethod
@@ -66,7 +64,9 @@ class Bugg():
 				
 	def stop(self):
 		self.ShiftCall(0)
-		pass
+		while GPIO.input(s1) == False:
+			pass
+
 
 
 
