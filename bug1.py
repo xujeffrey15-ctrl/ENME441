@@ -9,12 +9,12 @@ GPIO.setup(s2, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(s3, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 
 LTB = Bugg()
-GPIO.add_event_detect(s1, GPIO.RISING, callback=Bugg.Started, bouncetime=1000)
 GPIO.add_event_detect(s1, GPIO.FALLING, callback=Bugg.stop, bouncetime=1000)
 
 while True:
    Bugg.Bugging()
   
+
 
 
 
