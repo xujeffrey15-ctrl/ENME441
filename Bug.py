@@ -60,9 +60,9 @@ class Bugg():
 
 	def stop(self):
 		self.ShiftCall(0)
-		while True:
-			print('waiting')
-			time.sleep(1)
+		print('waiting')
+		time.sleep(1)
+
 
 
 
