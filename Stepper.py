@@ -79,6 +79,7 @@ class Stepper:
         elif delta <= -180:
             delta += 360
         self.rotate(delta)
+        time.sleep(0.5)
 
     # Set the motor zero point
     def zero(self):
@@ -126,5 +127,6 @@ if __name__ == '__main__':
         print('\nend')
 
    
+
 
 
