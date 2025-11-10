@@ -77,6 +77,7 @@ if __name__ == '__main__':
     # Zero the motors:
     m1.zero()
     m2.zero()
+    print("1")
 
     # Move as desired, with eacg step occuring as soon as the previous 
     # step ends:
@@ -100,6 +101,7 @@ if __name__ == '__main__':
     except:
 
         print('\nend')
+
 
 
 
