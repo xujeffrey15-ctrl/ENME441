@@ -28,7 +28,7 @@ cycle = [0b0001,
 # track position within m_seq:
 pos = 0
 
-delay = 1200/1e6  # delay between steps [us]
+delay = 12000/1e6  # delay between steps [us]
 # Make a full rotation of the output shaft:
 def loop(dir): # dir = rotation direction (1=cww, -1=cw)
     global pos
@@ -45,6 +45,7 @@ except Exception as e:
     print(e)
 
    
+
 
 
 
