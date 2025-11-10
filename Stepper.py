@@ -52,8 +52,13 @@ class Stepper:
 
     # Move to an absolute angle taking the shortest possible path:
     def goAngle(self, angle):
-         pass
-         # COMPLETE THIS METHOD FOR LAB 8
+        angle %= 360
+        delta = angle - self.angle
+        if delta > 180:
+            delta -= 360
+        elif delta <= -180:
+            delta += 360
+        self.rotate(delta)
 
     # Set the motor zero point
     def zero(self):
@@ -82,6 +87,7 @@ if __name__ == '__main__':
     except:
 
         print('\nend')
+
 
 
 
