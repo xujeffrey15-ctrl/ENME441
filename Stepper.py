@@ -72,30 +72,16 @@ if __name__ == '__main__':
 
     # Instantiate 2 Steppers:
     m1 = Stepper(s, lock)
-    m2 = Stepper(s, lock)
+    m1.zero()
+    m1.rotate(90)
 
-    # Zero the motors:
-    m1.rotate(-90)
-    m1.rotate(45)
-    m1.rotate(-90)
-    m1.rotate(45)
-
-    # Move as desired, with eacg step occuring as soon as the previous 
-    # step ends:
-    m1.rotate(-90)
-    time.sleep(0.5)
-    m1.rotate(45)
-    time.sleep(0.5)
-
- 
-    # While the motors are running in their separate processes, the main
-    # code can continue doing its thing: 
     try:
         while True:
             pass
     except:
 
         print('\nend')
+
 
 
 
