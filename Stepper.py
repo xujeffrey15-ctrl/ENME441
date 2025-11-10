@@ -74,6 +74,7 @@ if __name__ == '__main__':
     m1 = Stepper(s, lock)
     m1.zero()
     m1.rotate(90)
+    print('done')
 
     try:
         while True:
@@ -81,6 +82,7 @@ if __name__ == '__main__':
     except:
 
         print('\nend')
+
 
 
 
