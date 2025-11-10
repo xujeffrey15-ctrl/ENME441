@@ -1,6 +1,6 @@
 import time
 import multiprocessing
-from shifter import Shifter   # our custom Shifter class
+from Shifter import shifter   # our custom Shifter class
 
 class Stepper:
     """
@@ -89,7 +89,7 @@ class Stepper:
 
 if __name__ == '__main__':
 
-    s = Shifter(data=16,latch=20,clock=21)   # set up Shifter
+    s = shifter(data=16,latch=20,clock=21)   # set up Shifter
 
     # Use multiprocessing.Lock() to prevent motors from trying to 
     # execute multiple operations at the same time:
@@ -126,3 +126,4 @@ if __name__ == '__main__':
         print('\nend')
 
    
+
