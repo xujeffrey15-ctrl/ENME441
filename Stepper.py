@@ -1,12 +1,33 @@
 import time
 import multiprocessing
-from Shifter import shifter   # our custom Shifter class
+from shifter import Shifter   # our custom Shifter class
 
 class Stepper:
+    """
+    Supports operation of an arbitrary number of stepper motors using
+    one or more shift registers.
+  
+    A class attribute (shifter_outputs) keeps track of all
+    shift register output values for all motors.  In addition to
+    simplifying sequential control of multiple motors, this schema also
+    makes simultaneous operation of multiple motors possible.
+   
+    Motor instantiation sequence is inverted from the shift register outputs.
+    For example, in the case of 2 motors, the 2nd motor must be connected
+    with the first set of shift register outputs (Qa-Qd), and the 1st motor
+    with the second set of outputs (Qe-Qh). This is because the MSB of
+    the register is associated with Qa, and the LSB with Qh (look at the code
+    to see why this makes sense).
+ 
+    An instance attribute (shifter_bit_start) tracks the bit position
+    in the shift register where the 4 control bits for each motor
+    begin.
+    """
+
     # Class attributes:
     num_steppers = 0      # track number of Steppers instantiated
     shifter_outputs = 0   # track shift register outputs for all motors
-    seq = [0b00000001,0b00000011,0b00000010,0b00000110,0b00000100,0b00001100,0b00001000,0b00001001] # CCW sequence
+    seq = [0b0001,0b0011,0b0010,0b0110,0b0100,0b1100,0b1000,0b1001] # CCW sequence
     delay = 1200          # delay between motor steps [us]
     steps_per_degree = 4096/360    # 4096 steps/rev * 1/360 rev/deg
 
@@ -50,7 +71,6 @@ class Stepper:
         p = multiprocessing.Process(target=self.__rotate, args=(delta,))
         p.start()
 
-    # Move to an absolute angle taking the shortest possible path:
     def goAngle(self, angle):
         angle %= 360
         delta = angle - self.angle
@@ -69,7 +89,7 @@ class Stepper:
 
 if __name__ == '__main__':
 
-    s = shifter(16,21,20)   # set up Shifter
+    s = Shifter(data=16,latch=20,clock=21)   # set up Shifter
 
     # Use multiprocessing.Lock() to prevent motors from trying to 
     # execute multiple operations at the same time:
@@ -77,26 +97,32 @@ if __name__ == '__main__':
 
     # Instantiate 2 Steppers:
     m1 = Stepper(s, lock)
-    m1.zero()
-    m1.rotate(90)
-    m1.rotate(-90)
-    m1.rotate(30)
-    print('done')
+    m2 = Stepper(s, lock)
 
+    # Zero the motors:
+    m1.zero()
+    m2.zero()
+
+    # Move as desired, with eacg step occuring as soon as the previous 
+    # step ends:
+    m1.rotate(-90)
+    m1.rotate(45)
+    m1.rotate(-90)
+    m1.rotate(45)
+
+    # If separate multiprocessing.lock objects are used, the second motor
+    # will run in parallel with the first motor:
+    m2.rotate(180)
+    m2.rotate(-45)
+    m2.rotate(45)
+    m2.rotate(-90)
+ 
+    # While the motors are running in their separate processes, the main
+    # code can continue doing its thing: 
     try:
         while True:
             pass
     except:
-
         print('\nend')
 
-
-
-
-
-
-
-
-
-
-
+   
