@@ -115,23 +115,15 @@ if __name__ == '__main__':
     m1 = Stepper(s, lock)
     m2 = Stepper(s, lock)
 
-    # Zero the motors:
     m1.zero()
     m2.zero()
-
-    # Move as desired, with eacg step occuring as soon as the previous 
-    # step ends:
-    m1.rotate(-90)
-    m1.rotate(45)
-    m1.rotate(-90)
-    m1.rotate(45)
-
-    # If separate multiprocessing.lock objects are used, the second motor
-    # will run in parallel with the first motor:
-    m2.rotate(180)
-    m2.rotate(-45)
-    m2.rotate(45)
-    m2.rotate(-90)
+    m1.goAngle(90)
+    m1.goAngle(-45)
+    m2.goAngle(-90)
+    m2.goAngle(45)
+    m1.goAngle(-135)
+    m1.goAngle(135)
+    m1.goAngle(0
  
     # While the motors are running in their separate processes, the main
     # code can continue doing its thing: 
@@ -140,6 +132,7 @@ if __name__ == '__main__':
             pass
     except:
         print('\nend')
+
 
 
 
