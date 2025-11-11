@@ -8,6 +8,7 @@ class Stepper:
     seq = [0b0001,0b0011,0b0010,0b0110,0b0100,0b1100,0b1000,0b1001] # CCW sequence
     delay = 1200          # delay between motor steps [us]
     steps_per_degree = 4096/360    # 4096 steps/rev * 1/360 rev/deg
+    sharedval = 0
 
     def __init__(self, shifter, lock):
         self.s = shifter           # shift register
@@ -31,20 +32,19 @@ class Stepper:
         self.step_state %= 8      # ensure result stays in [0,7]
         Stepper.shifter_outputs &= Stepper.seq[self.step_state]<<self.shifter_bit_start
         Stepper.shifter_outputs |= 0b1111<<self.shifter_bit_start
+        Stepper.val |= Stepper.shifter_outputs
         self.angle += dir/Stepper.steps_per_degree
-        self.angle %= 360         # limit to [0,359.9+] range
-        print(Stepper.shifter_outputs)
+        self.angle %= 360 
         self.lock.release()
-        print(Stepper.shifter_outputs)
-
+        self.s.shiftByte(Stepper.shifter_outputs)
+        Stepper.val &= 0b00000000
+        
     # Move relative angle from current position:
     def __rotate(self, delta):
         numSteps = int(Stepper.steps_per_degree * abs(delta))
         for s in range(numSteps):      # take the steps
             self.__step(delta)
-            self.s.shiftByte(Stepper.shifter_outputs)
             time.sleep(Stepper.delay/1e6)
-        
 
     # Move relative angle from current position:
     def rotate(self, delta):
@@ -101,6 +101,7 @@ if __name__ == '__main__':
             pass
     except:
         print('\nend')
+
 
 
 
