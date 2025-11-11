@@ -71,6 +71,7 @@ class Stepper:
         for s in range(numSteps):      # take the steps
             self.__step(dir)
             self.s.shiftByte(Stepper.shifter_outputs)
+            print(Stepper.shifter_outputs)
             time.sleep(Stepper.delay/1e6)
 
     # Move relative angle from current position:
@@ -129,5 +130,6 @@ if __name__ == '__main__':
     except:
 
         print('\nend')
+
 
 
