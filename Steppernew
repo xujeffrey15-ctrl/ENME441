@@ -8,7 +8,7 @@
 
 import time
 import multiprocessing
-from shifter import Shifter   # custom class for controlling 74HC595 shift register
+from Shifter import shifter   # custom class for controlling 74HC595 shift register
 
 
 class Stepper:
@@ -98,7 +98,7 @@ class Stepper:
 
 # Example use:
 if __name__ == '__main__':
-    s = Shifter(data=16, latch=20, clock=21)
+    s = shifter(16, 21, 20)
     lock = multiprocessing.Lock()
 
     # instantiate 2 stepper motors
