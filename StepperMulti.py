@@ -8,7 +8,7 @@
 
 import time
 import multiprocessing
-from Shifter import shifter   # our custom Shifter class
+from shifter import Shifter   # our custom Shifter class
 
 class Stepper:
     """
@@ -36,7 +36,7 @@ class Stepper:
     num_steppers = 0      # track number of Steppers instantiated
     shifter_outputs = 0   # track shift register outputs for all motors
     seq = [0b0001,0b0011,0b0010,0b0110,0b0100,0b1100,0b1000,0b1001] # CCW sequence
-    delay = 12000          # delay between motor steps [us]
+    delay = 1200          # delay between motor steps [us]
     steps_per_degree = 4096/360    # 4096 steps/rev * 1/360 rev/deg
 
     def __init__(self, shifter, lock):
@@ -54,25 +54,24 @@ class Stepper:
         else: return(int(abs(x)/x))
 
     # Move a single +/-1 step in the motor sequence:
-    def __step(self,dir):
-        self.lock.acquire()
+    def __step(self, dir):
         self.step_state += dir    # increment/decrement the step
         self.step_state %= 8      # ensure result stays in [0,7]
         Stepper.shifter_outputs |= 0b1111<<self.shifter_bit_start
         Stepper.shifter_outputs &= Stepper.seq[self.step_state]<<self.shifter_bit_start
+        self.s.shiftByte(Stepper.shifter_outputs)
         self.angle += dir/Stepper.steps_per_degree
         self.angle %= 360         # limit to [0,359.9+] range
-        self.lock.release()
 
     # Move relative angle from current position:
     def __rotate(self, delta):
-        numSteps = int(Stepper.steps_per_degree * abs(delta))
-        dir = self.__sgn(delta)
+        self.lock.acquire()                 # wait until the lock is available
+        numSteps = int(Stepper.steps_per_degree * abs(delta))    # find the right # of steps
+        dir = self.__sgn(delta)        # find the direction (+/-1)
         for s in range(numSteps):      # take the steps
             self.__step(dir)
-            self.s.shiftByte(Stepper.shifter_outputs)
-            print(Stepper.shifter_outputs)
             time.sleep(Stepper.delay/1e6)
+        self.lock.release()
 
     # Move relative angle from current position:
     def rotate(self, delta):
@@ -94,7 +93,7 @@ class Stepper:
 
 if __name__ == '__main__':
 
-    s = shifter(16,21,20)   # set up Shifter
+    s = Shifter(data=16,latch=20,clock=21)   # set up Shifter
 
     # Use multiprocessing.Lock() to prevent motors from trying to 
     # execute multiple operations at the same time:
@@ -128,8 +127,8 @@ if __name__ == '__main__':
         while True:
             pass
     except:
-
         print('\nend')
+
 
 
 
