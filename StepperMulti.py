@@ -55,9 +55,8 @@ class Stepper:
 
     # Move a single +/-1 step in the motor sequence:
     def __step(self, dir):
-        with self.lock:
-            self.step_state += dir    # increment/decrement the step
-            self.step_state %= 8      # ensure result stays in [0,7]
+        self.step_state += dir    # increment/decrement the step
+        self.step_state %= 8      # ensure result stays in [0,7]
             
         Stepper.shifter_outputs |= 0b1111<<self.shifter_bit_start
         Stepper.shifter_outputs &= Stepper.seq[self.step_state]<<self.shifter_bit_start
@@ -129,6 +128,7 @@ if __name__ == '__main__':
             pass
     except:
         print('\nend')
+
 
 
 
