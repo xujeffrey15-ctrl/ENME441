@@ -8,7 +8,7 @@
 
 import time
 import multiprocessing
-from shifter import Shifter   # our custom Shifter class
+from Shifter import shifter   # our custom Shifter class
 
 class Stepper:
     """
@@ -54,24 +54,24 @@ class Stepper:
         else: return(int(abs(x)/x))
 
     # Move a single +/-1 step in the motor sequence:
-    def __step(self, dir):
+    def __step(self,dir):
+        self.lock.acquire()
         self.step_state += dir    # increment/decrement the step
         self.step_state %= 8      # ensure result stays in [0,7]
         Stepper.shifter_outputs |= 0b1111<<self.shifter_bit_start
         Stepper.shifter_outputs &= Stepper.seq[self.step_state]<<self.shifter_bit_start
-        self.s.shiftByte(Stepper.shifter_outputs)
         self.angle += dir/Stepper.steps_per_degree
         self.angle %= 360         # limit to [0,359.9+] range
+        self.lock.release()
 
     # Move relative angle from current position:
     def __rotate(self, delta):
-        self.lock.acquire()                 # wait until the lock is available
-        numSteps = int(Stepper.steps_per_degree * abs(delta))    # find the right # of steps
-        dir = self.__sgn(delta)        # find the direction (+/-1)
+        numSteps = int(Stepper.steps_per_degree * abs(delta))
+        dir = self.__sgn(delta)
         for s in range(numSteps):      # take the steps
             self.__step(dir)
+            self.s.shiftByte(Stepper.shifter_outputs)
             time.sleep(Stepper.delay/1e6)
-        self.lock.release()
 
     # Move relative angle from current position:
     def rotate(self, delta):
@@ -93,7 +93,7 @@ class Stepper:
 
 if __name__ == '__main__':
 
-    s = Shifter(data=16,latch=20,clock=21)   # set up Shifter
+    s = shifter(16,20,21)   # set up Shifter
 
     # Use multiprocessing.Lock() to prevent motors from trying to 
     # execute multiple operations at the same time:
@@ -127,4 +127,5 @@ if __name__ == '__main__':
         while True:
             pass
     except:
+
         print('\nend')
