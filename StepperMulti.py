@@ -55,16 +55,16 @@ class Stepper:
 
     # Move a single +/-1 step in the motor sequence:
     def __step(self, dir):
+        self.lock.aquire()
         self.step_state += dir    # increment/decrement the step
         self.step_state %= 8      # ensure result stays in [0,7]
-            
+        self.angle += dir/Stepper.steps_per_degree
+        self.angle %= 360
+        self.lock.release()
+        
         Stepper.shifter_outputs |= 0b1111<<self.shifter_bit_start
         Stepper.shifter_outputs &= Stepper.seq[self.step_state]<<self.shifter_bit_start
-            
         self.s.shiftByte(Stepper.shifter_outputs)
-        self.angle += dir/Stepper.steps_per_degree
-        self.angle %= 360         # limit to [0,359.9+] range
-
     # Move relative angle from current position:
     def __rotate(self, delta):
         numSteps = int(Stepper.steps_per_degree * abs(delta))    # find the right # of steps
@@ -76,7 +76,7 @@ class Stepper:
     # Move relative angle from current position:
     def rotate(self, delta):
         time.sleep(0.1)
-        p = multiprocessing.Process(target=self.__rotate, args=(delta,))
+        p = multiprocessing.Process(target=self.__rotate, args=(delta))
         p.start()
 
     # Move to an absolute angle taking the shortest possible path:
@@ -128,6 +128,7 @@ if __name__ == '__main__':
             pass
     except:
         print('\nend')
+
 
 
 
