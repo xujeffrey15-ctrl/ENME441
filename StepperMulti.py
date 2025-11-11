@@ -32,11 +32,11 @@ class Stepper:
         self.step_state %= 8      # ensure result stays in [0,7]
         Stepper.shifter_outputs &= Stepper.seq[self.step_state]<<self.shifter_bit_start
         Stepper.shifter_outputs |= 0b1111<<self.shifter_bit_start
-        Stepper.val |= Stepper.shifter_outputs
+        Stepper.sharedval |= Stepper.shifter_outputs
         self.angle += dir/Stepper.steps_per_degree
         self.angle %= 360 
         self.lock.release()
-        self.s.shiftByte(Stepper.shifter_outputs)
+        self.s.shiftByte(Stepper.sharedval)
         Stepper.val &= 0b00000000
         
     # Move relative angle from current position:
@@ -101,6 +101,7 @@ if __name__ == '__main__':
             pass
     except:
         print('\nend')
+
 
 
 
