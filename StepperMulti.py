@@ -76,7 +76,7 @@ class Stepper:
     # Move relative angle from current position:
     def rotate(self, delta):
         time.sleep(0.1)
-        p = multiprocessing.Process(target=self.__rotate, args=(delta))
+        p = multiprocessing.Process(target=self.__rotate, args=(delta,))
         p.start()
 
     # Move to an absolute angle taking the shortest possible path:
@@ -128,6 +128,7 @@ if __name__ == '__main__':
             pass
     except:
         print('\nend')
+
 
 
 
