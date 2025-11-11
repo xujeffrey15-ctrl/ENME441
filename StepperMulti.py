@@ -1,38 +1,8 @@
-# stepper_class_shiftregister_multiprocessing.py
-#
-# Stepper class
-#
-# Because only one motor action is allowed at a time, multithreading could be
-# used instead of multiprocessing. However, the GIL makes the motor process run 
-# too slowly on the Pi Zero, so multiprocessing is needed.
-
 import time
 import multiprocessing
 from Shifter import shifter   # our custom Shifter class
 
 class Stepper:
-    """
-    Supports operation of an arbitrary number of stepper motors using
-    one or more shift registers.
-  
-    A class attribute (shifter_outputs) keeps track of all
-    shift register output values for all motors.  In addition to
-    simplifying sequential control of multiple motors, this schema also
-    makes simultaneous operation of multiple motors possible.
-   
-    Motor instantiation sequence is inverted from the shift register outputs.
-    For example, in the case of 2 motors, the 2nd motor must be connected
-    with the first set of shift register outputs (Qa-Qd), and the 1st motor
-    with the second set of outputs (Qe-Qh). This is because the MSB of
-    the register is associated with Qa, and the LSB with Qh (look at the code
-    to see why this makes sense).
- 
-    An instance attribute (shifter_bit_start) tracks the bit position
-    in the shift register where the 4 control bits for each motor
-    begin.
-    """
-
-    # Class attributes:
     num_steppers = 0      # track number of Steppers instantiated
     shifter_outputs = 0   # track shift register outputs for all motors
     seq = [0b0001,0b0011,0b0010,0b0110,0b0100,0b1100,0b1000,0b1001] # CCW sequence
@@ -55,23 +25,24 @@ class Stepper:
 
     # Move a single +/-1 step in the motor sequence:
     def __step(self, dir):
+        self.lock.acquire()    
         self.step_state += dir    # increment/decrement the step
         self.step_state %= 8      # ensure result stays in [0,7]
         Stepper.shifter_outputs |= 0b1111<<self.shifter_bit_start
         Stepper.shifter_outputs &= Stepper.seq[self.step_state]<<self.shifter_bit_start
-        self.s.shiftByte(Stepper.shifter_outputs)
         self.angle += dir/Stepper.steps_per_degree
         self.angle %= 360         # limit to [0,359.9+] range
+        self.lock.release()
 
     # Move relative angle from current position:
     def __rotate(self, delta):
-        self.lock.acquire()                 # wait until the lock is available
         numSteps = int(Stepper.steps_per_degree * abs(delta))    # find the right # of steps
         dir = self.__sgn(delta)        # find the direction (+/-1)
         for s in range(numSteps):      # take the steps
             self.__step(dir)
+            self.s.shiftByte(Stepper.shifter_outputs)
             time.sleep(Stepper.delay/1e6)
-        self.lock.release()
+        
 
     # Move relative angle from current position:
     def rotate(self, delta):
@@ -128,6 +99,7 @@ if __name__ == '__main__':
             pass
     except:
         print('\nend')
+
 
 
 
