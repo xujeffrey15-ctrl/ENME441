@@ -70,6 +70,7 @@ class Stepper:
         # Send to shift register
         self.s.shiftByte(Stepper.shifter_outputs)
         # Move relative angle from current position:
+    
     def __rotate(self, delta):
         numSteps = int(Stepper.steps_per_degree * abs(delta))    # find the right # of steps
         dir = self.__sgn(delta)        # find the direction (+/-1)
@@ -77,14 +78,23 @@ class Stepper:
             self.__step(dir)
             time.sleep(Stepper.delay/1e6)
 
-    # Move relative angle from current position:
-    def rotate(self, delta):
-        self.__rotate(delta)
-
     # Move to an absolute angle taking the shortest possible path:
     def goAngle(self, angle):
-         pass
-         # COMPLETE THIS METHOD FOR LAB 8
+        # Ensure target angle stays within 0–360°
+        angle %= 360
+    
+        # Find difference between target and current position
+        delta = angle - self.angle
+    
+        # Choose the shortest direction (±180°)
+        if delta > 180:
+            delta -= 360
+        elif delta < -180:
+            delta += 360
+    
+        # Rotate by the computed delta
+        p = multiprocessing.Process(target=self.__rotate, args=(diff,))
+        p.start()
 
     # Set the motor zero point
     def zero(self):
@@ -130,6 +140,7 @@ if __name__ == '__main__':
             pass
     except:
         print('\nend')
+
 
 
 
