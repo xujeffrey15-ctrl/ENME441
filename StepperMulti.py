@@ -37,7 +37,7 @@ class Stepper:
         self.angle %= 360 
         self.lock.release()
         self.s.shiftByte(Stepper.sharedval)
-        Stepper.val &= 0b00000000
+        Stepper.sharedval &= 0b00000000
         
     # Move relative angle from current position:
     def __rotate(self, delta):
@@ -101,6 +101,7 @@ if __name__ == '__main__':
             pass
     except:
         print('\nend')
+
 
 
 
