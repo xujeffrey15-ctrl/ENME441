@@ -93,7 +93,7 @@ class Stepper:
             delta += 360
     
         # Rotate by the computed delta
-        p = multiprocessing.Process(target=self.__rotate, args=(diff,))
+        p = multiprocessing.Process(target=self.__rotate, args=(delta,))
         p.start()
 
     # Set the motor zero point
@@ -132,6 +132,7 @@ if __name__ == '__main__':
             pass
     except:
         print('\nend')
+
 
 
 
