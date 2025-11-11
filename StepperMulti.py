@@ -33,7 +33,9 @@ class Stepper:
         Stepper.shifter_outputs |= 0b1111<<self.shifter_bit_start
         self.angle += dir/Stepper.steps_per_degree
         self.angle %= 360         # limit to [0,359.9+] range
+        print(Stepper.shifter_putputs)
         self.lock.release()
+        print(Stepper.shifter_putputs)
 
     # Move relative angle from current position:
     def __rotate(self, delta):
@@ -99,6 +101,7 @@ if __name__ == '__main__':
             pass
     except:
         print('\nend')
+
 
 
 
