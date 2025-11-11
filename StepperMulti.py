@@ -26,7 +26,6 @@ class Stepper:
 
     # Move a single +/-1 step in the motor sequence:
     def __step(self,delta):
-        self.lock.acquire()
         dir = self.__sgn(delta)
         self.step_state += dir    # increment/decrement the step
         self.step_state %= 8      # ensure result stays in [0,7]
@@ -42,6 +41,7 @@ class Stepper:
         
     # Move relative angle from current position:
     def __rotate(self, delta):
+        self.lock.acquire()
         numSteps = int(Stepper.steps_per_degree * abs(delta))
         for s in range(numSteps):      # take the steps
             self.__step(delta)
@@ -102,6 +102,7 @@ if __name__ == '__main__':
             pass
     except:
         print('\nend')
+
 
 
 
