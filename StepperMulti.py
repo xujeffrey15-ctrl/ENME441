@@ -56,15 +56,20 @@ class Stepper:
     # Move a single +/-1 step in the motor sequence:
     def __step(self, dir):
         self.lock.acquire()
-        self.step_state += dir    # increment/decrement the step
-        self.step_state %= 8      # ensure result stays in [0,7]
-        Stepper.shifter_outputs |= 0b1111<<self.shifter_bit_start
-        Stepper.shifter_outputs &= Stepper.seq[self.step_state]<<self.shifter_bit_start
-        self.angle += dir/Stepper.steps_per_degree
-        self.angle %= 360
+        self.step_state = (self.step_state + dir) % 8
+    
+        # Clear and update just this motor's bits
+        Stepper.shifter_outputs &= ~(0b1111 << self.shifter_bit_start)
+        Stepper.shifter_outputs |= Stepper.seq[self.step_state] << self.shifter_bit_start
+    
+        # Update angle (wrapped to 0–360)
+        self.angle = (self.angle + dir / Stepper.steps_per_degree) % 360
+    
         self.lock.release()
+
+        # Send to shift register
         self.s.shiftByte(Stepper.shifter_outputs)
-    # Move relative angle from current position:
+        # Move relative angle from current position:
     def __rotate(self, delta):
         numSteps = int(Stepper.steps_per_degree * abs(delta))    # find the right # of steps
         dir = self.__sgn(delta)        # find the direction (+/-1)
@@ -127,6 +132,7 @@ if __name__ == '__main__':
             pass
     except:
         print('\nend')
+
 
 
 
