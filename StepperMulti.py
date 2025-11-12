@@ -95,11 +95,11 @@ if __name__ == '__main__':
     m1.goAngle(90)
     m1.goAngle(0)
 
+    m2.goAngle(90)
     m2.goAngle(-90)
-    m2.goAngle(45)
-    m2.goAngle(135)
-    m2.goAngle(-135)
-    m2.goAngle(0)
+    m2.goAngle(90)
+    m2.goAngle(-90)
+    m2.goAngle(90)
     m2.goAngle(0)
 
     # Keep main program running to let motors finish
@@ -108,6 +108,7 @@ if __name__ == '__main__':
             time.sleep(0.1)
     except KeyboardInterrupt:
         print("\nExiting")
+
 
 
 
