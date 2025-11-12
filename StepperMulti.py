@@ -31,8 +31,7 @@ class Stepper:
             myArray[self.index] |= (Stepper.seq[self.step_state] << self.shifter_bit_start)
             final |= myArray[self.index]
             self.angle = (self.angle + direction / Stepper.steps_per_degree) % 360
-
-        self.s.shiftByte(final)
+            self.s.shiftByte(final)
         time.sleep(Stepper.delay / 1e6)
 
     def _rotate(self, delta):
@@ -71,6 +70,7 @@ if __name__ == '__main__':
     m1.goAngle(-135)
     m1.goAngle(135)
     m1.goAngle(0)
+
 
 
 
