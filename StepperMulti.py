@@ -52,7 +52,6 @@ class Stepper:
     def rotate(self, delta):
         p = multiprocessing.Process(target=self._rotate, args=(delta,))
         p.start()
-        return p
 
     def zero(self):
         self.angle = 0
@@ -87,6 +86,7 @@ if __name__ == '__main__':
     # Wait for both to finish
 
     print("\nBoth motors finished!")
+
 
 
 
