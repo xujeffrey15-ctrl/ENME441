@@ -3,7 +3,7 @@ import multiprocessing
 from Shifter import shifter   # our custom Shifter class
 
 class Stepper:
-    myValue = multiprocessing.Value('i',0b00000000)
+    myValue = multiprocessing.Value('i',0)
     num_steppers = 0      # track number of Steppers instantiated
     shifter_outputs = 0   # track shift register outputs for all motors
     seq = [0b0001,0b0011,0b0010,0b0110,0b0100,0b1100,0b1000,0b1001] # CCW sequence
@@ -27,6 +27,7 @@ class Stepper:
     # Move a single +/-1 step in the motor sequence:
     def __step(self, dir):
         with self.lock:
+            self.myValue.value = 0
             self.step_state += dir    # increment/decrement the step
             self.step_state %= 8      # ensure result stays in [0,7]
             Stepper.shifter_outputs |= 0b1111<<self.shifter_bit_start
@@ -45,11 +46,6 @@ class Stepper:
             self.__step(dir)
             time.sleep(Stepper.delay/1e6)
             self.s.shiftByte(self.myValue.value)
-            print(self.myValue.value)
-            time.sleep(0.5)
-            self.myValue.value = 0b00000000
-            print(self.myValue.value)
-            time.sleep(0.5)
 
     def rotate(self, delta):
         time.sleep(0.1)
@@ -87,6 +83,7 @@ if __name__ == '__main__':
             pass
     except:
         print('\nend')
+
 
 
 
