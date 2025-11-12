@@ -63,16 +63,13 @@ if __name__ == '__main__':
     m1 = Stepper(s, lock, 0)
     m2 = Stepper(s, lock, 1)
 
-    # Start both motors at once
-    p1 = m1.rotate(90)
-    p2 = m2.rotate(-90)
-
-    # Wait for both to finish
-    p1.join()
-    p2.join()
-
-    print("\nBoth motors finished!")
-
+    m1.zero()
+    m2.zero()
+    m1.goAngle(90)
+    m1.goAngle(-45)
+    m1.goAngle(-135)
+    m1.goAngle(135)
+    m1.goAngle(0)
 
 
 
