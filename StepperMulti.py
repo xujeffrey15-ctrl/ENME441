@@ -50,6 +50,10 @@ class Stepper:
         for _ in range(steps):
             self._step(direction)
 
+    def rotate(self, delta):
+        p = multiprocessing.Process(target=self._rotate, args=(delta,))
+        p.start()
+
     def zero(self):
         self.angle = 0
 
@@ -59,10 +63,7 @@ class Stepper:
             pass
         elif abs(diff) > 180:
             angle = -1*(360-(angle-self.angle))
-        p = multiprocessing.Process(target=self._rotate, args=(angle,))
-        p.start()
-        p.join()
-
+        q.put(angle)
 
 if __name__ == '__main__':
     s = shifter(16, 21, 20)
@@ -80,6 +81,7 @@ if __name__ == '__main__':
     m1.goAngle(-135)
     m1.goAngle(135)
     m1.goAngle(0)
+
 
 
 
