@@ -51,6 +51,7 @@ class Stepper:
             self._step(direction)
 
     def rotate(self, delta):
+        delta = self.q.get()
         p = multiprocessing.Process(target=self._rotate, args=(delta,))
         p.start()
 
@@ -81,6 +82,7 @@ if __name__ == '__main__':
     m1.goAngle(-135)
     m1.goAngle(135)
     m1.goAngle(0)
+
 
 
 
