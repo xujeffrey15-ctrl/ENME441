@@ -27,7 +27,7 @@ class Stepper:
             self.step_state = (self.step_state + dir) % 8
         myArray[self.index] &= ~(0b1111 << self.shifter_bit_start)
         myArray[self.index] |= (Stepper.seq[self.step_state] << self.shifter_bit_start)
-        final = final |= myArray[self.index]
+        final |= myArray[self.index]
         self.s.shiftByte(final)
         self.angle = (self.angle + dir / Stepper.steps_per_degree) % 360
         time.sleep(Stepper.delay / 1e6)
@@ -61,6 +61,7 @@ if __name__ == '__main__':
             pass
     except KeyboardInterrupt:
         print("\nend")
+
 
 
 
