@@ -42,6 +42,8 @@ class Stepper:
         for s in range(numSteps):      # take the steps
             self.__step(dir)
             time.sleep(Stepper.delay/1e6)
+            print(bin(Stepper.myValue.value))
+            time.sleep(0.5)
             self.s.shiftByte(Stepper.myValue.value)
             Stepper.myValue.value = 0
 
@@ -80,6 +82,7 @@ if __name__ == '__main__':
             pass
     except:
         print('\nend')
+
 
 
 
