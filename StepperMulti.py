@@ -74,8 +74,7 @@ if __name__ == '__main__':
     m1.zero()
     m2.zero()
     m1.rotate(-90)
-    m1.rotate(-45)
-    m1.rotate(45)
+    m2.rotate(45)
     # While the motors are running in their separate processes, the main
     # code can continue doing its thing: 
     try:
@@ -83,6 +82,7 @@ if __name__ == '__main__':
             pass
     except:
         print('\nend')
+
 
 
 
