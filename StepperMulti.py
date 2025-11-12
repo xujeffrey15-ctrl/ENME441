@@ -33,7 +33,7 @@ class Stepper:
         Stepper.shifter_outputs &= Stepper.seq[self.step_state]<<self.shifter_bit_start
         self.angle += dir/Stepper.steps_per_degree
         self.angle %= 360
-        Stepper.myValue.value |= Stepper.shifter_outputs
+        Stepper.myValue.value &= Stepper.shifter_outputs
         self.lock.release()
         print(bin(Stepper.myValue.value))
         time.sleep(1)
@@ -83,6 +83,7 @@ if __name__ == '__main__':
             pass
     except:
         print('\nend')
+
 
 
 
