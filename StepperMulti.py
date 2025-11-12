@@ -60,10 +60,10 @@ class Stepper:
     def goAngle(self, angle):
         diff = angle - self.angle
         if abs(diff) <= 180:
-            rotate(angle)
+            self.rotate(angle)
         elif abs(diff) > 180:
             angle = -1*(360-(angle-self.angle))
-            rotate(angle)
+            self.rotate(angle)
 
 if __name__ == '__main__':
     s = shifter(16, 21, 20)
@@ -89,6 +89,7 @@ if __name__ == '__main__':
     p2.join()
 
     print("\nBoth motors finished!")
+
 
 
 
