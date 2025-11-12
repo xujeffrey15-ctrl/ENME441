@@ -34,6 +34,8 @@ class Stepper:
             Stepper.myValue.value |= Stepper.shifter_outputs
             self.angle += dir/Stepper.steps_per_degree
             self.angle %= 360
+            print(bin(self.myValue.value))
+            time.sleep(0.5)
 
     # Move relative angle from current position:
     def __rotate(self, delta):
@@ -80,6 +82,7 @@ if __name__ == '__main__':
             pass
     except:
         print('\nend')
+
 
 
 
