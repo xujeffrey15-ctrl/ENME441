@@ -22,16 +22,13 @@ class Stepper:
         return 0 if x == 0 else int(abs(x)/x)
 
     def _step(self, dir):
-        with self.lock:
-            self.step_state = (self.step_state + dir) % 8
+        self.step_state = (self.step_state + dir) % 8
             # clear the old 4 bits
-            myArray[self.index] &= ~(0b1111 << self.shifter_bit_start)
+        myArray[self.index] &= ~(0b1111 << self.shifter_bit_start)
             # set the new bits
-            myArray[self.index] |= (Stepper.seq[self.step_state] << self.shifter_bit_start)
-
-            # send to shift register
-            self.s.shiftByte(myArray[self.index])
-            self.angle = (self.angle + dir / Stepper.steps_per_degree) % 360
+        myArray[self.index] |= (Stepper.seq[self.step_state] << self.shifter_bit_start)
+        self.s.shiftByte(myArray[self.index])
+        self.angle = (self.angle + dir / Stepper.steps_per_degree) % 360
         time.sleep(Stepper.delay / 1e6)
 
     def _rotate(self, delta):
@@ -63,6 +60,7 @@ if __name__ == '__main__':
             pass
     except KeyboardInterrupt:
         print("\nend")
+
 
 
 
