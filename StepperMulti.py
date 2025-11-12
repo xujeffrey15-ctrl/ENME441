@@ -1,89 +1,70 @@
 import time
 import multiprocessing
-from multiprocessing.managers import SharedMemoryManager
-from Shifter import shifter   # our custom Shifter class
-myArray = multiprocessing.Array('f',2)
-myArray[0] = bin(0)
-myArray[1] = bin(0)
+from Shifter import shifter  # your custom module
+
+# Shared array for two steppers (integers)
+myArray = multiprocessing.Array('i', 2)
 
 class Stepper:
-    num_steppers = 0      # track number of Steppers instantiated
-    shifter_outputs = 0   # track shift register outputs for all motors
-    seq = [0b0001,0b0011,0b0010,0b0110,0b0100,0b1100,0b1000,0b1001] # CCW sequence
-    delay = 12000          # delay between motor steps [us]
-    steps_per_degree = 4096/360    # 4096 steps/rev * 1/360 rev/deg
+    seq = [0b0001, 0b0011, 0b0010, 0b0110, 0b0100, 0b1100, 0b1000, 0b1001]
+    delay = 12000
+    steps_per_degree = 4096 / 360
 
-    def __init__(self, shifter, lock):
-        self.s = shifter           # shift register
-        self.angle = 0             # current output shaft angle
-        self.step_state = 0        # track position in sequence
-        self.shifter_bit_start = 4*Stepper.num_steppers  # starting bit position
-        self.lock = lock           # multiprocessing lock
+    def __init__(self, shifter, lock, index):
+        self.s = shifter
+        self.lock = lock
+        self.index = index
+        self.angle = 0
+        self.step_state = 0
+        self.shifter_bit_start = 4 * index
 
-        Stepper.num_steppers += 1   # increment the instance count
+    def _sgn(self, x):
+        return 0 if x == 0 else int(abs(x)/x)
 
-    # Signum function:
-    def __sgn(self, x):
-        if x == 0: return(0)
-        else: return(int(abs(x)/x))
-
-    # Move a single +/-1 step in the motor sequence:
-    def __step(self, dir):
+    def _step(self, direction):
         with self.lock:
-            self.step_state += dir    # increment/decrement the step
-            self.step_state %= 8      # ensure result stays in [0,7]
-            myArray[Stepper.num_steppers-1] |= 0b1111<<self.shifter_bit_start
-            myArray[Stepper.num_steppers-1] &= Stepper.seq[self.step_state]<<self.shifter_bit_start
-            self.s.shiftByte(myArray[Stepper.num_steppers-1])
-            self.angle += dir/Stepper.steps_per_degree
-            self.angle %= 360
-            print(myArray[Stepper.num_steppers-1])
-            time.sleep(1)
-            myArray[Stepper.num_steppers-1] = 0b0000<<self.shifter_bit_start
+            self.step_state = (self.step_state + direction) % 8
+            # clear the old 4 bits
+            myArray[self.index] &= ~(0b1111 << self.shifter_bit_start)
+            # set the new bits
+            myArray[self.index] |= (Stepper.seq[self.step_state] << self.shifter_bit_start)
 
-    # Move relative angle from current position:
-    def __rotate(self, delta):
-        numSteps = int(Stepper.steps_per_degree * abs(delta))    # find the right # of steps
-        dir = self.__sgn(delta)        # find the direction (+/-1)
-        for s in range(numSteps):      # take the steps
-            self.__step(dir)
-            time.sleep(Stepper.delay/1e6)
+            # send to shift register
+            self.s.shiftByte(myArray[self.index])
+
+            self.angle = (self.angle + direction / Stepper.steps_per_degree) % 360
+        time.sleep(Stepper.delay / 1e6)
+
+    def _rotate(self, delta):
+        steps = int(Stepper.steps_per_degree * abs(delta))
+        direction = self._sgn(delta)
+        for _ in range(steps):
+            self._step(direction)
 
     def rotate(self, delta):
-        time.sleep(0.1)
-        p = multiprocessing.Process(target=self.__rotate, args=(delta,))
+        p = multiprocessing.Process(target=self._rotate, args=(delta,))
         p.start()
 
-    # Set the motor zero point
     def zero(self):
         self.angle = 0
 
 
-# Example use:
-
 if __name__ == '__main__':
-
-    s = shifter(16,21,20)   # set up Shifter
-
-    # Use multiprocessing.Lock() to prevent motors from trying to 
-    # execute multiple operations at the same time:
+    s = shifter(16, 21, 20)
     lock = multiprocessing.Lock()
 
-    # Instantiate 2 Steppers:
-    m1 = Stepper(s, lock)
-    m2 = Stepper(s, lock)
+    m1 = Stepper(s, lock, 0)
+    m2 = Stepper(s, lock, 1)
 
-    m1.zero()
-    m2.zero()
     m1.rotate(-90)
     m2.rotate(90)
-    # While the motors are running in their separate processes, the main
-    # code can continue doing its thing: 
+
     try:
         while True:
             pass
-    except:
-        print('\nend')
+    except KeyboardInterrupt:
+        print("\nend")
+
 
 
 
