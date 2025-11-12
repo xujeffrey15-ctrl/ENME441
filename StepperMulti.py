@@ -2,9 +2,9 @@ import time
 import multiprocessing
 from multiprocessing.managers import SharedMemoryManager
 from Shifter import shifter   # our custom Shifter class
+myValue = multiprocessing.Value('i',0b00000000)
 
 class Stepper:
-    myValue = multiprocessing.Value('i',0b00000000)
     num_steppers = 0      # track number of Steppers instantiated
     shifter_outputs = 0   # track shift register outputs for all motors
     seq = [0b0001,0b0011,0b0010,0b0110,0b0100,0b1100,0b1000,0b1001] # CCW sequence
@@ -29,14 +29,11 @@ class Stepper:
     def __step(self, dir):
         self.step_state += dir    # increment/decrement the step
         self.step_state %= 8      # ensure result stays in [0,7]
-        Stepper.shifter_outputs |= 0b1111<<self.shifter_bit_start
-        Stepper.shifter_outputs &= Stepper.seq[self.step_state]<<self.shifter_bit_start
+        with self.lock:
+            myValue.value = 0b1111<<self.shifter_bit_start
+            myValue.value &= Stepper.seq[self.step_state]<<self.shifter_bit_start
         self.angle += dir/Stepper.steps_per_degree
         self.angle %= 360
-        
-        with self.lock:
-            Stepper.myValue.value |= Stepper.shifter_outputs
-        
         time.sleep(1)
         print(bin(Stepper.myValue.value))
 
@@ -85,6 +82,7 @@ if __name__ == '__main__':
             pass
     except:
         print('\nend')
+
 
 
 
