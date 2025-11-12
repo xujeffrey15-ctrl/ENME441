@@ -47,7 +47,7 @@ class Stepper:
             self.s.shiftByte(self.myValue.value)
             print(self.myValue.value)
             time.sleep(0.5)
-            self.myValue.value &= (0b0000 << 4)
+            self.myValue.value = 0b00000000
             print(self.myValue.value)
             time.sleep(0.5)
 
@@ -87,6 +87,7 @@ if __name__ == '__main__':
             pass
     except:
         print('\nend')
+
 
 
 
