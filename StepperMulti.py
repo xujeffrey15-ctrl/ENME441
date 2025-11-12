@@ -30,16 +30,17 @@ class Stepper:
             myArray[self.index] |= (Stepper.seq[self.step_state] << self.shifter_bit_start)
             self.angle = (self.angle + dir / Stepper.steps_per_degree) % 360
             final |= myArray[self.index]
-        self.p.join()
-        self.s.shiftByte(final)
-        time.sleep(Stepper.delay / 1e6)
+ 
 
     def rotate(self, delta):
         steps = int(Stepper.steps_per_degree * abs(delta))
         p = multiprocessing.Process(target=self._step, args=(delta,))
         for _ in range(steps):
             p.start()
-
+            p.join()
+            self.s.shiftByte(self.final)
+            time.sleep(Stepper.delay / 1e6)
+            
     def zero(self):
         self.angle = 0
 
@@ -59,6 +60,7 @@ if __name__ == '__main__':
             pass
     except KeyboardInterrupt:
         print("\nend")
+
 
 
 
