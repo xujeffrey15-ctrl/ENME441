@@ -23,8 +23,7 @@ class Stepper:
 
     def _step(self, dir):
         final = 0b00000000
-        with self.lock:
-            self.step_state = (self.step_state + dir) % 8
+        self.step_state = (self.step_state + dir) % 8
         myArray[self.index] &= ~(0b1111 << self.shifter_bit_start)
         myArray[self.index] |= (Stepper.seq[self.step_state] << self.shifter_bit_start)
         final |= myArray[self.index]
@@ -61,6 +60,7 @@ if __name__ == '__main__':
             pass
     except KeyboardInterrupt:
         print("\nend")
+
 
 
 
