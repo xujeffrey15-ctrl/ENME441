@@ -28,20 +28,13 @@ class Stepper:
             # Clear previous 4 bits
             myArray[self.index] &= ~(0b1111 << self.shifter_bit_start)
             # Set new bits
-            myArray[self.index] |= (Stepper.seq[self.step_state] << self.shifter_bit_start)
-
-            # Combine all motor bytes
+            myArray[self.index] |= (Stepper.seq[self.step_state] << self.shifter_bit_start
             final = 0
             for val in myArray:
                 final |= val
-
-            # Send to shift register
             self.s.shiftByte(final)
-
-            # Update angle
             self.angle = (self.angle + direction / Stepper.steps_per_degree) % 360
-
-        time.sleep(Stepper.delay / 1e6)
+            time.sleep(Stepper.delay / 1e6)
 
     def _rotate(self, delta):
         steps = int(Stepper.steps_per_degree * abs(delta))
