@@ -4,6 +4,7 @@ from Shifter import shifter  # your custom module
 
 # Shared array for two steppers (integers)
 myArray = multiprocessing.Array('i', 2)
+q = multiprocessing.Queue
 
 class Stepper:
     seq = [0b0001, 0b0011, 0b0010, 0b0110,
@@ -79,6 +80,7 @@ if __name__ == '__main__':
     m1.goAngle(-135)
     m1.goAngle(135)
     m1.goAngle(0)
+
 
 
 
