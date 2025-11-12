@@ -38,7 +38,7 @@ class Stepper:
 
     def _rotate(self, delta):
         steps = int(Stepper.steps_per_degree * abs(delta))
-        direction = self._sgn(delta)
+        dir = self._sgn(delta)
         for _ in range(steps):
             self._step(dir)
 
@@ -65,6 +65,7 @@ if __name__ == '__main__':
             pass
     except KeyboardInterrupt:
         print("\nend")
+
 
 
 
