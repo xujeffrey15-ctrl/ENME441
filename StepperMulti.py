@@ -83,7 +83,6 @@ if __name__ == '__main__':
 
     # Wait for both to finish
 
-    print("\nBoth motors finished!")
 
 
 
