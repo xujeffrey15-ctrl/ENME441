@@ -21,25 +21,24 @@ class Stepper:
     def _sgn(self, x):
         return 0 if x == 0 else int(abs(x)/x)
 
-    def _step(self, dir):
+    def _step(self, delta):
         final = 0b00000000
-        self.step_state = (self.step_state + dir) % 8
-        myArray[self.index] &= ~(0b1111 << self.shifter_bit_start)
-        myArray[self.index] |= (Stepper.seq[self.step_state] << self.shifter_bit_start)
-        final |= myArray[self.index]
+        with lock:
+            ir = self._sgn(delta)
+            self.step_state = (self.step_state + dir) % 8
+            myArray[self.index] &= ~(0b1111 << self.shifter_bit_start)
+            myArray[self.index] |= (Stepper.seq[self.step_state] << self.shifter_bit_start)
+            self.angle = (self.angle + dir / Stepper.steps_per_degree) % 360
+            final |= myArray[self.index]
+        p.join()
         self.s.shiftByte(final)
-        self.angle = (self.angle + dir / Stepper.steps_per_degree) % 360
         time.sleep(Stepper.delay / 1e6)
 
-    def _rotate(self, delta):
-        steps = int(Stepper.steps_per_degree * abs(delta))
-        dir = self._sgn(delta)
-        for _ in range(steps):
-            self._step(dir)
-
     def rotate(self, delta):
-        p = multiprocessing.Process(target=self._rotate, args=(delta,))
-        p.start()
+        steps = int(Stepper.steps_per_degree * abs(delta))
+        p = multiprocessing.Process(target=self._step, args=(delta,))
+        for _ in range(steps):
+            p.start()
 
     def zero(self):
         self.angle = 0
@@ -60,6 +59,7 @@ if __name__ == '__main__':
             pass
     except KeyboardInterrupt:
         print("\nend")
+
 
 
 
