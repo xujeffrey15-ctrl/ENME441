@@ -36,12 +36,10 @@ class Stepper:
             counter = 0
         elif Stepper.num_steppers == 1:
             counter = 1
-        with self.lock:
-            myArray[counter] |= 0b1111<<self.shifter_bit_start
-            myArray[counter] &= Stepper.seq[self.step_state]<<self.shifter_bit_start
-            self.angle += dir/Stepper.steps_per_degree
-            self.angle %= 360
-            
+        myArray[counter] |= 0b1111<<self.shifter_bit_start
+        myArray[counter] &= Stepper.seq[self.step_state]<<self.shifter_bit_start
+        self.angle += dir/Stepper.steps_per_degree
+        self.angle %= 360
         self.s.shiftByte(myArray[Stepper.num_steppers-1])
         print(counter);
         time.sleep(1)
@@ -88,6 +86,7 @@ if __name__ == '__main__':
             pass
     except:
         print('\nend')
+
 
 
 
