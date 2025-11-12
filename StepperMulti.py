@@ -71,8 +71,6 @@ if __name__ == '__main__':
     m1 = Stepper(s, lock)
     m2 = Stepper(s, lock)
 
-    m1.zero()
-    m2.zero()
     m1.rotate(-90)
     m2.rotate(90)
     # While the motors are running in their separate processes, the main
@@ -82,6 +80,7 @@ if __name__ == '__main__':
             pass
     except:
         print('\nend')
+
 
 
 
