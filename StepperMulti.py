@@ -33,9 +33,9 @@ class Stepper:
         self.step_state %= 8      # ensure result stays in [0,7]
         counter = 0
         with self.lock:
-            if Stepper.num_steppers = 0:
+            if Stepper.num_steppers == 0:
                 counter = 0
-            elif Stepper.num_steppers = 1:
+            elif Stepper.num_steppers == 1:
                 counter = 1
             myArray[counter] |= 0b1111<<self.shifter_bit_start
             myArray[counter] &= Stepper.seq[self.step_state]<<self.shifter_bit_start
@@ -88,6 +88,7 @@ if __name__ == '__main__':
             pass
     except:
         print('\nend')
+
 
 
 
