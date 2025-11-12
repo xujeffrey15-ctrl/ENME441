@@ -3,8 +3,8 @@ import multiprocessing
 from multiprocessing.managers import SharedMemoryManager
 from Shifter import shifter   # our custom Shifter class
 myArray = multiprocessing.Array('f',2)
-myArray[0] = bin(0)
-myArray[1] = bin(0)
+myArray[0] = 0
+myArray[1] = 0
 
 class Stepper:
     num_steppers = 0      # track number of Steppers instantiated
@@ -84,6 +84,7 @@ if __name__ == '__main__':
             pass
     except:
         print('\nend')
+
 
 
 
