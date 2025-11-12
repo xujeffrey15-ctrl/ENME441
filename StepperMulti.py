@@ -2,7 +2,9 @@ import time
 import multiprocessing
 from multiprocessing.managers import SharedMemoryManager
 from Shifter import shifter   # our custom Shifter class
-myValue = multiprocessing.Value('i',0b00000000)
+myArray = multiprocessing.Array('f',2)
+myArray[0] = bin(0)
+myArray[1] = bin(0)
 
 class Stepper:
     num_steppers = 0      # track number of Steppers instantiated
@@ -27,15 +29,17 @@ class Stepper:
 
     # Move a single +/-1 step in the motor sequence:
     def __step(self, dir):
-        self.step_state += dir    # increment/decrement the step
-        self.step_state %= 8      # ensure result stays in [0,7]
         with self.lock:
-            myValue.value = 0b1111<<self.shifter_bit_start
-            myValue.value &= Stepper.seq[self.step_state]<<self.shifter_bit_start
-        self.angle += dir/Stepper.steps_per_degree
-        self.angle %= 360
-        time.sleep(1)
-        print(bin(myValue.value))
+            self.step_state += dir    # increment/decrement the step
+            self.step_state %= 8      # ensure result stays in [0,7]
+            myArray[Stepper.num_steppers-1] |= 0b1111<<self.shifter_bit_start
+            myArray[Stepper.num_steppers-1] &= Stepper.seq[self.step_state]<<self.shifter_bit_start
+            self.s.shiftByte(myArray[Stepper.num_steppers-1])
+            self.angle += dir/Stepper.steps_per_degree
+            self.angle %= 360
+            print(myArray[Stepper.num_steppers-1])
+            time.sleep(1)
+            myArray[Stepper.num_steppers-1] = 0b0000<<self.shifter_bit_start
 
     # Move relative angle from current position:
     def __rotate(self, delta):
@@ -44,8 +48,6 @@ class Stepper:
         for s in range(numSteps):      # take the steps
             self.__step(dir)
             time.sleep(Stepper.delay/1e6)
-            self.s.shiftByte(myValue.value)
-            myValue.value = 0b00000000
 
     def rotate(self, delta):
         time.sleep(0.1)
@@ -82,6 +84,7 @@ if __name__ == '__main__':
             pass
     except:
         print('\nend')
+
 
 
 
