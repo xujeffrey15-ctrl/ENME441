@@ -32,8 +32,8 @@ class Stepper:
         self.step_state += dir    # increment/decrement the step
         self.step_state %= 8      # ensure result stays in [0,7]
         with self.lock:
-            myArray[Stepper.num_steppers-1] |= 0b1111<<self.shifter_bit_start
-            myArray[Stepper.num_steppers-1] &= Stepper.seq[self.step_state]<<self.shifter_bit_start
+            myArray[int(Stepper.num_steppers)-1] |= 0b1111<<self.shifter_bit_start
+            myArray[int(Stepper.num_steppers)-1] &= Stepper.seq[self.step_state]<<self.shifter_bit_start
             self.angle += dir/Stepper.steps_per_degree
             self.angle %= 360
             
@@ -83,6 +83,7 @@ if __name__ == '__main__':
             pass
     except:
         print('\nend')
+
 
 
 
