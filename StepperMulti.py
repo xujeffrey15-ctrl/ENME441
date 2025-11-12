@@ -32,9 +32,6 @@ class Stepper:
             # send to shift register
             self.s.shiftByte(myArray[self.index])
             self.angle = (self.angle + dir / Stepper.steps_per_degree) % 360
-            
-        print(myArray[self.index])
-        time.sleep(1)
         time.sleep(Stepper.delay / 1e6)
 
     def _rotate(self, delta):
@@ -66,6 +63,7 @@ if __name__ == '__main__':
             pass
     except KeyboardInterrupt:
         print("\nend")
+
 
 
 
