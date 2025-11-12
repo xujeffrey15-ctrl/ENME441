@@ -38,7 +38,7 @@ class Stepper:
         steps = int(Stepper.steps_per_degree * abs(delta))
         self.p = multiprocessing.Process(target=self._step, args=(delta,))
         for _ in range(steps):
-            p.start()
+            self.p.start()
 
     def zero(self):
         self.angle = 0
@@ -59,6 +59,7 @@ if __name__ == '__main__':
             pass
     except KeyboardInterrupt:
         print("\nend")
+
 
 
 
