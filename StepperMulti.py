@@ -51,10 +51,10 @@ class Stepper:
     def goAngle(self, angle):
         diff = angle - self.angle
         if abs(diff) <= 180:
-            self._rotate(angle)
+            self.rotate(angle)
         elif abs(diff) > 180:
             angle = -1*(360-(angle-self.angle))
-            self._rotate(angle)
+            self.rotate(angle)
 
 
 if __name__ == '__main__':
@@ -71,6 +71,7 @@ if __name__ == '__main__':
     m1.goAngle(-135)
     m1.goAngle(135)
     m1.goAngle(0)
+
 
 
 
