@@ -85,10 +85,9 @@ if __name__ == '__main__':
     m1.goAngle(0)
 
     # Wait for both to finish
-    p1.join()
-    p2.join()
 
     print("\nBoth motors finished!")
+
 
 
 
