@@ -68,6 +68,7 @@ class Stepper:
     def goAngle(self, target_angle):
         """ Calculate shortest path and queue the movement """
         diff = target_angle - self.angle
+        print(self.angle)
         # Choose shortest rotation
         if diff > 180:
             diff -= 360
@@ -106,6 +107,7 @@ if __name__ == '__main__':
             time.sleep(0.1)
     except KeyboardInterrupt:
         print("\nExiting")
+
 
 
 
