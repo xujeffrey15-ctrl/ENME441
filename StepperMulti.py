@@ -37,8 +37,6 @@ class Stepper:
             self.s.shiftByte(myArray[Stepper.num_steppers-1])
             self.angle += dir/Stepper.steps_per_degree
             self.angle %= 360
-            print(myArray[Stepper.num_steppers-1])
-            time.sleep(1)
             myArray[Stepper.num_steppers-1] = 0b0000<<self.shifter_bit_start
 
     # Move relative angle from current position:
@@ -84,6 +82,7 @@ if __name__ == '__main__':
             pass
     except:
         print('\nend')
+
 
 
 
