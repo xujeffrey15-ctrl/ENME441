@@ -49,7 +49,6 @@ class Stepper:
             self.angle = (self.angle + direction / Stepper.steps_per_degree) % 360
 
         time.sleep(Stepper.delay / 1e6)
-        print(self.angle)
 
     def _rotate(self, delta):
         steps = int(Stepper.steps_per_degree * abs(delta))
@@ -94,14 +93,14 @@ if __name__ == '__main__':
     m1.goAngle(-135)
     m1.goAngle(135)
     m1.goAngle(0)
-    
+    m1.goAngle(0)
 
     m2.goAngle(-90)
     m2.goAngle(45)
     m2.goAngle(135)
     m2.goAngle(-135)
     m2.goAngle(0)
-
+    m2.goAngle(0)
 
     # Keep main program running to let motors finish
     try:
@@ -109,6 +108,7 @@ if __name__ == '__main__':
             time.sleep(0.1)
     except KeyboardInterrupt:
         print("\nExiting")
+
 
 
 
