@@ -4,7 +4,7 @@ from Shifter import shifter  # your custom module
 
 # Shared array for two steppers (integers)
 myArray = multiprocessing.Array('i', 2)
-final = 0
+
 
 class Stepper:
     seq = [0b0001, 0b0011, 0b0010, 0b0110,
@@ -24,6 +24,7 @@ class Stepper:
         return 0 if x == 0 else int(abs(x)/x)
 
     def _step(self, direction):
+        final = 0
         with self.lock:
             self.step_state = (self.step_state + direction) % 8
             myArray[self.index] &= ~(0b1111 << self.shifter_bit_start)
@@ -70,6 +71,7 @@ if __name__ == '__main__':
     m1.goAngle(-135)
     m1.goAngle(135)
     m1.goAngle(0)
+
 
 
 
