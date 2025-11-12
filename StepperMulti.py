@@ -55,14 +55,15 @@ if __name__ == '__main__':
     m1 = Stepper(s, lock, 0)
     m2 = Stepper(s, lock, 1)
 
-    m1.rotate(-90)
-    m2.rotate(90)
+    m1.rotate(0)
+    m2.rotate(0)
 
     try:
         while True:
             pass
     except KeyboardInterrupt:
         print("\nend")
+
 
 
 
