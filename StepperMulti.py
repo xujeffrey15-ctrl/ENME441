@@ -9,6 +9,7 @@ class Stepper:
     seq = [0b0001, 0b0011, 0b0010, 0b0110, 0b0100, 0b1100, 0b1000, 0b1001]
     delay = 12000
     steps_per_degree = 4096 / 360
+    final = 0b00000000
 
     def __init__(self, shifter, lock, index):
         self.s = shifter
@@ -22,14 +23,13 @@ class Stepper:
         return 0 if x == 0 else int(abs(x)/x)
 
     def _step(self, delta):
-        self.final = 0b00000000
         with lock:
             dir = self._sgn(delta)
             self.step_state = (self.step_state + dir) % 8
             myArray[self.index] &= ~(0b1111 << self.shifter_bit_start)
             myArray[self.index] |= (Stepper.seq[self.step_state] << self.shifter_bit_start)
             self.angle = (self.angle + dir / Stepper.steps_per_degree) % 360
-            self.final |= myArray[self.index]
+            Stepper.final |= myArray[self.index]
  
 
     def rotate(self, delta):
@@ -38,7 +38,7 @@ class Stepper:
         for _ in range(steps):
             p.start()
             p.join()
-            self.s.shiftByte(self.final)
+            self.s.shiftByte(Stepper.final)
             time.sleep(Stepper.delay / 1e6)
             
     def zero(self):
@@ -60,6 +60,7 @@ if __name__ == '__main__':
             pass
     except KeyboardInterrupt:
         print("\nend")
+
 
 
 
