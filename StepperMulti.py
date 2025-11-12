@@ -31,14 +31,19 @@ class Stepper:
     def __step(self, dir):
         self.step_state += dir    # increment/decrement the step
         self.step_state %= 8      # ensure result stays in [0,7]
+        counter = 0
         with self.lock:
-            myArray[int(Stepper.num_steppers)-1] |= 0b1111<<self.shifter_bit_start
-            myArray[int(Stepper.num_steppers)-1] &= Stepper.seq[self.step_state]<<self.shifter_bit_start
+            if Stepper.num_steppers = 0:
+                counter = 0
+            elif Stepper.num_steppers = 1:
+                counter = 1
+            myArray[counter] |= 0b1111<<self.shifter_bit_start
+            myArray[counter] &= Stepper.seq[self.step_state]<<self.shifter_bit_start
             self.angle += dir/Stepper.steps_per_degree
             self.angle %= 360
             
         self.s.shiftByte(myArray[Stepper.num_steppers-1])
-        print(Stepper.num_steppers-1);
+        print(counter);
         time.sleep(1)
         myArray[Stepper.num_steppers-1] = 0b0000<<self.shifter_bit_start
 
@@ -83,6 +88,7 @@ if __name__ == '__main__':
             pass
     except:
         print('\nend')
+
 
 
 
