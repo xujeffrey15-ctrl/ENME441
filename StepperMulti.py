@@ -4,7 +4,6 @@ from Shifter import shifter  # your custom module
 
 # Shared array for two steppers (integers)
 myArray = multiprocessing.Array('i', 2)
-myValue = multiprocessing.Value('i',0b00000000)
 
 class Stepper:
     seq = [0b0001, 0b0011, 0b0010, 0b0110, 0b0100, 0b1100, 0b1000, 0b1001]
@@ -23,26 +22,27 @@ class Stepper:
         return 0 if x == 0 else int(abs(x)/x)
 
     def _step(self, delta):
+        final = 0b00000000
         with lock:
             dir = self._sgn(delta)
             self.step_state = (self.step_state + dir) % 8
             myArray[self.index] &= ~(0b1111 << self.shifter_bit_start)
             myArray[self.index] |= (Stepper.seq[self.step_state] << self.shifter_bit_start)
             self.angle = (self.angle + dir / Stepper.steps_per_degree) % 360
-            MyValue.value |= myArray[self.index]
- 
+            final |= myArray[self.index]
+        self.p.join()
+        self.s.shiftByte(final)
+        time.sleep(Stepper.delay / 1e6)
 
     def rotate(self, delta):
         steps = int(Stepper.steps_per_degree * abs(delta))
-        p = multiprocessing.Process(target=self._step, args=(delta,))
+        self.p = multiprocessing.Process(target=self._step, args=(delta,))
         for _ in range(steps):
             p.start()
-            p.join()
-            self.s.shiftByte(MyValue.value)
-            time.sleep(Stepper.delay / 1e6)
 
     def zero(self):
         self.angle = 0
+
 
 if __name__ == '__main__':
     s = shifter(16, 21, 20)
