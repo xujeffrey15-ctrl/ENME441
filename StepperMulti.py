@@ -22,14 +22,14 @@ class Stepper:
         return 0 if x == 0 else int(abs(x)/x)
 
     def _step(self, delta):
-        final = 0b00000000
+        self.final = 0b00000000
         with lock:
             dir = self._sgn(delta)
             self.step_state = (self.step_state + dir) % 8
             myArray[self.index] &= ~(0b1111 << self.shifter_bit_start)
             myArray[self.index] |= (Stepper.seq[self.step_state] << self.shifter_bit_start)
             self.angle = (self.angle + dir / Stepper.steps_per_degree) % 360
-            final |= myArray[self.index]
+            self.final |= myArray[self.index]
  
 
     def rotate(self, delta):
@@ -60,6 +60,7 @@ if __name__ == '__main__':
             pass
     except KeyboardInterrupt:
         print("\nend")
+
 
 
 
