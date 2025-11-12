@@ -18,7 +18,7 @@ class Stepper:
         self.angle = 0
         self.step_state = 0
         self.shifter_bit_start = 4 * index
-        self.q = multiprocessing.Queue
+        self.q = multiprocessing.Queue()
 
     def _sgn(self, x):
         return 0 if x == 0 else int(abs(x)/x)
@@ -81,6 +81,7 @@ if __name__ == '__main__':
     m1.goAngle(-135)
     m1.goAngle(135)
     m1.goAngle(0)
+
 
 
 
