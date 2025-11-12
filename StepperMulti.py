@@ -4,7 +4,7 @@ from multiprocessing.managers import SharedMemoryManager
 from Shifter import shifter   # our custom Shifter class
 
 class Stepper:
-    myValue = multiprocessing.Value('i',0b00000000)
+    myValue = multiprocessing.Value('i',0b11111111)
     num_steppers = 0      # track number of Steppers instantiated
     shifter_outputs = 0   # track shift register outputs for all motors
     seq = [0b0001,0b0011,0b0010,0b0110,0b0100,0b1100,0b1000,0b1001] # CCW sequence
@@ -30,12 +30,11 @@ class Stepper:
         self.lock.acquire()
         self.step_state += dir    # increment/decrement the step
         self.step_state %= 8      # ensure result stays in [0,7]
-        Stepper.shifter_outputs |= 0b11111111
         Stepper.shifter_outputs &= Stepper.seq[self.step_state]<<self.shifter_bit_start
         self.angle += dir/Stepper.steps_per_degree
         self.angle %= 360
-        self.lock.release()
         Stepper.myValue.value |= Stepper.shifter_outputs
+        self.lock.release()
         print(bin(Stepper.myValue.value))
         time.sleep(1)
 
@@ -47,7 +46,7 @@ class Stepper:
             self.__step(dir)
             time.sleep(Stepper.delay/1e6)
             self.s.shiftByte(Stepper.myValue.value)
-            Stepper.myValue.value = 0b00000000
+            Stepper.myValue.value = 0b11111111
 
     def rotate(self, delta):
         time.sleep(0.1)
@@ -84,6 +83,7 @@ if __name__ == '__main__':
             pass
     except:
         print('\nend')
+
 
 
 
