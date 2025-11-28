@@ -32,14 +32,17 @@ def AngleConversion():
 
         xcoord = r * math.cos(theta)
         ycoord = r * math.sin(theta)
-        m = (ycoord - ownycoord)/(xcoord - ownxcoord)
-
-        goanglet = math.degrees(math.atan(m))
-
-        goanglexy[f"turret_{tnum}"] = round(goanglet, 2)
-        print(tnum)
-        print(goanglexy[f"turret_{tnum}"])
-        time.sleep(1)
+        if (xcoordb - ownxcoord) != 0:
+            m = (ycoord - ownycoord)/(xcoord - ownxcoord)
+    
+            goanglet = math.degrees(math.atan(m))
+    
+            goanglexy[f"turret_{tnum}"] = round(goanglet, 2)
+            print(tnum)
+            print(goanglexy[f"turret_{tnum}"])
+            time.sleep(1)
+        else:
+            pass
 
     # Balls
     for i, binfo in enumerate(BallData, start=1):
@@ -50,25 +53,29 @@ def AngleConversion():
 
         xcoordb = r * math.cos(theta)
         ycoordb = r * math.sin(theta)
-        m = (ycoord - ownycoord)/(xcoord - ownxcoord)
-        dx = xcoordb - ownxcoord
-        dy = ycoordb - ownycoord
-        dz = z
-
-        goangleb = math.degrees(math.atan(m))
-        horiz = math.sqrt(dx*dx + dy*dy)
-        angle_z = math.atan(dz, horiz)
-        
-        goanglexy[f"ball_{i}"] = round(goangleb, 2)
-        goanglez[f"ball_{i}"] = round(angle_z, 2)
-        print(i)
-        print(goanglexy[f"ball_{i}"])
-        print(goanglez[f"ball_{i}"])
-        time.sleep(1)
+        if (xcoordb - ownxcoord) != 0:
+            m = (ycoordb - ownycoord)/(xcoordb - ownxcoord)
+            dx = xcoordb - ownxcoord
+            dy = ycoordb - ownycoord
+            dz = z
+    
+            goangleb = math.degrees(math.atan(m))
+            horiz = math.sqrt(dx*dx + dy*dy)
+            angle_z = math.atan(dz, horiz)
+            
+            goanglexy[f"ball_{i}"] = round(goangleb, 2)
+            goanglez[f"ball_{i}"] = round(angle_z, 2)
+            print(i)
+            print(goanglexy[f"ball_{i}"])
+            print(goanglez[f"ball_{i}"])
+            time.sleep(1)
+        else:
+            pass
 
 
 # RUN THE CONVERSIONS
 AngleConversion()
+
 
 
 
