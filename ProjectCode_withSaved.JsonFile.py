@@ -32,7 +32,7 @@ def AngleConversion():
 
         xcoord = r * math.cos(theta)
         ycoord = r * math.sin(theta)
-        if (xcoordb - ownxcoord) != 0:
+        if (xcoord - ownxcoord) != 0:
             m = (ycoord - ownycoord)/(xcoord - ownxcoord)
     
             goanglet = math.degrees(math.atan(m))
@@ -75,6 +75,7 @@ def AngleConversion():
 
 # RUN THE CONVERSIONS
 AngleConversion()
+
 
 
 
