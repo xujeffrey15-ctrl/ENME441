@@ -1,6 +1,6 @@
 import json
 import math
-from StepperMulti import Stepper
+import time
 
 # LOAD JSON
 with open("backup_data.json", "r") as f:
@@ -61,10 +61,17 @@ def AngleConversion():
 # RUN THE CONVERSIONS
 AngleConversion()
 
-print('\n')
-print("XY Angles:", goanglexy)
-print('\n')
-print("Z Angles:", goanglez)
+for i in TurretData.items()
+    print('\n')
+    print("XY Angles:", goanglexy)
+    time.sleep(0.5)
+for g in BallData.items()
+    print('\n')
+    print("XY Angles:", goanglexy)
+    print('\n')
+    print("Z Angles:", goanglez)
+    time.sleep(0.5)
+
 
 
 
