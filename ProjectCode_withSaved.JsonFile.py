@@ -35,7 +35,7 @@ def AngleConversion():
 
         goanglet = math.degrees(math.atan2((ycoord - ownycoord), (xcoord - ownxcoord)))
 
-        goanglexy[f"turret_{tnum}"] = round(goangle, 2) 
+        goanglexy[f"turret_{tnum}"] = round(goanglet, 2) 
 
     # Balls
     for i, binfo in enumerate(BallData, start=1):
@@ -100,4 +100,5 @@ print('\n')
 print("XY Angles:", goanglesxy)
 print('\n')
 print("Z Angles:", goanglez)
+
 
