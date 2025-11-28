@@ -61,16 +61,17 @@ def AngleConversion():
 # RUN THE CONVERSIONS
 AngleConversion()
 
-for i in TurretData.items()
+for i in TurretData.items():
     print('\n')
     print("XY Angles:", goanglexy)
     time.sleep(0.5)
-for g in BallData.items()
+for g in BallData.items():
     print('\n')
     print("XY Angles:", goanglexy)
     print('\n')
     print("Z Angles:", goanglez)
     time.sleep(0.5)
+
 
 
 
