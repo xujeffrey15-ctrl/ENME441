@@ -62,43 +62,9 @@ def AngleConversion():
 AngleConversion()
 
 print('\n')
-print("XY Angles:", goanglesxy)
+print("XY Angles:", goanglexy)
 print('\n')
 print("Z Angles:", goanglez)
 
-# Z ANGLE CONVERSION
-# (elevation angle from XY plane)
-def ZAngleConversion():
-
-    for i, binfo in enumerate(BallData, start=1):
-
-        r = binfo["r"]
-        theta = binfo["theta"]
-        z = binfo["z"]
-
-        # xy projection
-        xcoordb = r * math.cos(theta)
-        ycoordb = r * math.sin(theta)
-
-        # vector difference
-        dx = xcoordb - ownxcoord
-        dy = ycoordb - ownycoord
-        dz = z
-
-        # elevation angle = atan(dz / horizontal distance)
-        horiz = math.sqrt(dx*dx + dy*dy)
-        angle_z = math.atan2(dz, horiz)
-
-        goanglez[f"ball_{i}"] = round(angle_z, 2)
-
-
-# RUN THE CONVERSIONS
-XYAngleConversion()
-ZAngleConversion()
-
-print('\n')
-print("XY Angles:", goanglesxy)
-print('\n')
-print("Z Angles:", goanglez)
 
 
