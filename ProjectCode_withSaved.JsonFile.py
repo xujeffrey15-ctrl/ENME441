@@ -61,7 +61,8 @@ def AngleConversion():
     
             goangleb = math.degrees(math.atan(m))
             horiz = math.sqrt(dx*dx + dy*dy)
-            angle_z = math.atan(dz, horiz)
+            heightangle = dz/horiz
+            angle_z = math.atan(heightangle)
             
             goanglexy[f"ball_{i}"] = round(goangleb, 2)
             goanglez[f"ball_{i}"] = round(angle_z, 2)
@@ -75,6 +76,7 @@ def AngleConversion():
 
 # RUN THE CONVERSIONS
 AngleConversion()
+
 
 
 
