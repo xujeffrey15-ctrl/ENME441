@@ -33,7 +33,7 @@ def AngleConversion():
         xcoord = r * math.cos(theta)
         ycoord = r * math.sin(theta)
 
-        goanglet = math.degrees(math.atan2((ycoord - ownycoord), (xcoord - ownxcoord)))
+        goanglet = math.degrees(math.atan((ycoord - ownycoord), (xcoord - ownxcoord)))
 
         goanglexy[f"turret_{tnum}"] = round(goanglet, 2)
         print(tnum)
@@ -55,7 +55,7 @@ def AngleConversion():
 
         goangleb = math.degrees(math.atan2((ycoordb - ownycoord), (xcoordb - ownxcoord)))
         horiz = math.sqrt(dx*dx + dy*dy)
-        angle_z = math.atan2(dz, horiz)
+        angle_z = math.atan(dz, horiz)
         
         goanglexy[f"ball_{i}"] = round(goangleb, 2)
         goanglez[f"ball_{i}"] = round(angle_z, 2)
@@ -67,6 +67,7 @@ def AngleConversion():
 
 # RUN THE CONVERSIONS
 AngleConversion()
+
 
 
 
