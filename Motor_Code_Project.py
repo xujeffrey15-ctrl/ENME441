@@ -88,14 +88,14 @@ if __name__ == '__main__':
     m1.zero()
     m2.zero()
 
-    if self.q.full() == False:
-        for t in (Json_Reader.numturrets):
-            m1.goangle(XY[f"turret_{t}"])
-        for b in Json_Reader.numball:
-             m1.goangle(XY[f"ball_{b}"])
-            m2.goangle(Z[f"ball_{b}"])
-    
-    # Keep main program running to let motors finish
+    # Queue movements
+    for t in range(Json_Reader.numturrets):
+        m1.goAngle(XY[f"turret_{t}"])
+    for b in range(Json_Reader.numball):
+        m1.goAngle(XY[f"ball_{b}"])
+        m2.goAngle(Z[f"ball_{b}"])
+
+    # Keep main program running
     try:
         while True:
             time.sleep(0.1)
