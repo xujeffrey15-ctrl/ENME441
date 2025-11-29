@@ -42,11 +42,6 @@ def AngleConversion():
             else:
                 target_angle = alpha - beta
 
-            if theta > math.pi:
-                target_angle = -target_angle
-            if theta < math.pi:
-                pass
-
             goanglexy[f"turret_{tnum}"] = round(target_angle, 2) 
 
         if (ycoord == ownycoord):
@@ -111,6 +106,7 @@ print('\n')
 print("XY Angles:", goanglexy)
 print('\n')
 print("Z Angles:", goanglez)
+
 
 
 
