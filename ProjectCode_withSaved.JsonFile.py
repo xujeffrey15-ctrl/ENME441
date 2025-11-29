@@ -20,10 +20,6 @@ ownycoord = 300*math.sin(1.117010721276371)
 
 goanglexy = {}
 goanglez = {}
-global current_angle_XY
-global current_angle_Z
-current_angle_XY = 0
-current_angle_Z = 0
 
 # XY ANGLE CONVERSION
 def AngleConversion():
@@ -50,11 +46,7 @@ def AngleConversion():
         if theta < math.pi:
             pass
 
-        goangle = target_angle - current_angle_XY
-
-        goanglexy[f"turret_{tnum}"] = round(goangle, 2) 
-
-        current_angle_XY = target_angle
+        goanglexy[f"turret_{tnum}"] = round(target_angle, 2) 
 
     # Balls
     for i, binfo in enumerate(BallData, start=1):
@@ -82,11 +74,10 @@ def AngleConversion():
         if theta < math.pi:
             pass
 
-        goangle = target_angle - current_angle_XY
         horiz = math.sqrt(dx*dx + dy*dy)
         angle_z = math.atan2(dz, horiz)
         
-        goanglexy[f"ball_{i}"] = round(goangle, 2)
+        goanglexy[f"ball_{i}"] = round(target_angle, 2)
         goanglez[f"ball_{i}"] = round(angle_z, 2)
 
 
@@ -97,6 +88,7 @@ print('\n')
 print("XY Angles:", goanglexy)
 print('\n')
 print("Z Angles:", goanglez)
+
 
 
 
