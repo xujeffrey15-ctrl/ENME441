@@ -4,7 +4,9 @@ from Shifter import shifter  # your custom module
 import Json_Reader
 
 XY = Json_Reader.goanglexy
-Z = Json_Reader.goangleZ
+Z = Json_Reader.goanglez
+numturrets = len(Json_Reader.TurretData)
+numball = len(Json_Reader.BallData)
 
 myArray = multiprocessing.Array('i', 2)
 
@@ -89,11 +91,13 @@ if __name__ == '__main__':
     m2.zero()
 
     # Queue movements
-    for t in range(Json_Reader.numturrets):
+    for t in range(numturrets):
         m1.goAngle(XY[f"turret_{t}"])
-    for b in range(Json_Reader.numball):
+    for b in range(numball):
         m1.goAngle(XY[f"ball_{b}"])
         m2.goAngle(Z[f"ball_{b}"])
+    m1.goAngle(0)
+    m2.goAngle(0)
 
     # Keep main program running
     try:
@@ -101,6 +105,7 @@ if __name__ == '__main__':
             time.sleep(0.1)
     except KeyboardInterrupt:
         print("\nExiting")
+
 
 
 
