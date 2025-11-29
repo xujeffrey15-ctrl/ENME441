@@ -1,6 +1,7 @@
 import time
 import multiprocessing
 from Shifter import shifter  # your custom module
+import ProjectCode_withSaved.JsonFile
 
 # Shared array for two steppers (integers)
 myArray = multiprocessing.Array('i', 2)
@@ -92,6 +93,7 @@ if __name__ == '__main__':
             time.sleep(0.1)
     except KeyboardInterrupt:
         print("\nExiting")
+
 
 
 
