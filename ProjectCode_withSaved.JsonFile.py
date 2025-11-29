@@ -22,6 +22,8 @@ goanglexy = {}
 goanglez = {}
 global current_angle_XY
 global current_angle_Z
+current_angle_XY = 0
+current_angle_Z = 0
 
 # XY ANGLE CONVERSION
 def AngleConversion():
@@ -95,6 +97,7 @@ print('\n')
 print("XY Angles:", goanglexy)
 print('\n')
 print("Z Angles:", goanglez)
+
 
 
 
