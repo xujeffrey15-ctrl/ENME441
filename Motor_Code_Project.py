@@ -23,6 +23,7 @@ class Stepper:
         self.angle = 0
         self.step_state = 0
         self.shifter_bit_start = 4 * index
+        self.both = multiprocessing.Event()
         self.q = multiprocessing.Queue()
 
         # Start a dedicated process to run commands from the queue
@@ -65,9 +66,7 @@ class Stepper:
         while True:
             delta = self.q.get()  # blocks until a new command
             self._rotate(delta)
-        time.sleep(1)
-        print("Shooting")
-        time.sleep(4)
+            self.both.set()
 
     def zero(self):
         self.angle = 0
@@ -81,7 +80,7 @@ class Stepper:
         elif diff < -180:
             diff += 360
         self.q.put(diff)
-
+        
 if __name__ == '__main__':
     s = shifter(16, 21, 20)
     lock = multiprocessing.Lock()
@@ -97,9 +96,26 @@ if __name__ == '__main__':
     for t in range(1,numturrets):
         m1.goAngle(XY[f"turret_{t}"])
         m2.goAngle(Z[f"turret_{t}"])
+        if (m1.both.is_set() == True) and (m2.both.is_set() == True):
+            print("Motors are set to the correct angle")
+            time.sleep(5)
+            m1.both.clear()
+            m2.both.clear()
+        else:
+            m1.both.wait()
+            m2.both.wait()
+            
     for b in range(1,numball):
         m1.goAngle(XY[f"ball_{b}"])
         m2.goAngle(Z[f"ball_{b}"])
+        if (m1.both.is_set() == True) and (m2.both.is_set() == True):
+            print("Motors are set to the correct angle")
+            time.sleep(5)
+            m1.both.clear()
+            m2.both.clear()
+        else:
+            m1.both.wait()
+            m2.both.wait()
         
     m1.goAngle(0)
     m2.goAngle(0)
@@ -110,6 +126,7 @@ if __name__ == '__main__':
             time.sleep(0.1)
     except KeyboardInterrupt:
         print("\nExiting")
+
 
 
 
