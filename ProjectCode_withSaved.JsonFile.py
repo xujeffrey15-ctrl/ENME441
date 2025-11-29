@@ -20,8 +20,8 @@ ownycoord = 300*math.sin(1.117010721276371)
 
 goanglexy = {}
 goanglez = {}
-current_angle_XY = 0
-current_angle_Z = 0
+global current_angle_XY = 0
+global current_angle_Z = 0
 
 # XY ANGLE CONVERSION
 def AngleConversion():
@@ -95,6 +95,7 @@ print('\n')
 print("XY Angles:", goanglexy)
 print('\n')
 print("Z Angles:", goanglez)
+
 
 
 
