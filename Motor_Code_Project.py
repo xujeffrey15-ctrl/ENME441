@@ -1,9 +1,11 @@
 import time
 import multiprocessing
 from Shifter import shifter  # your custom module
-import ProjectCode_withSaved.JsonFile
+import Json_Reader
 
-# Shared array for two steppers (integers)
+XY = Json_Reader.goanglexy
+Z = Json_Reader.goangleZ
+
 myArray = multiprocessing.Array('i', 2)
 
 class Stepper:
@@ -75,7 +77,6 @@ class Stepper:
             diff += 360
         self.q.put(diff)
 
-
 if __name__ == '__main__':
     s = shifter(16, 21, 20)
     lock = multiprocessing.Lock()
@@ -86,6 +87,11 @@ if __name__ == '__main__':
     # Initialize angles
     m1.zero()
     m2.zero()
+
+    if self.q.full() == False:
+        for i in (Json_Reader.numturrets + Json_Reader.numball):
+            m1.goangle(XY[f"turret_{i}"])
+            m2.goangle(Z[f"turret_{i}"])
     
     # Keep main program running to let motors finish
     try:
@@ -93,6 +99,7 @@ if __name__ == '__main__':
             time.sleep(0.1)
     except KeyboardInterrupt:
         print("\nExiting")
+
 
 
 
