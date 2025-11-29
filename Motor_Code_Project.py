@@ -91,9 +91,9 @@ if __name__ == '__main__':
     m2.zero()
 
     # Automated movements
-    for t in range(numturrets):
+    for t in range(1,numturrets):
         m1.goAngle(XY[f"turret_{t}"])
-    for b in range(numball):
+    for b in range(1,numball):
         m1.goAngle(XY[f"ball_{b}"])
         m2.goAngle(Z[f"ball_{b}"])
         
@@ -106,6 +106,7 @@ if __name__ == '__main__':
             time.sleep(0.1)
     except KeyboardInterrupt:
         print("\nExiting")
+
 
 
 
