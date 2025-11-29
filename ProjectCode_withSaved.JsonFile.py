@@ -37,10 +37,10 @@ def AngleConversion():
             alpha = math.degrees(abs(math.atan(ownycoord/ownxcoord)))
             beta = math.degrees(abs(math.atan((ownycoord-ycoord)/(ownxcoord-xcoord))))
 
-            if abs(alpha) < abs(beta):
-                target_angle = abs(alpha) + abs(beta)
-            if abs(alpha) > abs(beta):
-                target_angle = abs(alpha) - abs(beta)
+            if (xcoord  > ownxcoord) or (ycoord > ownycoord):
+                target_angle = alpha + beta
+            else:
+                target_angle = alpha - beta
 
             if theta > math.pi:
                 target_angle = -target_angle
@@ -111,6 +111,7 @@ print('\n')
 print("XY Angles:", goanglexy)
 print('\n')
 print("Z Angles:", goanglez)
+
 
 
 
