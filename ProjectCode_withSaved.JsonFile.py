@@ -1,101 +1,116 @@
 import json
 import math
+from StepperMulti import Stepper
 
 # LOAD JSON
 with open("backup_data.json", "r") as f:
     data = json.load(f)
 
-TurretData = data["turrets"]
-BallData = data["globes"]
+print(data)
 
-# Robot position & facing direction (team 18)
-robot_angle = 1.117010721276371              # radians
-robot_angle_deg = math.degrees(robot_angle)  # convert now
+TurretData = data["turrets"]        # dict of turret objects
+BallData = data["globes"]           # list of ball objects
 
-ownxcoord = 300 * math.cos(robot_angle)
-ownycoord = 300 * math.sin(robot_angle)
+numturrets = len(TurretData)
+numball = len(BallData)
+
+# We are team 18
+ownxcoord = 300*math.cos(1.117010721276371)
+ownycoord = 300*math.sin(1.117010721276371)
 
 goanglexy = {}
 goanglez = {}
 
+# XY ANGLE CONVERSION
 def AngleConversion():
 
-    # -------------------------------
-    # TURRETS
-    # -------------------------------
+    # Turrets
     for tnum, tinfo in TurretData.items():
 
-        # turret world position
         r = tinfo["r"]
         theta = tinfo["theta"]
 
-        Tx = r * math.cos(theta)
-        Ty = r * math.sin(theta)
+        xcoord = r * math.cos(theta)
+        ycoord = r * math.sin(theta)
 
-        dx = Tx - ownxcoord
-        dy = Ty - ownycoord
+        if (ycoord != ownycoord) and (xcoord != ownxcoord):
+            alpha = math.degrees(abs(math.atan(ownycoord/ownxcoord)))
+            beta = math.degrees(abs(math.atan((ownycoord-ycoord)/(ownxcoord-xcoord))))
 
-        # absolute world-space angle
-        world_angle = math.degrees(math.atan2(dy, dx))
+            if abs(alpha) < abs(beta):
+                target_angle = abs(alpha) + abs(beta)
+            if abs(alpha) > abs(beta):
+                target_angle = abs(alpha) - abs(beta)
 
-        # convert to relative angle
-        rel_angle = world_angle - robot_angle_deg
+            if theta > math.pi:
+                target_angle = -target_angle
+            if theta < math.pi:
+                pass
 
-        # normalize to [-180,180]
-        rel_angle = (rel_angle + 180) % 360 - 180
+            goanglexy[f"turret_{tnum}"] = round(target_angle, 2) 
 
-        # turret can only rotate ±90°
-        if -90 <= rel_angle <= 90:
-            goanglexy[f"turret_{tnum}"] = round(rel_angle, 2)
-        else:
-            goanglexy[f"turret_{tnum}"] = None  # target behind you
+        if (ycoord == ownycoord):
+            goanglexy[f"turret_{tnum}"] = round(-math.atan(ownycoord/ownxcoord), 2)
 
-    # -------------------------------
-    # BALLS (with Z angle)
-    # -------------------------------
+        if (xcoord == ownxcoord):
+            goanglexy[f"turret_{tnum}"] = round(math.atan(ownycoord/ownxcoord), 2)
+
+    # Balls
     for i, binfo in enumerate(BallData, start=1):
 
         r = binfo["r"]
         theta = binfo["theta"]
         z = binfo["z"]
 
-        Bx = r * math.cos(theta)
-        By = r * math.sin(theta)
+        xcoordb = r * math.cos(theta)
+        ycoordb = r * math.sin(theta)
+        dx = xcoordb - ownxcoord
+        dy = ycoordb - ownycoord
+        dz = z
 
-        dx = Bx - ownxcoord
-        dy = By - ownycoord
-        dz = z  # height above floor, no transform needed
+        if (ycoordb != ownycoord) and (xcoordb != ownxcoord):
+            alpha = math.degrees(abs(math.atan(ownycoord/ownxcoord)))
+            beta = math.degrees(abs(math.atan((ownycoord-ycoordb)/(ownxcoord-xcoordb))))
 
-        # XY absolute world angle
-        world_angle = math.degrees(math.atan2(dy, dx))
+            if abs(alpha) < abs(beta):
+                target_angle = abs(alpha) + abs(beta)
+            if abs(alpha) > abs(beta):
+                target_angle = abs(alpha) - abs(beta)
 
-        # relative XY angle
-        rel_angle_xy = world_angle - robot_angle_deg
-        rel_angle_xy = (rel_angle_xy + 180) % 360 - 180
+            if theta > math.pi:
+                target_angle = -target_angle
+            if theta < math.pi:
+                pass
 
-        # horizontal distance for Z angle
-        horiz = math.sqrt(dx*dx + dy*dy)
+            horiz = math.sqrt(dx*dx + dy*dy)
+            angle_z = math.atan2(dz, horiz)
+        
+            goanglexy[f"ball_{i}"] = round(target_angle, 2)
+            goanglez[f"ball_{i}"] = round(angle_z, 2)
 
-        # Z-axis (up/down) angle
-        rel_angle_z = math.degrees(math.atan2(dz, horiz))
+        if (ycoordb == ownycoord):
+            horiz = math.sqrt(dx*dx + dy*dy)
+            angle_z = math.atan2(dz, horiz)
+    
+            goanglexy[f"turret_{tnum}"] = round(-math.atan(ownycoord/ownxcoord), 2)
+            goanglez[f"ball_{i}"] = round(angle_z, 2)
 
-        # restrict XY to ±90 (turret limit)
-        if -90 <= rel_angle_xy <= 90:
-            goanglexy[f"ball_{i}"] = round(rel_angle_xy, 2)
-            goanglez[f"ball_{i}"] = round(rel_angle_z, 2)
-        else:
-            goanglexy[f"ball_{i}"] = None
-            goanglez[f"ball_{i}"] = None
+        if (xcoordb == ownxcoord):
+            horiz = math.sqrt(dx*dx + dy*dy)
+            angle_z = math.atan2(dz, horiz)
+
+            goanglexy[f"turret_{tnum}"] = round(math.atan(ownycoord/ownxcoord), 2)
+            goanglez[f"ball_{i}"] = round(angle_z, 2)
 
 
-# RUN
+
+# RUN THE CONVERSIONS
 AngleConversion()
 
-print("\nXY Angles:", goanglexy)
-print("\nZ Angles:", goanglez)
-
-
-
+print('\n')
+print("XY Angles:", goanglexy)
+print('\n')
+print("Z Angles:", goanglez)
 
 
 
