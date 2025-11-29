@@ -5,7 +5,6 @@ from Shifter import shifter  # your custom module
 # Shared array for two steppers (integers)
 myArray = multiprocessing.Array('i', 2)
 
-
 class Stepper:
     seq = [0b0001, 0b0011, 0b0010, 0b0110,
            0b0100, 0b1100, 0b1000, 0b1001]
@@ -86,24 +85,14 @@ if __name__ == '__main__':
     # Initialize angles
     m1.zero()
     m2.zero()
-
-    # Queue multiple commands
-    m1.goAngle(90)
-    m1.goAngle(-45)
-    m2.goAngle(-90)
-    m2.goAngle(45)
-    m1.goAngle(-135)
-    m1.goAngle(135)
-    m1.goAngle(0)
-        
-
-
+    
     # Keep main program running to let motors finish
     try:
         while True:
             time.sleep(0.1)
     except KeyboardInterrupt:
         print("\nExiting")
+
 
 
 
