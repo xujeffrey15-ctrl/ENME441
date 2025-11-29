@@ -16,7 +16,6 @@ ownycoord = 300 * math.sin(1.117010721276371)
 goanglexy = {}
 goanglez = {}
 
-# HELPER: compute xy angle and z angle
 def compute_angles(target_x, target_y, target_z=0):
 
     dx = target_x - ownxcoord
@@ -31,12 +30,10 @@ def compute_angles(target_x, target_y, target_z=0):
 
     return xy_angle, z_angle
 
-
 def AngleConversion():
 
     # ---- TURRETS ----
     for tnum, tinfo in TurretData.items():
-
         r = tinfo["r"]
         theta = tinfo["theta"]
 
@@ -45,8 +42,7 @@ def AngleConversion():
         y = r * math.sin(theta)
 
         xy_angle, _ = compute_angles(x, y)   # turrets have no Z angle
-        
-
+    
         goanglexy[f"turret_{tnum}"] = round((xy_angle % 360), 2)
 
     # ---- BALLS ----
@@ -64,12 +60,11 @@ def AngleConversion():
         goanglexy[f"ball_{i}"] = round((xy_angle % 360), 2)
         goanglez[f"ball_{i}"]  = round(z_angle, 2)
 
-
-# RUN
 AngleConversion()
 
 print("\nXY Angles:", goanglexy)
 print("\nZ Angles:", goanglez)
+
 
 
 
