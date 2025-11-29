@@ -68,7 +68,8 @@ def AngleConversion():
 AngleConversion()
 
 print("\nXY Angles:", goanglexy)
-print("\nZ Angles:", goanglez
+print("\nZ Angles:", goanglez)
+
 
 
 
