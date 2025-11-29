@@ -1,6 +1,5 @@
 import json
 import math
-from StepperMulti import Stepper
 
 # LOAD JSON
 with open("backup_data.json", "r") as f:
@@ -65,6 +64,7 @@ AngleConversion()
 
 print("\nXY Angles:", goanglexy)
 print("\nZ Angles:", goanglez)
+
 
 
 
