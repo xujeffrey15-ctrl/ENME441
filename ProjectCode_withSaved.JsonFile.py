@@ -44,7 +44,7 @@ def AngleConversion():
             target_angle = abs(alpha) - abs(beta)
 
         if theta > math.pi:
-            target_angle * (-1)
+            target_angle = -target_angle
         if theta < math.pi:
             pass
 
@@ -95,6 +95,7 @@ print('\n')
 print("XY Angles:", goanglexy)
 print('\n')
 print("Z Angles:", goanglez)
+
 
 
 
