@@ -26,63 +26,39 @@ def AngleConversion():
     for tnum, tinfo in TurretData.items():
         r = tinfo["r"]
         theta = tinfo["theta"]
-        target_angle = 0
 
         xcoord = r * math.cos(theta)
         ycoord = r * math.sin(theta)
 
-        if (ownxcoord-xcoord) != 0:
-            alpha = math.degrees(abs(math.atan(ownycoord/ownxcoord)))
-            beta = math.degrees(abs(math.atan((ownycoord-ycoord)/(ownxcoord-xcoord))))
-    
-            if abs(alpha) < abs(beta):
-                target_angle = abs(alpha) + abs(beta)
-            if abs(alpha) > abs(beta):
-                target_angle = abs(alpha) - abs(beta)
-    
-            if theta > math.pi:
-                target_angle = -target_angle
-            if theta < math.pi:
-                pass
-    
-            goanglexy[f"turret_{tnum}"] = round(target_angle, 2) 
-        else:
-            pass
+        dx = xcoord - ownxcoord
+        dy = ycoord - ownycoord
+
+        target_angle = math.degrees(math.atan2(dy, dx))
+
+        goanglexy[f"turret_{tnum}"] = round(target_angle, 2)
 
     # Balls
     for i, binfo in enumerate(BallData, start=1):
-
         r = binfo["r"]
         theta = binfo["theta"]
         z = binfo["z"]
 
         xcoordb = r * math.cos(theta)
         ycoordb = r * math.sin(theta)
+
         dx = xcoordb - ownxcoord
         dy = ycoordb - ownycoord
         dz = z
 
-        if (ownxcoord-xcoordb) != 0:
-            alpha = math.degrees(abs(math.atan(ownycoord/ownxcoord)))
-            beta = math.degrees(abs(math.atan((ownycoord-ycoordb)/(ownxcoord-xcoordb))))
-    
-            if abs(alpha) < abs(beta):
-                target_angle = abs(alpha) + abs(beta)
-            if abs(alpha) > abs(beta):
-                target_angle = abs(alpha) - abs(beta)
-    
-            if theta > math.pi:
-                target_angle * (-1)
-            if theta < math.pi:
-                pass
-    
-            horiz = math.sqrt(dx*dx + dy*dy)
-            angle_z = math.atan2(dz, horiz)
-            
-            goanglexy[f"ball_{i}"] = round(target_angle, 2)
-            goanglez[f"ball_{i}"] = round(angle_z, 2)
-        else:
-            pass
+        # XY angle
+        target_angle = math.degrees(math.atan2(dy, dx))
+
+        # Z angle
+        horiz = math.sqrt(dx*dx + dy*dy)
+        angle_z = math.atan2(dz, horiz)
+
+        goanglexy[f"ball_{i}"] = round(target_angle, 2)
+        goanglez[f"ball_{i}"] = round(angle_z, 2)
 
 
 # RUN THE CONVERSIONS
@@ -92,6 +68,7 @@ print('\n')
 print("XY Angles:", goanglexy)
 print('\n')
 print("Z Angles:", goanglez)
+
 
 
 
