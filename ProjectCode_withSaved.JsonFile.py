@@ -61,7 +61,7 @@ def AngleConversion():
 
         xy_angle, z_angle = compute_angles(x, y, z)
 
-        goanglexy[f"ball_{i}"] = round(xy_angle, 2)
+        goanglexy[f"ball_{i}"] = round((xy_angle % 360), 2)
         goanglez[f"ball_{i}"]  = round(z_angle, 2)
 
 
@@ -70,6 +70,7 @@ AngleConversion()
 
 print("\nXY Angles:", goanglexy)
 print("\nZ Angles:", goanglez)
+
 
 
 
