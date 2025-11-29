@@ -45,8 +45,9 @@ def AngleConversion():
         y = r * math.sin(theta)
 
         xy_angle, _ = compute_angles(x, y)   # turrets have no Z angle
+        
 
-        goanglexy[f"turret_{tnum}"] = round(xy_angle, 2)
+        goanglexy[f"turret_{tnum}"] = round((xy_angle % 360), 2)
 
     # ---- BALLS ----
     for i, binfo in enumerate(BallData, start=1):
@@ -69,6 +70,7 @@ AngleConversion()
 
 print("\nXY Angles:", goanglexy)
 print("\nZ Angles:", goanglez)
+
 
 
 
