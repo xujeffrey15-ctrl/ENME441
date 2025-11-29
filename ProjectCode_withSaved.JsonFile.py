@@ -25,12 +25,12 @@ current_angle_Z = 0
 
 # XY ANGLE CONVERSION
 def AngleConversion():
-    target_angle = 0
 
     # Turrets
     for tnum, tinfo in TurretData.items():
         r = tinfo["r"]
         theta = tinfo["theta"]
+        target_angle = 0
 
         xcoord = r * math.cos(theta)
         ycoord = r * math.sin(theta)
@@ -95,6 +95,7 @@ print('\n')
 print("XY Angles:", goanglexy)
 print('\n')
 print("Z Angles:", goanglez)
+
 
 
 
