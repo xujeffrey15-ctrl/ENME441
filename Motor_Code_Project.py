@@ -96,6 +96,7 @@ if __name__ == '__main__':
     for b in range(numball):
         m1.goAngle(XY[f"ball_{b}"])
         m2.goAngle(Z[f"ball_{b}"])
+        
     m1.goAngle(0)
     m2.goAngle(0)
 
@@ -105,6 +106,7 @@ if __name__ == '__main__':
             time.sleep(0.1)
     except KeyboardInterrupt:
         print("\nExiting")
+
 
 
 
