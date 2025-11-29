@@ -61,25 +61,26 @@ class Stepper:
         for _ in range(steps):
             self._step(direction)
 
+
     def _run(self):
-        """ Continuously run commands from the queue """
         while True:
-            delta = self.q.get()  # blocks until a new command
+            delta = self.q.get()   # Wait for command
             self._rotate(delta)
-            self.both.set()
+            self.both.set()        # Signal "done"
 
     def zero(self):
         self.angle = 0
 
     def goAngle(self, target_angle):
-        """ Calculate shortest path and queue the movement """
+        # Compute shortest rotation path
         diff = target_angle - self.angle
-        # Choose shortest rotation
         if diff > 180:
             diff -= 360
         elif diff < -180:
             diff += 360
-        self.q.put(diff)
+
+        self.both.clear()  # Must clear before new command
+        self.q.put(diff)   # Background worker handles it
         
 if __name__ == '__main__':
     s = shifter(16, 21, 20)
@@ -88,39 +89,34 @@ if __name__ == '__main__':
     m1 = Stepper(s, lock, 0)
     m2 = Stepper(s, lock, 1)
 
-    # Initialize angles
     m1.zero()
     m2.zero()
 
-    # Automated movements
-    for t in range(1,numturrets):
+    for t in range(1, numturrets):
         m1.goAngle(XY[f"turret_{t}"])
         m2.goAngle(Z[f"turret_{t}"])
-        if (m1.both.is_set() == True) and (m2.both.is_set() == True):
-            print("Motors are set to the correct angle")
-            time.sleep(5)
-            m1.both.clear()
-            m2.both.clear()
-        else:
-            m1.both.wait()
-            m2.both.wait()
-            
-    for b in range(1,numball):
+
+        m1.both.wait()
+        m2.both.wait()
+
+        print("Motors are set to the correct angle")
+        time.sleep(5)
+
+    # ---------------- AUTOMATED BALL MOVEMENT ----------------
+    for b in range(1, numball):
         m1.goAngle(XY[f"ball_{b}"])
         m2.goAngle(Z[f"ball_{b}"])
-        if (m1.both.is_set() == True) and (m2.both.is_set() == True):
-            print("Motors are set to the correct angle")
-            time.sleep(5)
-            m1.both.clear()
-            m2.both.clear()
-        else:
-            m1.both.wait()
-            m2.both.wait()
-        
+
+        m1.both.wait()
+        m2.both.wait()
+
+        print("Motors are set to the correct angle")
+        time.sleep(5)
+
+    # Return to zero
     m1.goAngle(0)
     m2.goAngle(0)
 
-    # Keep main program running
     try:
         while True:
             time.sleep(0.1)
