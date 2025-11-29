@@ -20,6 +20,8 @@ ownycoord = 300*math.sin(1.117010721276371)
 
 goanglexy = {}
 goanglez = {}
+current_angle_XY = 0
+current_angle_Z = 0
 
 # XY ANGLE CONVERSION
 def AngleConversion():
@@ -32,17 +34,25 @@ def AngleConversion():
 
         xcoord = r * math.cos(theta)
         ycoord = r * math.sin(theta)
-        if (xcoord - ownxcoord) != 0:
-            m = (ycoord - ownycoord)/(xcoord - ownxcoord)
-    
-            goanglet = math.degrees(math.atan(m))
-    
-            goanglexy[f"turret_{tnum}"] = round(goanglet, 2)
-            print(tnum)
-            print(goanglexy[f"turret_{tnum}"])
-            time.sleep(1)
-        else:
+
+        alpha = math.degrees(abs(math.atan(ownycoord/ownxcoord)))
+        beta = math.degrees(abs(math.atan((ownycoord-ycoord)/(ownxcoord-xcoord))))
+
+        if abs(alpha) < abs(beta):
+            target_angle = abs(alpha) + abs(beta)
+        if abs(alpha) > abs(beta):
+            target_angle = abs(alpha) - abs(beta)
+
+        if theta > math.pi:
+            target_angle * (-1)
+        if theta < math.pi:
             pass
+
+        goangle = target_angle - current_angle_XY
+
+        goanglexy[f"turret_{tnum}"] = round(goangle, 2) 
+
+        current_angle_XY = target_angle
 
     # Balls
     for i, binfo in enumerate(BallData, start=1):
@@ -53,29 +63,39 @@ def AngleConversion():
 
         xcoordb = r * math.cos(theta)
         ycoordb = r * math.sin(theta)
-        if (xcoordb - ownxcoord) != 0:
-            m = (ycoordb - ownycoord)/(xcoordb - ownxcoord)
-            dx = xcoordb - ownxcoord
-            dy = ycoordb - ownycoord
-            dz = z
-    
-            goangleb = math.degrees(math.atan(m))
-            horiz = math.sqrt(dx*dx + dy*dy)
-            heightangle = dz/horiz
-            angle_z = math.atan(heightangle)
-            
-            goanglexy[f"ball_{i}"] = round(goangleb, 2)
-            goanglez[f"ball_{i}"] = round(angle_z, 2)
-            print(i)
-            print(goanglexy[f"ball_{i}"])
-            print(goanglez[f"ball_{i}"])
-            time.sleep(1)
-        else:
+        dx = xcoordb - ownxcoord
+        dy = ycoordb - ownycoord
+        dz = z
+
+        alpha = math.degrees(abs(math.atan(ownycoord/ownxcoord)))
+        beta = math.degrees(abs(math.atan((ownycoord-ycoordb)/(ownxcoord-xcoordb))))
+
+        if abs(alpha) < abs(beta):
+            target_angle = abs(alpha) + abs(beta)
+        if abs(alpha) > abs(beta):
+            target_angle = abs(alpha) - abs(beta)
+
+        if theta > math.pi:
+            target_angle * (-1)
+        if theta < math.pi:
             pass
+
+        goangle = target_angle - current_angle_XY
+        horiz = math.sqrt(dx*dx + dy*dy)
+        angle_z = math.atan2(dz, horiz)
+        
+        goanglexy[f"ball_{i}"] = round(goangle, 2)
+        goanglez[f"ball_{i}"] = round(angle_z, 2)
 
 
 # RUN THE CONVERSIONS
 AngleConversion()
+
+print('\n')
+print("XY Angles:", goanglexy)
+print('\n')
+print("Z Angles:", goanglez)
+
 
 
 
