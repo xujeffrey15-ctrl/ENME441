@@ -65,6 +65,7 @@ class Stepper:
         while True:
             delta = self.q.get()  # blocks until a new command
             self._rotate(delta)
+            time.sleep(1)
 
     def zero(self):
         self.angle = 0
@@ -106,6 +107,7 @@ if __name__ == '__main__':
             time.sleep(0.1)
     except KeyboardInterrupt:
         print("\nExiting")
+
 
 
 
