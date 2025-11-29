@@ -34,8 +34,8 @@ def AngleConversion():
         ycoord = r * math.sin(theta)
 
         if (ycoord != ownycoord) and (xcoord != ownxcoord):
-            alpha = math.degrees(abs(math.atan(ownycoord/ownxcoord)))
-            beta = math.degrees(abs(math.atan((ownycoord-ycoord)/(ownxcoord-xcoord))))
+            alpha = abs(math.degrees(math.atan(ownycoord/ownxcoord)))
+            beta = abs(math.degrees(math.atan((ownycoord-ycoord)/(ownxcoord-xcoord))))
 
             if (xcoord  > ownxcoord) or (ycoord > ownycoord):
                 target_angle = alpha + beta
@@ -111,6 +111,7 @@ print('\n')
 print("XY Angles:", goanglexy)
 print('\n')
 print("Z Angles:", goanglez)
+
 
 
 
