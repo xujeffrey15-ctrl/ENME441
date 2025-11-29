@@ -1,6 +1,3 @@
-ULL CORRECTED PROGRAM
-
-Copy & paste this exactly.
 
 import json
 import math
@@ -93,6 +90,7 @@ AngleConversion()
 
 print("\nXY Angles:", goanglexy)
 print("\nZ Angles:", goanglez)
+
 
 
 
