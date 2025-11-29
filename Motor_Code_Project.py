@@ -90,7 +90,7 @@ if __name__ == '__main__':
     m1.zero()
     m2.zero()
 
-    # Queue movements
+    # Automated movements
     for t in range(numturrets):
         m1.goAngle(XY[f"turret_{t}"])
     for b in range(numball):
@@ -106,6 +106,7 @@ if __name__ == '__main__':
             time.sleep(0.1)
     except KeyboardInterrupt:
         print("\nExiting")
+
 
 
 
