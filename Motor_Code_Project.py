@@ -102,8 +102,9 @@ if __name__ == '__main__':
         m1.both.wait()
         m2.both.wait()
 
-        print("Motors are set to the correct angle")
-        time.sleep(5)
+        GPIO.OUT(11,1) 
+        time.sleep(3)
+        GPIO.OUT(11,0)
 
     # ---------------- AUTOMATED BALL MOVEMENT ----------------
     for b in range(1, numball):
@@ -113,8 +114,9 @@ if __name__ == '__main__':
         m1.both.wait()
         m2.both.wait()
 
-        print("Motors are set to the correct angle")
-        time.sleep(5)
+        GPIO.OUT(11,1) 
+        time.sleep(3)
+        GPIO.OUT(11,0)
 
     # Return to zero
     m1.goAngle(0)
@@ -125,6 +127,7 @@ if __name__ == '__main__':
             time.sleep(0.1)
     except KeyboardInterrupt:
         print("\nExiting")
+
 
 
 
