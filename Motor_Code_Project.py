@@ -5,7 +5,7 @@ import RPi.GPIO as GPIO
 import time
 GPIO.setmode(GPIO.BCM)  
 
-GPIO.
+GPIO.setup(11,GPIO.OUT)
 XY = Json_Reader.goanglexy
 Z = Json_Reader.goanglez
 numturrets = len(Json_Reader.TurretData)
@@ -125,6 +125,7 @@ if __name__ == '__main__':
             time.sleep(0.1)
     except KeyboardInterrupt:
         print("\nExiting")
+
 
 
 
