@@ -1,8 +1,11 @@
-import time
 import multiprocessing
 from Shifter import shifter  # your custom module
 import Json_Reader
+import RPi.GPIO as GPIO
+import time
+GPIO.setmode(GPIO.BCM)  
 
+GPIO.
 XY = Json_Reader.goanglexy
 Z = Json_Reader.goanglez
 numturrets = len(Json_Reader.TurretData)
@@ -122,6 +125,7 @@ if __name__ == '__main__':
             time.sleep(0.1)
     except KeyboardInterrupt:
         print("\nExiting")
+
 
 
 
