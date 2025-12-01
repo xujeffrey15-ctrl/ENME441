@@ -4,7 +4,7 @@ import json
 import time
 import multiprocessing
 from Shifter import shifter
-from MultiStepper import Stepper  # Import your existing class
+from StepperMulti import Stepper  # Import your existing class
 
 # GPIO simulation (replace with RPi.GPIO or gpiozero for real implementation)
 class GPIOSimulator:
