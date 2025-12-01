@@ -360,10 +360,6 @@ class ReusableTCPServer(socketserver.TCPServer):
 def start_server(port=8656):
     with open('index.html', 'w') as f:
         f.write(generate_html())
-
-    with ReusableTCPServer(("", port), GPIORequestHandler) as httpd:
-        print(f"Server running at http://localhost:{port}")
-        httpd.serve_forever()
         
     # Start the server
     with socketserver.TCPServer(("", port), GPIORequestHandler) as httpd:
