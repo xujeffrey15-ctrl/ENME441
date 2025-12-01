@@ -88,14 +88,14 @@ class Stepper:
 if __name__ == '__main__':
     s = shifter(16, 21, 20)
     lock = multiprocessing.Lock()
-
-    m1 = Stepper(s, lock, 0)
-    m2 = Stepper(s, lock, 1)
-
-    m1.zero()
-    m2.zero()
     
     def Automated():
+            m1 = Stepper(s, lock, 0)
+            m2 = Stepper(s, lock, 1)
+        
+            m1.zero()
+            m2.zero()
+        
         for t in range(1, numturrets):
             m1.goAngle(XY[f"turret_{t}"])
             m2.goAngle(Z[f"turret_{t}"])
@@ -119,15 +119,16 @@ if __name__ == '__main__':
             time.sleep(3)
             GPIO.output(11,0)
     
-    # Return to zero
-    m1.goAngle(0)
-    m2.goAngle(0)
+            # Return to zero
+            m1.goAngle(0)
+            m2.goAngle(0)
 
     try:
         while True:
             time.sleep(0.1)
     except KeyboardInterrupt:
         print("\nExiting")
+
 
 
 
