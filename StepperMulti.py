@@ -88,7 +88,7 @@ if __name__ == '__main__':
     m2.zero()
 
     # Queue multiple commands
-    m1.goAngle(45)
+    m1.goAngle(25)
 
 
     # Keep main program running to let motors finish
@@ -97,6 +97,7 @@ if __name__ == '__main__':
             time.sleep(0.1)
     except KeyboardInterrupt:
         print("\nExiting")
+
 
 
 
