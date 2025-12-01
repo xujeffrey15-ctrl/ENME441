@@ -352,11 +352,17 @@ def generate_html():
 </html>"""
     return html
 
+class ReusableTCPServer(socketserver.TCPServer):
+    allow_reuse_address = True
+
 def start_server(port=8000):
-    # Create HTML file
     with open('index.html', 'w') as f:
         f.write(generate_html())
-    
+
+    with ReusableTCPServer(("", port), GPIORequestHandler) as httpd:
+        print(f"Server running at http://localhost:{port}")
+        httpd.serve_forever()
+        
     # Start the server
     with socketserver.TCPServer(("", port), GPIORequestHandler) as httpd:
         print(f"Server running at http://localhost:{port}")
