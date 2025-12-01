@@ -247,8 +247,8 @@ def generate_html():
             
             <div class="motor-status">
                 <h3>Motor Positions:</h3>
-                <div>Motor 1 Angle: <span id="motor1Angle">str(GPIOSimulator.m1.angle)</span>°</div>
-                <div>Motor 2 Angle: <span id="motor2Angle">str(GPIOSimulator.m2.angle)</span>°</div>
+                <div>Motor 1 Angle: <span id="motor1Angle">{{ GPIOSimulator.m1.angle }}</span>°</div>
+                <div>Motor 2 Angle: <span id="motor2Angle">{{ GPIOSimulator.m2.angle }}</span>°</div>
             </div>
         </div>
         
