@@ -86,39 +86,13 @@ class Stepper:
         self.q.put(diff)   # Background worker handles it
         
 if __name__ == '__main__':
-    def Automated():
-        for t in range(1, numturrets):
-            m1.goAngle(XY[f"turret_{t}"])
-            m2.goAngle(Z[f"turret_{t}"])
-    
-            m1.both.wait()
-            m2.both.wait()
-    
-            GPIO.output(11,1) 
-            time.sleep(3)
-            GPIO.output(11,0)
-    
-        # ---------------- AUTOMATED BALL MOVEMENT ----------------
-        for b in range(1, numball):
-            m1.goAngle(XY[f"ball_{b}"])
-            m2.goAngle(Z[f"ball_{b}"])
-    
-            m1.both.wait()
-            m2.both.wait()
-    
-            GPIO.output(11,1) 
-            time.sleep(3)
-            GPIO.output(11,0)
-    
-            # Return to zero
-            m1.goAngle(0)
-            m2.goAngle(0)
 
     try:
         while True:
             time.sleep(0.1)
     except KeyboardInterrupt:
         print("\nExiting")
+
 
 
 
