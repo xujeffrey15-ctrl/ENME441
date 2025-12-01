@@ -88,11 +88,10 @@ class Stepper:
 if __name__ == '__main__':
     s = shifter(16, 21, 20)
     lock = multiprocessing.Lock()
+    m1 = Stepper(s, lock, 0)
+    m2 = Stepper(s, lock, 1)
     
     def Automated():
-        m1 = Stepper(s, lock, 0)
-        m2 = Stepper(s, lock, 1)
-        
         m1.zero()
         m2.zero()
         
@@ -128,6 +127,7 @@ if __name__ == '__main__':
             time.sleep(0.1)
     except KeyboardInterrupt:
         print("\nExiting")
+
 
 
 
