@@ -60,31 +60,31 @@ class GPIOSimulator:
         print("Automation task initiated - moving motors")
 
         for t in range(1, numturrets):
-            m1.goAngle(XY[f"turret_{t}"])
-            m2.goAngle(Z[f"turret_{t}"])
+            self.m1.goAngle(XY[f"turret_{t}"])
+            self.m2.goAngle(Z[f"turret_{t}"])
     
-            m1.both.wait()
-            m2.both.wait()
+            self.m1.both.wait()
+            self.m2.both.wait()
     
-            GPIO.output(11,1) 
+            #GPIO.output(11,1) 
             time.sleep(3)
-            GPIO.output(11,0)
+            #GPIO.output(11,0)
     
         # ---------------- AUTOMATED BALL MOVEMENT ----------------
         for b in range(1, numball):
-            m1.goAngle(XY[f"ball_{b}"])
-            m2.goAngle(Z[f"ball_{b}"])
+            self.m1.goAngle(XY[f"ball_{b}"])
+            self.m2.goAngle(Z[f"ball_{b}"])
     
-            m1.both.wait()
-            m2.both.wait()
+            self. m1.both.wait()
+            self. m2.both.wait()
     
-            GPIO.output(11,1) 
+            #GPIO.output(11,1) 
             time.sleep(3)
-            GPIO.output(11,0)
+            #GPIO.output(11,0)
     
         # Return to zero
-        m1.goAngle(0)
-        m2.goAngle(0)
+            self.m1.goAngle(0)
+            self.m2.goAngle(0)
         
         return True
 
