@@ -26,7 +26,6 @@ def compute_angles(target_x, target_y, target_z=0):
 
     # Z angle (0 if target_z=0)
     z_angle = math.degrees(math.atan2(target_z, horiz))
-    z_angle = (180 - z_angle) % 360
 
     return xy_angle, z_angle
 
@@ -66,6 +65,7 @@ AngleConversion()
 
 print("\nXY Angles:", goanglexy)
 print("\nZ Angles:", goanglez)
+
 
 
 
