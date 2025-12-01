@@ -7,6 +7,9 @@ from Shifter import shifter
 from Motor_Code_Project import Stepper
 import Json_Reader
 
+numturrets = len(Json_Reader.TurretData)
+numball = len(Json_Reader.BallData)
+
 # GPIO simulation (replace with RPi.GPIO or gpiozero for real implementation)
 class GPIOSimulator:
     def __init__(self):
