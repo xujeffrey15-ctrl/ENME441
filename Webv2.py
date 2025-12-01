@@ -7,6 +7,8 @@ from Shifter import shifter
 from Motor_Code_Project import Stepper
 import Json_Reader
 
+XY = Json_Reader.goanglexy
+Z = Json_Reader.goanglez
 numturrets = len(Json_Reader.TurretData)
 numball = len(Json_Reader.BallData)
 
