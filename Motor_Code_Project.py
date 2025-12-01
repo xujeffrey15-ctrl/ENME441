@@ -86,15 +86,7 @@ class Stepper:
         self.q.put(diff)   # Background worker handles it
         
 if __name__ == '__main__':
-    s = shifter(16, 21, 20)
-    lock = multiprocessing.Lock()
-    m1 = Stepper(s, lock, 0)
-    m2 = Stepper(s, lock, 1)
-    
     def Automated():
-        m1.zero()
-        m2.zero()
-        
         for t in range(1, numturrets):
             m1.goAngle(XY[f"turret_{t}"])
             m2.goAngle(Z[f"turret_{t}"])
@@ -127,6 +119,7 @@ if __name__ == '__main__':
             time.sleep(0.1)
     except KeyboardInterrupt:
         print("\nExiting")
+
 
 
 
