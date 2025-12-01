@@ -1,9 +1,15 @@
 import json
 import math
+import requests
 
-# LOAD JSON
-with open("backup_data.json", "r") as f:
-    data = json.load(f)
+url = "http://192.168.1.254:8000/positions.json"   # Replace with your URL
+
+response = requests.get(url)
+response.raise_for_status()             # Raises an error for bad status codes
+
+data = response.json()                  # Parse JSON directly
+
+print(data)
 
 TurretData = data["turrets"]        # dict of turret objects
 BallData = data["globes"]           # list of ball objects
@@ -65,6 +71,7 @@ AngleConversion()
 
 print("\nXY Angles:", goanglexy)
 print("\nZ Angles:", goanglez)
+
 
 
 
