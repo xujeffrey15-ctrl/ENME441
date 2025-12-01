@@ -54,15 +54,8 @@ class GPIOSimulator:
     def initiate_automation(self):
         # Do automation task using your existing motor control code
         print("Automation task initiated - moving motors")
-        
-        # Use your exact motor sequence from MultiStepper.py
-        self.m1.goAngle(90)
-        self.m1.goAngle(-45)
-        self.m2.goAngle(-90)
-        self.m2.goAngle(45)
-        self.m1.goAngle(-135)
-        self.m1.goAngle(135)
-        self.m1.goAngle(0)
+
+        Motor_Code_Project.Automated()
         
         return True
 
