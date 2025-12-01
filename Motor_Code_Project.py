@@ -90,11 +90,11 @@ if __name__ == '__main__':
     lock = multiprocessing.Lock()
     
     def Automated():
-            m1 = Stepper(s, lock, 0)
-            m2 = Stepper(s, lock, 1)
+        m1 = Stepper(s, lock, 0)
+        m2 = Stepper(s, lock, 1)
         
-            m1.zero()
-            m2.zero()
+        m1.zero()
+        m2.zero()
         
         for t in range(1, numturrets):
             m1.goAngle(XY[f"turret_{t}"])
@@ -128,6 +128,7 @@ if __name__ == '__main__':
             time.sleep(0.1)
     except KeyboardInterrupt:
         print("\nExiting")
+
 
 
 
