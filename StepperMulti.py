@@ -88,7 +88,7 @@ if __name__ == '__main__':
     m2.zero()
 
     # Queue multiple commands
-    m1.goAngle(-360)
+    m1.goAngle(-180)
         
 
 
@@ -98,6 +98,7 @@ if __name__ == '__main__':
             time.sleep(0.1)
     except KeyboardInterrupt:
         print("\nExiting")
+
 
 
 
