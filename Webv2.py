@@ -77,8 +77,8 @@ class GPIOSimulator:
             self.m1.goAngle(XY[f"ball_{b}"])
             self.m2.goAngle(Z[f"ball_{b}"])
     
-            self. m1.both.wait()
-            self. m2.both.wait()
+            self.m1.both.wait()
+            self.m2.both.wait()
     
             #GPIO.output(11,1) 
             time.sleep(3)
@@ -247,8 +247,8 @@ def generate_html():
             
             <div class="motor-status">
                 <h3>Motor Positions:</h3>
-                <div>Motor 1 Angle: <span id="motor1Angle">0</span>°</div>
-                <div>Motor 2 Angle: <span id="motor2Angle">0</span>°</div>
+                <div>Motor 1 Angle: <span id="motor1Angle">{{ GPIOSimulator.m1.angle }}</span>°</div>
+                <div>Motor 2 Angle: <span id="motor2Angle">{{ GPIOSimulator.m2.angle }}</span>°</div>
             </div>
         </div>
         
@@ -357,13 +357,9 @@ def generate_html():
 class ReusableTCPServer(socketserver.TCPServer):
     allow_reuse_address = True
 
-def start_server(port=8000):
+def start_server(port=8656):
     with open('index.html', 'w') as f:
         f.write(generate_html())
-
-    with ReusableTCPServer(("", port), GPIORequestHandler) as httpd:
-        print(f"Server running at http://localhost:{port}")
-        httpd.serve_forever()
         
     # Start the server
     with socketserver.TCPServer(("", port), GPIORequestHandler) as httpd:
