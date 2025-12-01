@@ -77,8 +77,8 @@ class GPIOSimulator:
             self.m1.goAngle(XY[f"ball_{b}"])
             self.m2.goAngle(Z[f"ball_{b}"])
     
-            self. m1.both.wait()
-            self. m2.both.wait()
+            self.m1.both.wait()
+            self.m2.both.wait()
     
             #GPIO.output(11,1) 
             time.sleep(3)
