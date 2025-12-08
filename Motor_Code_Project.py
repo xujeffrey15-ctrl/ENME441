@@ -1,23 +1,12 @@
-import multiprocessing
 from Shifter import shifter  # your custom module
-import Json_Reader
-import RPi.GPIO as GPIO
 import time
-GPIO.setmode(GPIO.BCM)  
-
-GPIO.setup(11,GPIO.OUT)
-XY = Json_Reader.goanglexy
-Z = Json_Reader.goanglez
-numturrets = len(Json_Reader.TurretData)
-numball = len(Json_Reader.BallData)
 
 myArray = multiprocessing.Array('i', 2)
 
 class Stepper:
-    seq = [0b0001, 0b0011, 0b0010, 0b0110,
-           0b0100, 0b1100, 0b1000, 0b1001]
-    delay = 12000  # microseconds
-    steps_per_degree = 1024 / 360
+    seq = [0b0001, 0b0011, 0b0010, 0b0110, 0b0100, 0b1100, 0b1000, 0b1001]
+    delay = 12000  
+    steps_per_degree = 4096 / 360
 
     def __init__(self, shifter, lock, index):
         self.s = shifter
@@ -26,14 +15,7 @@ class Stepper:
         self.angle = 0
         self.step_state = 0
         self.shifter_bit_start = 4 * index
-        self.both = multiprocessing.Event()
-        self.q = multiprocessing.Queue()
-
-        # Start a dedicated process to run commands from the queue
-        self.proc = multiprocessing.Process(target=self._run)
-        self.proc.daemon = True  # ends when main program ends
-        self.proc.start()
-
+        
     def _sgn(self, x):
         return 0 if x == 0 else int(abs(x)/x)
 
@@ -64,7 +46,6 @@ class Stepper:
         for _ in range(steps):
             self._step(direction)
 
-
     def _run(self):
         while True:
             delta = self.q.get()   # Wait for command
@@ -92,6 +73,7 @@ if __name__ == '__main__':
             time.sleep(0.1)
     except KeyboardInterrupt:
         print("\nExiting")
+
 
 
 
