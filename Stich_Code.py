@@ -1,5 +1,5 @@
 #Code to stitch together JSON Reader and Motor Code while recording crucial data for calibration
-
+import Json_Reader
 import multiprocessing 
 
 class calibration():
