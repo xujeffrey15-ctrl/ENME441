@@ -11,9 +11,16 @@ numturrets = len(Json_Reader.TurretData)          #Number of turrets for automat
 numball = len(Json_Reader.BallData)               #Number of stationary ball targets for automation
 
 class Stepper_Motors():
+    #Class variables:
+    Motor_wiring_sequence = [0b0001, 0b0011, 0b0010, 0b0110, 0b0100, 0b1100, 0b1000, 0b1001]    #I assume that each complete rotation turns the shaft 4096/360 degrees due to gearbox
+    delay = 12000  
+    steps_per_degree = 4096 / 360
+    
     def Motor_To_Shift_Register(self, desired_angle):            #Converts both desired angles to a single string of 8 bit binary code for shift register
         #Has to be able to take in angle requests and combine the results from both process into a single 8 bit string
-        Motor_wiring = [
+        Concurrent_Motors.start()
+
+
         
         
 
