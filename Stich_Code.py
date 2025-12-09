@@ -1,6 +1,7 @@
 #Code to stitch together JSON Reader and Motor Code while recording crucial data for calibration
 
 #Imports
+from Shifter import shifter
 from Motor_Code_Project import Stepper
 import RPi.GPIO as GPIO
 import Json_Reader
