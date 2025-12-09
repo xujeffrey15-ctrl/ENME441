@@ -1,13 +1,9 @@
 from flask import Flask, request, render_template_string
-from your_motor_file import Stepper_Motors  # <-- Replace with your actual file
+from Stich_Code import Stepper_Motors  # <-- Replace with your actual file
 import time
 
 app = Flask(__name__)
 motors = Stepper_Motors()
-
-# ---------------------------------------------------------
-# HTML PAGE (served as a template string by Flask)
-# ---------------------------------------------------------
 
 HTML_PAGE = """
 <!DOCTYPE html>
