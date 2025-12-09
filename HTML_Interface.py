@@ -72,7 +72,7 @@ def parse_form(form_body):
 
 # ---------------------------------------------------------------------
 
-HOST = "0.0.0.0"
+HOST = "127.0.0.1"
 PORT = 5000
 
 print(f"Server running at http://{HOST}:{PORT}")
