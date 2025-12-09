@@ -19,7 +19,25 @@ class Stepper_Motors():
         self.m2 = Stepper(self.s, self.lock, 1)
 
    def Automated_Motors():
-      for i in numturrets:
+      for turrets in range(1, numturrets):
+         self.m1.goAngle(XY[f"turret_{t}"])
+         self.m2.goAngle(Z[f"turret_{t}"])
+         self.m1.both.wait()
+         self.m2.both.wait()
+    
+         GPIO.output(11,1) 
+         time.sleep(3)
+         GPIO.output(11,0)
+    
+      for balls in range(1, numball):
+         self.m1.goAngle(XY[f"ball_{b}"])
+         self.m2.goAngle(Z[f"ball_{b}"])
+         self.m1.both.wait()
+         self.m2.both.wait()
+    
+         GPIO.output(11,1) 
+         time.sleep(3)
+         GPIO.output(11,0)
          
 
         
