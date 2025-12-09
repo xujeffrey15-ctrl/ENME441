@@ -18,14 +18,33 @@ class Stepper_Motors():
         self.m1 = Stepper(self.s, self.lock, 0)
         self.m2 = Stepper(self.s, self.lock, 1)
 
+   def Calibration():
+      calibration_magnitude = 120
+      calibration_direction = 1
+
+      # Calibrate motors to 90 degrees
+      while calibration_magnitude >= 0.5:
+         self.m1.goAngle(calibration_magnitude)
+         self.m2.goAngle(calibration_magnitude)
+         calibration_magnitude = calibration_magnitude + calibration_magnitude/2
+         calibration_direction = -calibration_direction
+      print("Motors Calibrated")
+
+      # Test Laser
+      GPIO.output(11,1)
+      time.sleep(3)
+      GPIO.output(11,0)
+      print("Laser Primed")
+   
    def Automated_Motors():
       for turrets in range(1, numturrets):
          self.m1.goAngle(XY[f"turret_{t}"])
          self.m2.goAngle(Z[f"turret_{t}"])
          self.m1.both.wait()
          self.m2.both.wait()
-    
-         GPIO.output(11,1) 
+
+         GPIO.output(11,1)
+         print("Laser Engaged")
          time.sleep(3)
          GPIO.output(11,0)
     
@@ -35,7 +54,8 @@ class Stepper_Motors():
          self.m1.both.wait()
          self.m2.both.wait()
     
-         GPIO.output(11,1) 
+         GPIO.output(11,1)
+         print("Laser Engaged")
          time.sleep(3)
          GPIO.output(11,0)
          
@@ -45,11 +65,7 @@ class Stepper_Motors():
 
 class calibration():
     def self_calibration(): #Can be used if you know the magnitude and direction of the previous rotation
-        calibration_magnitude = mag
-        calibration_direction = dir
-        while calibration_magnitude >= 0.5:
-            calibration_magnitude = calibration_magnitude + calibration_magnitude/2
-            calibration_direction = -calibration_direction
+        
             #motor continously rotate between 1.5 times the other direction, eventually it should rest close to 90 which is the desired starting line
         #Preferably the code will interupt the automation code
 
