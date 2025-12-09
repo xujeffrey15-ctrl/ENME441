@@ -3,11 +3,6 @@ from Shifter import shifter
 import Json_Reader
 import time
 
-XY = Json_Reader.goanglexy
-Z = Json_Reader.goanglez
-numturrets = len(Json_Reader.TurretData)
-numball = len(Json_Reader.BallData)
-
 myArray = multiprocessing.Array('i', 2)
 
 class Stepper:
@@ -79,6 +74,7 @@ if __name__ == '__main__':
             time.sleep(0.1)
     except KeyboardInterrupt:
         print("\nExiting")
+
 
 
 
