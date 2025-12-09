@@ -58,16 +58,3 @@ class Stepper_Motors():
          print("Laser Engaged")
          time.sleep(3)
          GPIO.output(11,0)
-         
-
-        
-        
-
-class calibration():
-    def self_calibration(): #Can be used if you know the magnitude and direction of the previous rotation
-        
-            #motor continously rotate between 1.5 times the other direction, eventually it should rest close to 90 which is the desired starting line
-        #Preferably the code will interupt the automation code
-
-
-        
