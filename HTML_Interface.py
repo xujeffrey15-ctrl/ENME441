@@ -48,7 +48,7 @@ HTML_PAGE = """
 </html>
 """
 
-# ---------------------------------------------------------------------
+# -------------------------------------------------------
 
 def http_response(body, status="200 OK"):
     return (
@@ -66,70 +66,69 @@ def parse_post_data(request):
 
 def parse_form(form_body):
     parsed = urllib.parse.parse_qs(form_body)
-    # flatten values
-    data = {k: v[0] for k, v in parsed.items()}
-    return data
+    return {k: v[0] for k, v in parsed.items()}
 
-# ---------------------------------------------------------------------
+# -------------------------------------------------------
 
-HOST = "127.0.0.1"
+HOST = "0.0.0.0"  # Accept connections from LAN
 PORT = 5000
-
-print(f"Server running at http://{HOST}:{PORT}")
 
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server.bind((HOST, PORT))
 server.listen(5)
+print(f"Server running! Access at http://localhost:{PORT} or http://<YOUR_LAN_IP>:{PORT}")
 
 while True:
     client, addr = server.accept()
-    request = client.recv(4096).decode()
+    try:
+        request = client.recv(8192).decode()  # increased buffer for POST
+        if not request:
+            client.close()
+            continue
 
-    if not request:
+        request_line = request.splitlines()[0]
+        print(f"Request from {addr}: {request_line}")  # Debugging
+
+        method, path, _ = request_line.split(" ")
+        message = ""
+
+        # ---------------- Routing ------------------
+        if method == "GET" and path == "/":
+            response = http_response(HTML_PAGE.format(MESSAGE=""))
+            client.sendall(response.encode())
+
+        elif method == "POST" and path == "/calibrate":
+            form = parse_form(parse_post_data(request))
+            toggle = int(form.get("toggle", 0))
+            motors.Calibration(toggle)
+            message = "<p><b>Calibration complete.</b></p>"
+            response = http_response(HTML_PAGE.format(MESSAGE=message))
+            client.sendall(response.encode())
+
+        elif method == "POST" and path == "/manual":
+            form = parse_form(parse_post_data(request))
+            toggle = int(form.get("toggle", 0))
+            diff = float(form.get("diff", 0))
+            motors.Manual_Motors(toggle, diff)
+            message = f"<p><b>Manual movement complete (diff={diff}).</b></p>"
+            response = http_response(HTML_PAGE.format(MESSAGE=message))
+            client.sendall(response.encode())
+
+        elif method == "POST" and path == "/automation":
+            form = parse_form(parse_post_data(request))
+            toggle = int(form.get("toggle", 0))
+            if toggle == 1:
+                motors.Automated_Motors()
+            message = "<p><b>Automation sequence completed.</b></p>"
+            response = http_response(HTML_PAGE.format(MESSAGE=message))
+            client.sendall(response.encode())
+
+        else:
+            response = http_response("<h1>404 Not Found</h1>", status="404 Not Found")
+            client.sendall(response.encode())
+
+    except Exception as e:
+        print("Error handling request:", e)
+    finally:
         client.close()
-        continue
 
-    # Determine the route
-    request_line = request.split("\n")[0]
-    method, path, _ = request_line.split(" ")
-
-    message = ""
-
-    # ---------------- ROUTING HANDLERS ------------------
-
-    if method == "GET" and path == "/":
-        response = http_response(HTML_PAGE.format(MESSAGE=""))
-        client.sendall(response.encode())
-
-    elif method == "POST" and path == "/calibrate":
-        form = parse_form(parse_post_data(request))
-        toggle = int(form.get("toggle", 0))
-        motors.Calibration(toggle)
-        message = "<p><b>Calibration complete.</b></p>"
-        response = http_response(HTML_PAGE.format(MESSAGE=message))
-        client.sendall(response.encode())
-
-    elif method == "POST" and path == "/manual":
-        form = parse_form(parse_post_data(request))
-        toggle = int(form.get("toggle", 0))
-        diff = float(form.get("diff", 0))
-        motors.Manual_Motors(toggle, diff)
-        message = f"<p><b>Manual movement complete (diff={diff}).</b></p>"
-        response = http_response(HTML_PAGE.format(MESSAGE=message))
-        client.sendall(response.encode())
-
-    elif method == "POST" and path == "/automation":
-        form = parse_form(parse_post_data(request))
-        toggle = int(form.get("toggle", 0))
-        if toggle == 1:
-            motors.Automated_Motors()
-        message = "<p><b>Automation sequence completed.</b></p>"
-        response = http_response(HTML_PAGE.format(MESSAGE=message))
-        client.sendall(response.encode())
-
-    else:
-        # unknown route
-        response = http_response("<h1>404 Not Found</h1>", status="404 Not Found")
-        client.sendall(response.encode())
-
-    client.close()
