@@ -11,7 +11,8 @@ numturrets = len(Json_Reader.TurretData)          #Number of turrets for automat
 numball = len(Json_Reader.BallData)               #Number of stationary ball targets for automation
 
 class Stepper_Motors():
-   def __initiation__():
+   def __init__(self):
+      self.m1 = Stepper
 
 
         
