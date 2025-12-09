@@ -1,5 +1,5 @@
 from Shifter import shifter
-from Motor_Code_Project.Stepper import Stepper
+from Motor_Code_Project import Stepper
 import Json_Reader
 import multiprocessing
 import RPi.GPIO as GPIO
