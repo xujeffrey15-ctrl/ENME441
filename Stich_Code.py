@@ -3,6 +3,7 @@
 #Imports
 from Motor_Code_Project import Stepper
 import Json_Reader
+import multiprocessing
 
 #Global variables
 XY = Json_Reader.goanglexy                        #Calculated in-plane rotations
@@ -12,8 +13,14 @@ numball = len(Json_Reader.BallData)               #Number of stationary ball tar
 
 class Stepper_Motors():
    def __init__(self):
-      self.m1 = Stepper
+        self.s = shifter(16, 21, 20)
+        self.lock = multiprocessing.Lock()
+        self.m1 = Stepper(self.s, self.lock, 0)
+        self.m2 = Stepper(self.s, self.lock, 1)
 
+   def Automated_Motors():
+      for i in numturrets:
+         
 
         
         
