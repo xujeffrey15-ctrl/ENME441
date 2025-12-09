@@ -63,12 +63,13 @@ class Stepper:
         self.q.put(angle)   # Background worker handles it
         
 if __name__ == '__main__':
-    
+    s = shifter(16, 21, 20)
     try:
         while True:
             time.sleep(0.1)
     except KeyboardInterrupt:
         print("\nExiting")
+
 
 
 
