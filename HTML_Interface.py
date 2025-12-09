@@ -1,19 +1,22 @@
-import socket
-from Stich_Code import Stepper_Motors
+import http.server
+import socketserver
 import urllib.parse
+from Stich_Code import Stepper_Motors
 
 motors = Stepper_Motors()
+PORT = 8080  # you can change this if needed
 
-HTML_PAGE = """
+# HTML template with a placeholder for messages
+HTML_TEMPLATE = """
 <!DOCTYPE html>
 <html>
 <head>
     <title>Motor Control Panel</title>
     <style>
-        body { font-family: Arial; max-width: 600px; margin: 40px auto; padding: 20px; background: #f4f4f4; border-radius: 10px; }
-        form { background: #fff; padding: 20px; margin-bottom: 25px; border-radius: 8px; box-shadow: 0 0 5px rgba(0,0,0,0.1); }
-        button { padding: 10px 18px; font-size: 16px; background: #0077cc; border: none; color: white; border-radius: 5px; }
-        button:hover { background: #005fa3; }
+        body {{ font-family: Arial; max-width: 600px; margin: 40px auto; padding: 20px; background: #f4f4f4; border-radius: 10px; }}
+        form {{ background: #fff; padding: 20px; margin-bottom: 25px; border-radius: 8px; box-shadow: 0 0 5px rgba(0,0,0,0.1); }}
+        button {{ padding: 10px 18px; font-size: 16px; background: #0077cc; border: none; color: white; border-radius: 5px; }}
+        button:hover {{ background: #005fa3; }}
     </style>
 </head>
 <body>
@@ -43,92 +46,76 @@ HTML_PAGE = """
         <button type="submit">Run Automation</button>
     </form>
 
-    {MESSAGE}
+    {message}
 </body>
 </html>
 """
 
-# -------------------------------------------------------
+# -------------------- Request Handler --------------------
 
-def http_response(body, status="200 OK"):
-    return (
-        f"HTTP/1.1 {status}\r\n"
-        "Content-Type: text/html\r\n"
-        f"Content-Length: {len(body)}\r\n"
-        "Connection: close\r\n\r\n"
-        + body
-    )
+class MotorRequestHandler(http.server.BaseHTTPRequestHandler):
+    def do_GET(self):
+        # Always return the main page for GET requests
+        html = HTML_TEMPLATE.format(message="")
+        self.send_response(200)
+        self.send_header("Content-Type", "text/html")
+        self.send_header("Content-Length", str(len(html)))
+        self.end_headers()
+        self.wfile.write(html.encode())
 
-def parse_post_data(request):
-    if "\r\n\r\n" not in request:
-        return ""
-    return request.split("\r\n\r\n", 1)[1]
+    def do_POST(self):
+        # Read POST data
+        content_length = int(self.headers.get('Content-Length', 0))
+        post_data = self.rfile.read(content_length).decode()
+        form = {k: v[0] for k, v in urllib.parse.parse_qs(post_data).items()}
 
-def parse_form(form_body):
-    parsed = urllib.parse.parse_qs(form_body)
-    return {k: v[0] for k, v in parsed.items()}
-
-# -------------------------------------------------------
-
-HOST = "0.0.0.0"  # Accept connections from LAN
-PORT = 5000
-
-server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-server.bind((HOST, PORT))
-server.listen(5)
-print(f"Server running! Access at http://localhost:{PORT} or http://<YOUR_LAN_IP>:{PORT}")
-
-while True:
-    client, addr = server.accept()
-    try:
-        request = client.recv(8192).decode()  # increased buffer for POST
-        if not request:
-            client.close()
-            continue
-
-        request_line = request.splitlines()[0]
-        print(f"Request from {addr}: {request_line}")  # Debugging
-
-        method, path, _ = request_line.split(" ")
         message = ""
 
-        # ---------------- Routing ------------------
-        if method == "GET" and path == "/":
-            response = http_response(HTML_PAGE.format(MESSAGE=""))
-            client.sendall(response.encode())
+        try:
+            if self.path == "/calibrate":
+                toggle = int(form.get("toggle", 0))
+                motors.Calibration(toggle)
+                message = "<p><b>Calibration complete.</b></p>"
 
-        elif method == "POST" and path == "/calibrate":
-            form = parse_form(parse_post_data(request))
-            toggle = int(form.get("toggle", 0))
-            motors.Calibration(toggle)
-            message = "<p><b>Calibration complete.</b></p>"
-            response = http_response(HTML_PAGE.format(MESSAGE=message))
-            client.sendall(response.encode())
+            elif self.path == "/manual":
+                toggle = int(form.get("toggle", 0))
+                diff = float(form.get("diff", 0))
+                motors.Manual_Motors(toggle, diff)
+                message = f"<p><b>Manual movement complete (diff={diff}).</b></p>"
 
-        elif method == "POST" and path == "/manual":
-            form = parse_form(parse_post_data(request))
-            toggle = int(form.get("toggle", 0))
-            diff = float(form.get("diff", 0))
-            motors.Manual_Motors(toggle, diff)
-            message = f"<p><b>Manual movement complete (diff={diff}).</b></p>"
-            response = http_response(HTML_PAGE.format(MESSAGE=message))
-            client.sendall(response.encode())
+            elif self.path == "/automation":
+                toggle = int(form.get("toggle", 0))
+                if toggle == 1:
+                    motors.Automated_Motors()
+                message = "<p><b>Automation sequence completed.</b></p>"
 
-        elif method == "POST" and path == "/automation":
-            form = parse_form(parse_post_data(request))
-            toggle = int(form.get("toggle", 0))
-            if toggle == 1:
-                motors.Automated_Motors()
-            message = "<p><b>Automation sequence completed.</b></p>"
-            response = http_response(HTML_PAGE.format(MESSAGE=message))
-            client.sendall(response.encode())
+            else:
+                message = "<p><b>Unknown action.</b></p>"
 
-        else:
-            response = http_response("<h1>404 Not Found</h1>", status="404 Not Found")
-            client.sendall(response.encode())
+        except Exception as e:
+            message = f"<p><b>Error: {e}</b></p>"
 
-    except Exception as e:
-        print("Error handling request:", e)
-    finally:
-        client.close()
+        # Return updated page
+        html = HTML_TEMPLATE.format(message=message)
+        self.send_response(200)
+        self.send_header("Content-Type", "text/html")
+        self.send_header("Content-Length", str(len(html)))
+        self.end_headers()
+        self.wfile.write(html.encode())
+
+# -------------------- Reusable TCP Server --------------------
+
+class ReusableTCPServer(socketserver.TCPServer):
+    allow_reuse_address = True
+
+def start_server(port=PORT):
+    with ReusableTCPServer(("", port), MotorRequestHandler) as httpd:
+        print(f"Server running at http://localhost:{port}")
+        print("Access from other devices using http://<YOUR_LAN_IP>:{port}")
+        httpd.serve_forever()
+
+# -------------------- Main --------------------
+
+if __name__ == "__main__":
+    start_server()
 
