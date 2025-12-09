@@ -2,12 +2,15 @@ import json
 import math
 import requests
 
-url = "http://192.168.1.254:8000/positions.json"   # Replace with your URL
+#url = "http://192.168.1.254:8000/positions.json"   # Replace with your URL
 
-response = requests.get(url)
-response.raise_for_status()             # Raises an error for bad status codes
+#response = requests.get(url)
+#response.raise_for_status()             # Raises an error for bad status codes
 
-data = response.json()                  # Parse JSON directly
+#data = response.json()                  # Parse JSON directly
+
+with open("backup_data.json", "r") as f:
+    data = json.load(f)
 
 print(data)
 
@@ -71,6 +74,7 @@ AngleConversion()
 
 print("\nXY Angles:", goanglexy)
 print("\nZ Angles:", goanglez)
+
 
 
 
