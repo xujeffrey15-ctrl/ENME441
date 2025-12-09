@@ -1,5 +1,5 @@
-import multiprocessing
 from Shifter import shifter
+import multiprocessing
 import Json_Reader
 import time
 
@@ -14,8 +14,6 @@ class Stepper:
         self.s = shifter
         self.lock = lock
         self.index = index
-        self.angle = 0
-        self.step_state = 0
         self.shifter_bit_start = 4 * index
         self.both = multiprocessing.Event()
         self.q = multiprocessing.Queue()
@@ -44,9 +42,6 @@ class Stepper:
             # Send to shift register
             self.s.shiftByte(final)
 
-            # Update angle
-            self.angle = (self.angle + direction / Stepper.steps_per_degree) % 360
-
         time.sleep(Stepper.delay / 1e6)
 
     def _rotate(self, delta):
@@ -74,6 +69,7 @@ if __name__ == '__main__':
             time.sleep(0.1)
     except KeyboardInterrupt:
         print("\nExiting")
+
 
 
 
