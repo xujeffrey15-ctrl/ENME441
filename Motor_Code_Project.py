@@ -32,7 +32,7 @@ class Stepper:
         self.step_state = (self.step_state + direction) % 8        #Code that causes the motor to either increase by one step or go back one step depending on the direction. The mod 8 keeps the values from exceeding 8 as the sequence only has 8 possible values.
 
         with self.lock:    #Lock to prevent race conditions
-           shared_state[self.index] = Stepper.seq[self.step_state] << (4 * self.index) #Self.index governs which interger value in the shared memory array each motor can access. For instance, when self.index = 1 then that motor would be able to update the Array[1] integer.
+            shared_state[self.index] = Stepper.seq[self.step_state] << (4 * self.index) #Self.index governs which interger value in the shared memory array each motor can access. For instance, when self.index = 1 then that motor would be able to update the Array[1] integer.
                                                                                        #The second half of the code updates the respective 4 bits for that motor.
             output_byte = 0     #Placeholder value for combining as |= does bitwise comparison that results a 1 if there is a 1 in either comparison objects
             for motor_val in shared_state: #Iterates through both array integers
@@ -60,5 +60,6 @@ class Stepper:
     def goAngle(self, angle):    #Function to put command in queue
         self.event.clear()
         self.q.put(angle)
+
 
 
