@@ -51,8 +51,8 @@ def AngleConversion():
 
         xy_angle, _ = compute_angles(x, y)   # turrets have no Z angle
     
-        goanglexy[f"turret_{tnum}"] = round((xy_angle % 360), 2)
-        goanglez[f"turret_{tnum}"]  = round(0)
+        goanglexy[f"turret_{tnum}"] = round(xy_angle,2)
+        goanglez[f"turret_{tnum}"]  = round(z_angle,2)
         
 
     # ---- BALLS ----
@@ -67,13 +67,14 @@ def AngleConversion():
 
         xy_angle, z_angle = compute_angles(x, y, z)
 
-        goanglexy[f"ball_{i}"] = round((xy_angle % 360), 2)
+        goanglexy[f"ball_{i}"] = round(xy_angle, 2)
         goanglez[f"ball_{i}"]  = round(z_angle, 2)
 
 AngleConversion()
 
 print("\nXY Angles:", goanglexy)
 print("\nZ Angles:", goanglez)
+
 
 
 
