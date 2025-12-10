@@ -1,121 +1,241 @@
 import http.server
 import socketserver
-import urllib.parse
-from Stich_Code import Stepper_Motors
+import json
+import time
+import multiprocessing
 
-motors = Stepper_Motors()
-PORT = 8080  # you can change this if needed
+# Import your Stitch motor control class
+from Stitch import Stepper_Motors   # <-- CHANGE THIS to match your actual filename
 
-# HTML template with a placeholder for messages
-HTML_TEMPLATE = """
-<!DOCTYPE html>
-<html>
+# --------------------------------------------------------------------------------------
+# GPIO SIMULATOR / REAL MOTOR WRAPPER
+# --------------------------------------------------------------------------------------
+
+class GPIOSimulator:
+    def __init__(self):
+        self.pin_state = False
+
+        # Use the REAL motor system from your Stitch file
+        self.motors = Stepper_Motors()
+
+        # For display values
+        self.radius = 0
+        self.theta = 0
+        self.z = 0
+
+    def toggle_pin(self):
+        self.pin_state = not self.pin_state
+        # (In real hardware, GPIO.output would go here)
+        return self.pin_state
+
+    def set_origin(self, radius, theta, z):
+        self.radius = float(radius)
+        self.theta = float(theta)
+        self.z = float(z)
+
+        # Use your real calibration method
+        self.motors.Calibration(1)
+        return True
+
+    def get_status(self):
+        return {
+            'pin_state': 'ON' if self.pin_state else 'OFF',
+            'radius': self.radius,
+            'theta': self.theta,
+            'z': self.z,
+            'motor1_angle': self.motors.m1.angle,
+            'motor2_angle': self.motors.m2.angle
+        }
+
+    def initiate_automation(self):
+        print("Starting real Stitch automation...")
+        self.motors.Automated_Motors()
+        return True
+
+    def manual_move(self, diff):
+        print(f"Manual move request: diff={diff}")
+        self.motors.Manual_Motors(1, diff)
+        return True
+
+
+# --------------------------------------------------------------------------------------
+# GLOBAL GPIO SIMULATOR INSTANCE
+# --------------------------------------------------------------------------------------
+
+gpio = GPIOSimulator()
+
+
+# --------------------------------------------------------------------------------------
+# HTTP SERVER HANDLER
+# --------------------------------------------------------------------------------------
+
+class GPIORequestHandler(http.server.SimpleHTTPRequestHandler):
+
+    def do_GET(self):
+        if self.path == '/':
+            self.path = '/index.html'
+        return super().do_GET()
+
+    def do_POST(self):
+        content_length = int(self.headers['Content-Length'])
+        post_data = self.rfile.read(content_length).decode('utf-8')
+
+        response = {}
+
+        # ----------------------------- ROUTES ------------------------------------
+
+        if self.path == '/toggle':
+            new_state = gpio.toggle_pin()
+            response = {'status': 'ON' if new_state else 'OFF'}
+
+        elif self.path == '/set_origin':
+            data = json.loads(post_data)
+            success = gpio.set_origin(data['radius'], data['theta'], data['z'])
+            response = {'success': success}
+
+        elif self.path == '/automation':
+            success = gpio.initiate_automation()
+            response = {'success': success}
+
+        # ⭐ NEW: Calibrate using Stitch file
+        elif self.path == '/calibrate':
+            gpio.motors.Calibration(1)
+            response = {'success': True}
+
+        # ⭐ NEW: Manual angle adjustment
+        elif self.path == '/manual':
+            data = json.loads(post_data)
+            diff = float(data.get("diff", 0))
+            gpio.manual_move(diff)
+            response = {'success': True}
+
+        elif self.path == '/status':
+            response = gpio.get_status()
+
+        # -------------------------------------------------------------------------
+        # SEND RESPONSE
+        # -------------------------------------------------------------------------
+
+        self.send_response(200)
+        self.send_header('Content-type', 'application/json')
+        self.send_header('Access-Control-Allow-Origin', '*')
+        self.end_headers()
+        self.wfile.write(json.dumps(response).encode())
+
+
+# --------------------------------------------------------------------------------------
+# HTML FILE GENERATION
+# --------------------------------------------------------------------------------------
+
+def generate_html():
+    html = """<!DOCTYPE html>
+<html lang="en">
 <head>
-    <title>Motor Control Panel</title>
-    <style>
-        body {{ font-family: Arial; max-width: 600px; margin: 40px auto; padding: 20px; background: #f4f4f4; border-radius: 10px; }}
-        form {{ background: #fff; padding: 20px; margin-bottom: 25px; border-radius: 8px; box-shadow: 0 0 5px rgba(0,0,0,0.1); }}
-        button {{ padding: 10px 18px; font-size: 16px; background: #0077cc; border: none; color: white; border-radius: 5px; }}
-        button:hover {{ background: #005fa3; }}
-    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Turret Control Panel</title>
 </head>
 <body>
-    <h1>Motor Control Panel</h1>
+    <h1>Team 18 Turret Control</h1>
 
-    <form action="/calibrate" method="post">
-        <h2>Calibration</h2>
-        <p>Click below to run calibration routine.</p>
-        <input type="hidden" name="toggle" value="1">
-        <button type="submit">Run Calibration</button>
-    </form>
+    <h2>GPIO Toggle</h2>
+    <button id="toggleBtn">Toggle ON/OFF</button>
+    <div id="statusDisplay">Status: OFF</div>
 
-    <form action="/manual" method="post">
-        <h2>Manual Motor Movement</h2>
-        <label for="diff">Rotation Amount (diff):</label><br>
-        <input type="number" id="diff" name="diff" step="0.1" required><br><br>
-        <label>
-            <input type="checkbox" name="toggle" value="1"> Enable Manual Movement
-        </label><br><br>
-        <button type="submit">Move Motors</button>
-    </form>
+    <h2>Set Origin / Calibration</h2>
+    <button id="calibrateBtn">Calibrate Motors</button>
 
-    <form action="/automation" method="post">
-        <h2>Automation Sequence</h2>
-        <p>Click below to start full automated turret + ball sequence.</p>
-        <input type="hidden" name="toggle" value="1">
-        <button type="submit">Run Automation</button>
-    </form>
+    <h2>Manual Control</h2>
+    <button id="leftBtn">Rotate Left</button>
+    <button id="rightBtn">Rotate Right</button>
 
-    {message}
+    <h3>Current Values</h3>
+    <div>Motor 1: <span id="motor1Angle">0</span>°</div>
+    <div>Motor 2: <span id="motor2Angle">0</span>°</div>
+
+    <h2>Automation</h2>
+    <button id="automationBtn">Start Automation</button>
+
+<script>
+const statusDisplay = document.getElementById('statusDisplay');
+const motor1Angle = document.getElementById('motor1Angle');
+const motor2Angle = document.getElementById('motor2Angle');
+
+// ------------------ BUTTON LOGIC ------------------------
+
+document.getElementById("toggleBtn").onclick = async () => {
+    const r = await fetch('/toggle', { method: 'POST' });
+    const data = await r.json();
+    statusDisplay.textContent = `Status: ${data.status}`;
+};
+
+document.getElementById("calibrateBtn").onclick = async () => {
+    await fetch('/calibrate', { method: 'POST' });
+    alert("Calibration Complete");
+};
+
+document.getElementById("leftBtn").onclick = async () => {
+    await fetch('/manual', {
+        method: 'POST',
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ diff: -10 })
+    });
+};
+
+document.getElementById("rightBtn").onclick = async () => {
+    await fetch('/manual', {
+        method: 'POST',
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ diff: 10 })
+    });
+};
+
+document.getElementById("automationBtn").onclick = async () => {
+    await fetch('/automation', { method: 'POST' });
+    alert("Automation Started");
+};
+
+// ------------------ AUTO REFRESH STATUS ------------------------
+
+async function refreshStatus() {
+    try {
+        const res = await fetch('/status');
+        const data = await res.json();
+
+        motor1Angle.textContent = data.motor1_angle.toFixed(2);
+        motor2Angle.textContent = data.motor2_angle.toFixed(2);
+        statusDisplay.textContent = `Status: ${data.pin_state}`;
+    } catch (err) {
+        console.log("Status update error:", err);
+    }
+}
+
+setInterval(refreshStatus, 1000);
+refreshStatus();
+
+</script>
 </body>
 </html>
 """
+    return html
 
-# -------------------- Request Handler --------------------
 
-class MotorRequestHandler(http.server.BaseHTTPRequestHandler):
-    def do_GET(self):
-        # Always return the main page for GET requests
-        html = HTML_TEMPLATE.format(message="")
-        self.send_response(200)
-        self.send_header("Content-Type", "text/html")
-        self.send_header("Content-Length", str(len(html)))
-        self.end_headers()
-        self.wfile.write(html.encode())
-
-    def do_POST(self):
-        # Read POST data
-        content_length = int(self.headers.get('Content-Length', 0))
-        post_data = self.rfile.read(content_length).decode()
-        form = {k: v[0] for k, v in urllib.parse.parse_qs(post_data).items()}
-
-        message = ""
-
-        try:
-            if self.path == "/calibrate":
-                toggle = int(form.get("toggle", 0))
-                motors.Calibration(toggle)
-                message = "<p><b>Calibration complete.</b></p>"
-
-            elif self.path == "/manual":
-                toggle = int(form.get("toggle", 0))
-                diff = float(form.get("diff", 0))
-                motors.Manual_Motors(toggle, diff)
-                message = f"<p><b>Manual movement complete (diff={diff}).</b></p>"
-
-            elif self.path == "/automation":
-                toggle = int(form.get("toggle", 0))
-                if toggle == 1:
-                    motors.Automated_Motors()
-                message = "<p><b>Automation sequence completed.</b></p>"
-
-            else:
-                message = "<p><b>Unknown action.</b></p>"
-
-        except Exception as e:
-            message = f"<p><b>Error: {e}</b></p>"
-
-        # Return updated page
-        html = HTML_TEMPLATE.format(message=message)
-        self.send_response(200)
-        self.send_header("Content-Type", "text/html")
-        self.send_header("Content-Length", str(len(html)))
-        self.end_headers()
-        self.wfile.write(html.encode())
-
-# -------------------- Reusable TCP Server --------------------
+# --------------------------------------------------------------------------------------
+# SERVER STARTUP
+# --------------------------------------------------------------------------------------
 
 class ReusableTCPServer(socketserver.TCPServer):
     allow_reuse_address = True
 
-def start_server(port=PORT):
-    with ReusableTCPServer(("", port), MotorRequestHandler) as httpd:
+def start_server(port=8080):
+    # create html file:
+    with open('index.html', 'w') as f:
+        f.write(generate_html())
+
+    with ReusableTCPServer(("", port), GPIORequestHandler) as httpd:
         print(f"Server running at http://localhost:{port}")
-        print("Access from other devices using http://<YOUR_LAN_IP>:{port}")
         httpd.serve_forever()
 
-# -------------------- Main --------------------
 
 if __name__ == "__main__":
     start_server()
-
