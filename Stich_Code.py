@@ -40,19 +40,20 @@ class Stepper_Motors:
             
         print("Starting calibration sequence...")
         
-        for i in range(1,7):
+        for i in range(1,3):
             self.m1.goAngle(Calibration_Angle)
             self.m2.goAngle(Calibration_Angle)
             self.waitBoth()
+            self.x_angle_tracking += Calibration_Angle
+            self.z_angle_tracking += Calibration_Angle
 
-            self.x_angle_tracking = Calibration_Angle
-            self.z_angle_tracking = Calibration_Angle
+        for n in range(1,3):
+            self.m1.goAngle(-Calibration_Angle)
+            self.m2.goAngle(-Calibration_Angle)
+            self.waitBoth()
+            self.x_angle_tracking += -Calibration_Angle
+            self.z_angle_tracking += -Calibration_Angle
             
-            if Calibration_Angle != 180:
-                Calibration_Angle +=30
-            else: 
-                Calibration_Angle = 0
-
         self.Engage_Laser()
 
         print("Calibration complete.")
