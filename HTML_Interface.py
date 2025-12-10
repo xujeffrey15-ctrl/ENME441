@@ -5,7 +5,7 @@ import time
 import multiprocessing
 
 # Import your Stitch motor control class
-from Stich import Stepper_Motors   # <-- CHANGE THIS to match your actual filename
+from Stich_Code import Stepper_Motors   # <-- CHANGE THIS to match your actual filename
 
 # --------------------------------------------------------------------------------------
 # GPIO SIMULATOR / REAL MOTOR WRAPPER
