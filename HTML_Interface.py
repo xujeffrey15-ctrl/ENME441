@@ -48,8 +48,9 @@ class GPIOSimulator:
         }
 
     def initiate_automation(self):
-        print("Starting real Stitch automation...")
+        print("Starting Automation...")
         self.motors.Automated_Motors()
+        print("Automation Finished")
         return True
 
     def manual_move(self, diff):
