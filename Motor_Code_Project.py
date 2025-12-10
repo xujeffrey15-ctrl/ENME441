@@ -43,7 +43,7 @@ class Stepper:
         time.sleep(self.delay) #Delay
 
     def _rotate(self, angle):
-        steps = int(abs(delta) * self.steps_per_degree) #Calculates the total num of steps needed for the angle
+        steps = int(abs(angle) * self.steps_per_degree) #Calculates the total num of steps needed for the angle
         direction = self._sgn(angle)                    #Calculates direction
 
         for _ in range(steps):
@@ -60,6 +60,7 @@ class Stepper:
     def goAngle(self, angle):    #Function to put command in queue
         self.event.clear()
         self.q.put(angle)
+
 
 
 
