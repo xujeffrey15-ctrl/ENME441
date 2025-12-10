@@ -1,86 +1,64 @@
-# Motor_Code_Project/Stepper.py
+from Shifter import shifter
 import multiprocessing
 import time
 
-# Shared motor state array: 2 motors (expandable)
 shared_state = multiprocessing.Array('i', 2)
 
-
 class Stepper:
-    # Half-step sequence
-    seq = [0b0001, 0b0011, 0b0010, 0b0110,
-           0b0100, 0b1100, 0b1000, 0b1001]
+    #Class variables
+    seq = [0b0001, 0b0011, 0b0010, 0b0110, 0b0100, 0b1100, 0b1000, 0b1001]
+    delay = 0.005
+    steps_per_degree = 4096 / 360
 
-    delay = 0.0025                  # 2.5 ms delay per step (400 steps/sec)
-    steps_per_degree = 4096 / 360   # one full rev
-
-    def __init__(self, shifter, lock, index):
-        self.s = shifter
+    def __init__(self, lock, index):
+        #Class initiation variables (need to pass to construct class)
+        self.s = shifter(16,21,20)
         self.lock = lock
         self.index = index
-
-        self.step_state = 0               # REQUIRED to prevent crash
-        self.current_angle = 0.0          # absolute angle tracking
-
-        self.event = multiprocessing.Event()
-        self.q = multiprocessing.Queue()
-
-        # Process worker
-        self.proc = multiprocessing.Process(target=self._run)
-        self.proc.daemon = True
+        #Variables that track data
+        self.step_state = 0              
+        self.current_angle = 0.0       
+        #Set up multiprocessing events and queues
+        self.event = multiprocessing.Event() #Necessary to set up "on/off" switches for mutiprocessing, all processes wait until set() before continuing
+        self.q = multiprocessing.Queue() #Necessary to insert multiple commands and have them execute sequentially
+        #Set up the multiprocessing themselves
+        self.proc = multiprocessing.Process(target=self._run, daemon=True)
         self.proc.start()
-
-    # ------------------------------------------
-    # Utility: signed direction
-    def _sgn(self, x):
+        
+    def _sgn(self, x):    #Function to convert a degree into a value of 0, 1, or -1 depending on the degree desired (ex. -90 --> -1)
         return 0 if x == 0 else (1 if x > 0 else -1)
-
-    # ------------------------------------------
-    # Perform a single half-step
+        
     def _step(self, direction):
-        self.step_state = (self.step_state + direction) % 8
+        self.step_state = (self.step_state + direction) % 8        #Code that causes the motor to either increase by one step or go back one step depending on the direction. The mod 8 keeps the values from exceeding 8 as the sequence only has 8 possible values.
 
-        with self.lock:
-            # Clear this motor's 4 output bits
-            shared_state[self.index] = Stepper.seq[self.step_state] << (4 * self.index)
+        with self.lock:    #Lock to prevent race conditions
+           shared_state[self.index] = Stepper.seq[self.step_state] << (4 * self.index) #Self.index governs which interger value in the shared memory array each motor can access. For instance, when self.index = 1 then that motor would be able to update the Array[1] integer.
+                                                                                       #The second half of the code updates the respective 4 bits for that motor.
+            output_byte = 0     #Placeholder value for combining as |= does bitwise comparison that results a 1 if there is a 1 in either comparison objects
+            for motor_val in shared_state: #Iterates through both array integers
+                output_byte |= motor_val #Gets final combined code
 
-            # Combine all motors into one byte
-            output_byte = 0
-            for motor_val in shared_state:
-                output_byte |= motor_val
+            self.s.shiftByte(output_byte) #Pushes to Shifter
 
-            self.s.shiftByte(output_byte)
+        time.sleep(self.delay) #Delay
 
-        time.sleep(self.delay)
-
-    # ------------------------------------------
-    # Rotate delta degrees
-    def _rotate(self, delta):
-        steps = int(abs(delta) * self.steps_per_degree)
-        direction = self._sgn(delta)
+    def _rotate(self, angle):
+        steps = int(abs(delta) * self.steps_per_degree) #Calculates the total num of steps needed for the angle
+        direction = self._sgn(angle)                    #Calculates direction
 
         for _ in range(steps):
             self._step(direction)
 
-        self.current_angle += delta
+        self.current_angle += angle                    #Updates angle
 
-    # ------------------------------------------
-    # Worker: receive delta angles and move
-    def _run(self):
+    def _run(self):    #Function to continously get queued commands and runs it
         while True:
-            delta = self.q.get()
-            self._rotate(delta)
-            self.event.set()   # signal completion
-
-    # ------------------------------------------
-    # Public: Move to absolute angle
-    def goToAngle(self, absolute_angle):
-        delta = absolute_angle - self.current_angle
-        self.goAngle(delta)
-
-    # ------------------------------------------
-    # Public: Rotate by delta degrees
-    def goAngle(self, delta):
+            angle = self.q.get()                        
+            self._rotate(angle)
+            self.event.set()     #Signal completion
+            
+    def goAngle(self, angle):    #Function to put command in queue
         self.event.clear()
-        self.q.put(delta)
+        self.q.put(angle)
+
 
