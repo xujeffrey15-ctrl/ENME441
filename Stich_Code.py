@@ -61,8 +61,6 @@ class Stepper_Motors:
         if toggle != 1:
             return
 
-        print(f"Manual rotation: delta={angle}")
-
         self.m1.goAngle(x_angle)
         self.m2.goAngle(z_angle)
         self.waitBoth()
