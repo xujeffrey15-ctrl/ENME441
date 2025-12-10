@@ -1,32 +1,26 @@
-from Shifter import shifter
 from Motor_Code_Project import Stepper
 import Json_Reader
 import multiprocessing
 import RPi.GPIO as GPIO
 import time
 
-# Load angle data
-XY = Json_Reader.goanglexy
-Z = Json_Reader.goanglez
-
-numturrets = len(Json_Reader.TurretData)
-numball = len(Json_Reader.BallData)
+#Calculated Target Data
+XY = Json_Reader.goanglexy #In-plane angles
+Z = Json_Reader.goanglez   #Height angles
+numturrets = len(Json_Reader.TurretData)   #Number of turrets in Json
+numball = len(Json_Reader.BallData)        #Number of ball targets in Json
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(11, GPIO.OUT)
 
-
 class Stepper_Motors:
     def __init__(self):
-        self.s = shifter(16, 21, 20)
         self.lock = multiprocessing.Lock()
-
-        self.m1 = Stepper(self.s, self.lock, 0)
-        self.m2 = Stepper(self.s, self.lock, 1)
-
-    # --------------------------------------------------------
+        self.m1 = Stepper(self.lock, 0)    #Initiate Motor 1 with self.index = 0
+        self.m2 = Stepper(self.lock, 1)    #Initiate Motor 2 with self.index = 1
+        
     def waitBoth(self):
-        self.m1.event.wait()
+        self.m1.event.wait()               #Wait() command forces 
         self.m2.event.wait()
 
     # --------------------------------------------------------
