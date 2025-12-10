@@ -7,7 +7,7 @@ shared_state = multiprocessing.Array('i', 2)
 class Stepper:
     #Class variables
     seq = [0b0001, 0b0011, 0b0010, 0b0110, 0b0100, 0b1100, 0b1000, 0b1001]
-    delay = 0.005
+    delay = 0.01
     steps_per_degree = 4096 / 360
 
     def __init__(self, lock, index):
@@ -60,6 +60,7 @@ class Stepper:
     def goAngle(self, angle):    #Function to put command in queue
         self.event.clear()
         self.q.put(angle)
+
 
 
 
