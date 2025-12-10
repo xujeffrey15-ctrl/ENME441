@@ -18,47 +18,60 @@ class Stepper_Motors:
         self.lock = multiprocessing.Lock()
         self.m1 = Stepper(self.lock, 0)    #Initiate Motor 1 with self.index = 0
         self.m2 = Stepper(self.lock, 1)    #Initiate Motor 2 with self.index = 1
+
+        self.X_angle_tracking = 0
+        self.Z_angle_tracking = 0
         
     def waitBoth(self):
-        self.m1.event.wait()               #Wait() command forces 
-        self.m2.event.wait()
+        self.m1.event.wait()               #Each motor process has its own multiprocessing.event that signals its own completion. 
+        self.m2.event.wait()               #By waiting for both to finish, you can gurantee that the entire turret won't move on until both mtors are done.
 
-    # --------------------------------------------------------
+    def Engage_Laser(self):
+        print("Laser Engaging!")
+        GPIO.output(11,1)
+        time.sleep(3)
+        GPIO.output(11,0)
+        print("Target Eliminated")
+ 
     def Calibration(self, toggle):
+        Calibration_Angle = 30
         if toggle != 1:
             return
-
+            
         print("Starting calibration sequence...")
+        
+        for i in range(1,7):
+            self.m1.goAngle(Calibration_Angle)
+            self.m2.goAngle(Calibration_Angle)
+            self.waitBoth()
 
-        # Move both motors to 90 degrees absolute
-        self.m1.goToAngle(90)
-        self.m2.goToAngle(90)
-        self.waitBoth()
+            self.x_angle_tracking = Calibration_Angle
+            self.z_angle_tracking = Calibration_Angle
+            
+            if Calibration_Angle != 180:
+                Calibration_Angle +=30
+            else: 
+                Calibration_Angle = 0
 
-        print("Motors centered at 90°")
-
-        # Laser test
-        GPIO.output(11, 1)
-        print("Laser ON for calibration test...")
-        time.sleep(3)
-        GPIO.output(11, 0)
+        self.Engage_Laser()
 
         print("Calibration complete.")
 
-    # --------------------------------------------------------
-    def Manual_Motors(self, toggle, diff):
+    def Manual_Motors(self, toggle, x_angle, z_angle):
         if toggle != 1:
             return
 
-        print(f"Manual rotation: delta={diff}")
+        print(f"Manual rotation: delta={angle}")
 
-        self.m1.goAngle(diff)
-        self.m2.goAngle(diff)
+        self.m1.goAngle(x_angle)
+        self.m2.goAngle(z_angle)
         self.waitBoth()
+
+        self.x_angle_tracking = x_angle
+        self.z_angle_tracking = z_angle
 
         print("Manual movement complete")
 
-    # --------------------------------------------------------
     def Automated_Motors(self):
         print("Starting automated turret sequence...")
 
@@ -69,15 +82,15 @@ class Stepper_Motors:
 
             print(f"Turret {i}: moving to X={x_angle}, Z={z_angle}")
 
-            self.m1.goToAngle(x_angle)
-            self.m2.goToAngle(z_angle)
+            self.m1.goAngle(x_angle)
+            self.m2.goAngle(z_angle)
             self.waitBoth()
 
-            GPIO.output(11, 1)
-            print("Laser firing...")
-            time.sleep(3)
-            GPIO.output(11, 0)
+            self.x_angle_tracking = x_angle
+            self.z_angle_tracking = z_angle
 
+            self.Engage_Laser()
+            
         # Balls
         for i in range(1, numball):
             x_angle = XY[f"ball_{i}"]
@@ -85,13 +98,13 @@ class Stepper_Motors:
 
             print(f"Ball {i}: moving to X={x_angle}, Z={z_angle}")
 
-            self.m1.goToAngle(x_angle)
-            self.m2.goToAngle(z_angle)
+            self.m1.goAngle(x_angle)
+            self.m2.goAngle(z_angle)
             self.waitBoth()
 
-            GPIO.output(11, 1)
-            print("Laser firing...")
-            time.sleep(3)
-            GPIO.output(11, 0)
+            self.x_angle_tracking = x_angle
+            self.z_angle_tracking = z_angle
+
+            self.Engage_Laser()
 
         print("Automation sequence complete.")
