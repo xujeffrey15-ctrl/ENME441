@@ -34,8 +34,8 @@ class GPIOSimulator:
             'radius': self.radius,
             'theta': self.theta,
             'z': self.z,
-            'motor1_angle': self.motors.m1.current_angle,
-            'motor2_angle': self.motors.m2.current_angle
+            'motor1_angle': self.motors.x_angle_tracking,
+            'motor2_angle': self.motors.z_angle_tracking
         }
 
     def initiate_automation(self):
