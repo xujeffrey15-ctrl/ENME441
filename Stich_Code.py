@@ -19,8 +19,8 @@ class Stepper_Motors:
         self.m1 = Stepper(self.lock, 0)    #Initiate Motor 1 with self.index = 0
         self.m2 = Stepper(self.lock, 1)    #Initiate Motor 2 with self.index = 1
 
-        self.X_angle_tracking = 0
-        self.Z_angle_tracking = 0
+        self.x_angle_tracking = 0
+        self.z_angle_tracking = 0
         
     def waitBoth(self):
         self.m1.event.wait()               #Each motor process has its own multiprocessing.event that signals its own completion. 
