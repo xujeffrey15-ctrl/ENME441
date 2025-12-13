@@ -33,41 +33,28 @@ class Stepper_Motors:
         GPIO.output(11,0)
         print("Target Eliminated")
  
-    def Calibration(self, toggle):
-        Calibration_Angle = 30
-        if toggle != 1:
+    def Calibrate_X_Angles(self, toggle):
+        if toggle !=1:
             return
-            
-        print("Starting calibration sequence...")
+        Stepper_Motors.x_angle_tracking = 0
+        print("X Origin Calibrated!")
+
+    def Calibrate_Z_Angles(self, toggle):
+        if toggle !=1:
+            return
+        Stepper_Motors.z_angle_tracking = 0
+        print("Z Origin Calibrated!")
         
-        for i in range(1,3):
-            self.m1.goAngle(Calibration_Angle)
-            self.m2.goAngle(Calibration_Angle)
-            self.waitBoth()
-            self.x_angle_tracking += Calibration_Angle
-            self.z_angle_tracking += Calibration_Angle
-
-        for n in range(1,3):
-            self.m1.goAngle(-Calibration_Angle)
-            self.m2.goAngle(-Calibration_Angle)
-            self.waitBoth()
-            self.x_angle_tracking += -Calibration_Angle
-            self.z_angle_tracking += -Calibration_Angle
-            
-        self.Engage_Laser()
-
-        print("Calibration complete.")
-
-    def Manual_Motors(self, toggle, x_angle, z_angle):
+    def Manual_Motors(self, toggle, x_angle_diff, z_angle_diff):
         if toggle != 1:
             return
 
-        self.m1.goAngle(x_angle)
-        self.m2.goAngle(z_angle)
+        self.m1.goAngle(x_angle_diff)
+        self.m2.goAngle(z_angle_diff)
         self.waitBoth()
 
-        self.x_angle_tracking = x_angle
-        self.z_angle_tracking = z_angle
+        Stepper_Motors.x_angle_tracking = x_angle
+        Stepper_Motors.z_angle_tracking = z_angle
 
         print("Manual movement complete")
 
@@ -85,8 +72,8 @@ class Stepper_Motors:
             self.m2.goAngle(z_angle)
             self.waitBoth()
 
-            self.x_angle_tracking = x_angle
-            self.z_angle_tracking = z_angle
+            Stepper_Motors.x_angle_tracking = x_angle
+            Stepper_Motors.z_angle_tracking = z_angle
 
             self.Engage_Laser()
             
@@ -101,8 +88,8 @@ class Stepper_Motors:
             self.m2.goAngle(z_angle)
             self.waitBoth()
 
-            self.x_angle_tracking = x_angle
-            self.z_angle_tracking = z_angle
+            Stepper_Motors.x_angle_tracking = x_angle
+            Stepper_Motors.z_angle_tracking = z_angle
 
             self.Engage_Laser()
 
