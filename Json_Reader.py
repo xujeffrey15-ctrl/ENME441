@@ -26,6 +26,8 @@ Own_Theta_Value = TurretData["18"]["theta"]
 Own_X_Coord = 300*math.cos(Own_Theta_Value)
 Own_Y_Coord = 300*math.sin(Own_Theta_Value)
 Own_Z_Coord = 0
+slope = Own_X_Coord/Own_Y_Coord
+y_intercept = slope*(0-Own_X_Coord) + Own_Y_Coord
 
 def compute_angles(Previous_X, Previous_Y, Previous_Z, Target_X, Target_Y, Target_Z=0):
     if (Own_X_Coord - Target_X) and (Previous_X - Own_X_Coord) != 0:
@@ -61,8 +63,8 @@ def compute_angles(Previous_X, Previous_Y, Previous_Z, Target_X, Target_Y, Targe
         return 0.0, 0.0
 
 def AngleConversion():
-    Previous_X = Own_X_Coord
-    Previous_Y = Own_Y_Coord + 1
+    Previous_X = 0
+    Previous_Y = y_intercept
     Previous_Z = 0
     
     for tnum, tinfo in TurretData.items():
@@ -106,6 +108,7 @@ AngleConversion()
 
 print("\nXY Angles:", goanglexy)
 print("\nZ Angles:", goanglez)
+
 
 
 
