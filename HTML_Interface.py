@@ -5,7 +5,7 @@ import time
 import multiprocessing
 
 # Import your updated motor class
-from Stich_Code import Stepper_Motors  # Update if your filename differs
+from Stich_Code import Stepper_Motors
 
 # -------------------- GPIO / Motor Wrapper --------------------
 
