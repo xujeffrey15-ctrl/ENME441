@@ -53,8 +53,8 @@ class Stepper_Motors:
         self.m2.goAngle(z_angle_diff)
         self.waitBoth()
 
-        Stepper_Motors.x_angle_tracking = x_angle_diff
-        Stepper_Motors.z_angle_tracking = z_angle_diff
+        self.x_angle_tracking = x_angle_diff
+        self.z_angle_tracking = z_angle_diff
 
         print("Manual movement complete")
 
@@ -66,14 +66,14 @@ class Stepper_Motors:
             x_angle_diff = XY[f"turret_{i}"]
             z_angle_diff = Z[f"turret_{i}"]
 
-            print(f"Turret {i}: moving to X={x_angle}, Z={z_angle}")
+            print(f"Turret {i}: moving to X={x_angle_diff}, Z={z_angle_diff}")
 
             self.m1.goAngle(x_angle_diff)
             self.m2.goAngle(z_angle_diff)
             self.waitBoth()
 
-            Stepper_Motors.x_angle_tracking = x_angle_diff
-            Stepper_Motors.z_angle_tracking = z_angle_diff
+            self.x_angle_tracking = x_angle_diff
+            self.z_angle_tracking = z_angle_diff
 
             self.Engage_Laser()
             
@@ -82,14 +82,14 @@ class Stepper_Motors:
             x_angle_diff = XY[f"ball_{i}"]
             z_angle_diff = Z[f"ball_{i}"]
 
-            print(f"Ball {i}: moving to X={x_angle}, Z={z_angle}")
+            print(f"Ball {i}: moving to X={x_angle_diff}, Z={z_angle_diff}")
 
             self.m1.goAngle(x_angle_diff)
             self.m2.goAngle(z_angle_diff)
             self.waitBoth()
 
-            Stepper_Motors.x_angle_tracking = x_angle_diff
-            Stepper_Motors.z_angle_tracking = z_angle_diff
+            self.x_angle_tracking = x_angle_diff
+            self.z_angle_tracking = z_angle_diff
 
             self.Engage_Laser()
 
