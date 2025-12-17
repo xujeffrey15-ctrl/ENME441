@@ -56,7 +56,7 @@ def compute_angles(Previous_X, Previous_Y, Previous_Z, Target_X, Target_Y, Targe
         if Target_Z < Previous_Z:
             Angle_diff_z = - Angle_diff_z
     
-        return Angle_diff_x, Angle_diff_z
+        return math.degrees(Angle_diff_x), math.degrees(Angle_diff_z)
     else:
         return 0.0, 0.0
 
@@ -103,6 +103,7 @@ AngleConversion()
 
 print("\nXY Angles:", goanglexy)
 print("\nZ Angles:", goanglez)
+
 
 
 
