@@ -61,8 +61,8 @@ def compute_angles(Previous_X, Previous_Y, Previous_Z, Target_X, Target_Y, Targe
         return 0.0, 0.0
 
 def AngleConversion():
-    Previous_X = 1
-    Previous_Y = 1
+    Previous_X = Own_X_Coord
+    Previous_Y = Own_Y_Coord + 1
     Previous_Z = 0
     
     for tnum, tinfo in TurretData.items():
@@ -103,6 +103,7 @@ AngleConversion()
 
 print("\nXY Angles:", goanglexy)
 print("\nZ Angles:", goanglez)
+
 
 
 
