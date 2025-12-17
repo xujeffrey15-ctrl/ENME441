@@ -19,7 +19,7 @@ class GPIOSimulator:
         self.z = 0
         self.automation_thread = None
 
-    def toggle_pin(self):
+    def fire_laser(self):
         self.motors.Engage_Laser()
         return True
 
