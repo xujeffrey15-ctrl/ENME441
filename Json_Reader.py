@@ -23,16 +23,15 @@ goanglez = {}
 #Team 18
 Own_R_Value = 300
 Own_Theta_Value = TurretData["18"]["theta"]
-Own_X_Coord = 300*math.cos(theta)
-Own_Y_Coord = 300*math.sin(theta)
+Own_X_Coord = 300*math.cos(Own_Theta_Value)
+Own_Y_Coord = 300*math.sin(Own_Theta_Value)
 Own_Z_Coord = 0
 
-def compute_angles(target_x, target_y, target_z=0):
-
+def compute_angles(Previous_X, Previous_Y, Previous_Z=0, Target_X, Target_Y, Target_Z=0):
     #For In Plane Rotations
     Side_a = (Previous_Y - Own_Y_Coord)/(Previous_X - Own_X_Coord)
     Side_b = (Target_Y - Previous_Y)/(Target_X - Previous_Y)
-    side_c = (Own_Y_Coord - Target_Y)/(Own_X_Coord - Target_X)
+    Side_c = (Own_Y_Coord - Target_Y)/(Own_X_Coord - Target_X)
     Angle_diff_x = arccos((((Side_b)**2) - ((Side_a)**2) - ((Side_c)**2))/(-2*Side_C*Side_a))
 
     if Target_Y > Previous_Y:
@@ -53,18 +52,10 @@ def compute_angles(target_x, target_y, target_z=0):
     return Angle_diff_x, Angle_diff_z
 
 def AngleConversion():
-
-    #Have to be able to store previous data
-    #Have to be able to parse through target data
-    #Find the angle difference
-
-    #equation of the circle --> y^2 + x^2 = 300^2
-    #y = sqrt(300^2 - x^2)
-    #dy/dx for when x = own_x_coord --> gives m
-    #y = mx+b --> 
+    Previous_X = 0
+    Previous_Y = 0
+    Previous_Z = 0
     
-    
-    # ---- TURRETS ----
     for tnum, tinfo in TurretData.items():
         r = tinfo["r"]
         theta = tinfo["theta"]
@@ -73,9 +64,12 @@ def AngleConversion():
         x = r * math.cos(theta)
         y = r * math.sin(theta)
 
-        xy_angle, _ = compute_angles(x, y)   # turrets have no Z angle
+        xy_angle, _ = compute_angles(Previous_X, Previous_Y, Previous_Z, x, y, 0)   # turrets have no Z angle
     
         goanglexy[f"turret_{tnum}"] = round(xy_angle,2)
+        
+        Previous_X = x
+        Previous_Y = y
 
     # ---- BALLS ----
     for i, binfo in enumerate(BallData, start=1):
@@ -87,15 +81,20 @@ def AngleConversion():
         x = r * math.cos(theta)
         y = r * math.sin(theta)
 
-        xy_angle, z_angle = compute_angles(x, y, z)
+        xy_angle, z_angle = compute_angles(Previous_X,Previous_Y,Previous_Z,x, y, z)
 
         goanglexy[f"ball_{i}"] = round(xy_angle, 2)
         goanglez[f"ball_{i}"]  = round(z_angle, 2)
+
+        Previous_X = x
+        Previous_Y = y
+        Previous_Z = z
 
 AngleConversion()
 
 print("\nXY Angles:", goanglexy)
 print("\nZ Angles:", goanglez)
+
 
 
 
