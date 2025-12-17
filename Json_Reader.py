@@ -30,11 +30,11 @@ slope = Own_X_Coord/Own_Y_Coord
 y_intercept = slope*(0-Own_X_Coord) + Own_Y_Coord
 
 def compute_angles(Previous_X, Previous_Y, Previous_Z, Target_X, Target_Y, Target_Z=0):
-    if (Own_X_Coord - Target_X) and (Previous_X - Own_X_Coord) != 0:
+    if (Own_X_Coord - Target_X) != 0 and (Previous_X - Own_X_Coord) != 0:
         #For In Plane Rotations
-        Side_a = (Previous_Y - Own_Y_Coord)/(Previous_X - Own_X_Coord)
-        Side_b = (Target_Y - Previous_Y)/(Target_X - Previous_X)
-        Side_c = (Own_Y_Coord - Target_Y)/(Own_X_Coord - Target_X)
+        Side_a = math.sqrt((Previous_Y - Own_Y_Coord)**2 + (Previous_X - Own_X_Coord)**2)
+        Side_b = math.sqrt((Target_Y - Previous_Y)**2 + (Target_X - Previous_X)**2)
+        Side_c = math.sqrt((Own_Y_Coord - Target_Y)**2 + (Own_X_Coord - Target_X)**2)
     
         cosine_val_x = ((-1*Side_b**2) + (Side_a**2) + (Side_c**2))/(2*Side_c*Side_a)
         cosine_val_x = max(-1, min(1, cosine_val_x))
@@ -50,7 +50,7 @@ def compute_angles(Previous_X, Previous_Y, Previous_Z, Target_X, Target_Y, Targe
         Height_Hypotenuse = math.sqrt((Side_c**2) + (Side_z**2))
         
         cosine_val_z = ((-1*Side_z**2) + (Side_c**2) + (Height_Hypotenuse**2))/(2*Side_c*Height_Hypotenuse)
-        cosine_val_z = max(-1, min(1, cosine_val_x))
+        cosine_val_z = max(-1, min(1, cosine_val_z))
         Angle_diff_z = math.acos(cosine_val_z)
     
         if Target_Z >= Previous_Z:
@@ -108,63 +108,3 @@ AngleConversion()
 
 print("\nXY Angles:", goanglexy)
 print("\nZ Angles:", goanglez)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
