@@ -64,6 +64,7 @@ class Stepper_Motors:
         # Turrets
         for i in range(1, numturrets):
             x_angle_diff = XY[f"turret_{i}"]
+            z_angle_diff = Z[f"turret_{i}"]
 
             print(f"Turret {i}: moving to X={x_angle_diff}, Z={z_angle_diff}")
 
