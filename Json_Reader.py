@@ -80,6 +80,9 @@ def AngleConversion():
         Previous_X = x
         Previous_Y = y
 
+        print(Previous_X)
+        print(Previous_Y)
+
     # ---- BALLS ----
     for i, binfo in enumerate(BallData, start=1):
 
@@ -103,6 +106,7 @@ AngleConversion()
 
 print("\nXY Angles:", goanglexy)
 print("\nZ Angles:", goanglez)
+
 
 
 
