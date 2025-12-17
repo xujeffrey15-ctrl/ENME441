@@ -32,7 +32,7 @@ def compute_angles(Previous_X, Previous_Y, Previous_Z, Target_X, Target_Y, Targe
     Side_a = (Previous_Y - Own_Y_Coord)/(Previous_X - Own_X_Coord)
     Side_b = (Target_Y - Previous_Y)/(Target_X - Previous_Y)
     Side_c = (Own_Y_Coord - Target_Y)/(Own_X_Coord - Target_X)
-    Angle_diff_x = math.acos((((Side_b)**2) - ((Side_a)**2) - ((Side_c)**2))/(-2*Side_C*Side_a))
+    Angle_diff_x = math.acos((((Side_b)**2) - ((Side_a)**2) - ((Side_c)**2))/(-2*Side_c*Side_a))
 
     if Target_Y > Previous_Y:
         Angle_diff_x = - Angle_diff_x
@@ -94,6 +94,7 @@ AngleConversion()
 
 print("\nXY Angles:", goanglexy)
 print("\nZ Angles:", goanglez)
+
 
 
 
