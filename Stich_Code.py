@@ -36,13 +36,13 @@ class Stepper_Motors:
     def Calibrate_X_Angles(self, toggle):
         if toggle !=1:
             return
-        self.x_angle_tracking = 0 = 0
+        self.x_angle_tracking = 0
         print("X Origin Calibrated!")
 
     def Calibrate_Z_Angles(self, toggle):
         if toggle !=1:
             return
-        self.z_angle_tracking = 0 = 0
+        self.z_angle_tracking = 0
         print("Z Origin Calibrated!")
         
     def Manual_Motors(self, toggle, x_angle_diff, z_angle_diff):
