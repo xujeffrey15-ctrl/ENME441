@@ -105,137 +105,73 @@ class GPIORequestHandler(http.server.SimpleHTTPRequestHandler):
 
 # -------------------- HTML Generator --------------------
 
+
 def generate_html():
     return """<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Turret Control Panel</title>
 <style>
-body { font-family: Arial, sans-serif; margin: 20px; }
-h1, h2, h3 { margin-bottom: 10px; }
-canvas { display: block; margin: 20px 0; border: 1px solid #000; }
-input { width: 60px; margin-right: 10px; }
-button { margin: 5px; padding: 5px 10px; }
-.status { font-weight: bold; }
+body { font-family: Arial; margin: 20px; }
+button { margin: 5px; padding: 6px 12px; }
+canvas { border: 1px solid black; margin-top: 10px; }
 </style>
 </head>
 <body>
 
 <h1>Team 18 Turret Control</h1>
 
-<h2>GPIO Toggle</h2>
-<button id="toggleBtn">Toggle ON/OFF</button>
-<div class="status" id="statusDisplay">Status: OFF</div>
+<h2>Laser</h2>
+<button id="fireBtn">🔥 Fire Laser</button>
 
-<h2>Calibration / Set Origin</h2>
+<h2>Calibration</h2>
 <button id="calibrateBtn">Calibrate Motors</button>
 
 <h2>Manual Control</h2>
-<input type="number" id="xAngle" placeholder="X Angle" value="0">
-<input type="number" id="zAngle" placeholder="Z Angle" value="0">
-<button id="manualBtn">Move Motors</button>
+<input id="xAngle" type="number" placeholder="X Angle">
+<input id="zAngle" type="number" placeholder="Z Angle">
+<button id="manualBtn">Move</button>
 
-<h3>Current Motor Angles</h3>
-<div>Motor 1 (X): <span id="motor1Angle">0</span>°</div>
-<div>Motor 2 (Z): <span id="motor2Angle">0</span>°</div>
+<h3>Motor Angles</h3>
+<div>X: <span id="motor1Angle">0</span>°</div>
+<div>Z: <span id="motor2Angle">0</span>°</div>
 
-<h3>Motor Angle Visualization</h3>
 <canvas id="angleCanvas" width="400" height="200"></canvas>
 
 <h2>Automation</h2>
 <button id="automationBtn">Start Automation</button>
 
 <script>
-const statusDisplay = document.getElementById('statusDisplay');
-const motor1Angle = document.getElementById('motor1Angle');
-const motor2Angle = document.getElementById('motor2Angle');
-const canvas = document.getElementById('angleCanvas');
-const ctx = canvas.getContext('2d');
+document.getElementById("fireBtn").onclick = () =>
+    fetch('/fire', { method: 'POST' });
 
-function drawMotorAngles(x_angle, z_angle) {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+document.getElementById("calibrateBtn").onclick = () =>
+    fetch('/calibrate', { method: 'POST' });
 
-    const radius = 80;
-    const centerX1 = 100;
-    const centerX2 = 300;
-    const centerY = 150;
-
-    ctx.lineWidth = 2;
-    ctx.strokeStyle = '#aaa';
-
-    ctx.beginPath();
-    ctx.arc(centerX1, centerY, radius, Math.PI, 0, false);
-    ctx.stroke();
-    ctx.fillStyle = 'black';
-    ctx.fillText("Motor 1", centerX1 - 25, centerY + 20);
-
-    ctx.beginPath();
-    ctx.arc(centerX2, centerY, radius, Math.PI, 0, false);
-    ctx.stroke();
-    ctx.fillText("Motor 2", centerX2 - 25, centerY + 20);
-
-    function drawPointer(cx, cy, angle, color) {
-        const rad = Math.PI - (angle * Math.PI / 180);
-        const length = radius - 10;
-        ctx.beginPath();
-        ctx.moveTo(cx, cy);
-        ctx.lineTo(cx + length * Math.cos(rad), cy - length * Math.sin(rad));
-        ctx.strokeStyle = color;
-        ctx.lineWidth = 4;
-        ctx.stroke();
-    }
-
-    drawPointer(centerX1, centerY, x_angle, 'red');
-    drawPointer(centerX2, centerY, z_angle, 'blue');
-}
-
-document.getElementById("toggleBtn").onclick = async () => {
-    const r = await fetch('/toggle', { method: 'POST' });
-    const data = await r.json();
-    statusDisplay.textContent = `Status: ${data.status}`;
-};
-
-document.getElementById("calibrateBtn").onclick = async () => {
-    await fetch('/calibrate', { method: 'POST' });
-    alert("Calibration Complete");
-};
-
-document.getElementById("manualBtn").onclick = async () => {
-    const x_angle = parseFloat(document.getElementById('xAngle').value) || 0;
-    const z_angle = parseFloat(document.getElementById('zAngle').value) || 0;
-
-    await fetch('/manual', {
+document.getElementById("manualBtn").onclick = () => {
+    fetch('/manual', {
         method: 'POST',
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ x_angle: x_angle, z_angle: z_angle })
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+            x_angle: document.getElementById('xAngle').value,
+            z_angle: document.getElementById('zAngle').value
+        })
     });
 };
 
-document.getElementById("automationBtn").onclick = async () => {
-    alert("Automation Started");
-    await fetch('/automation', { method: 'POST' });
-};
+document.getElementById("automationBtn").onclick = () =>
+    fetch('/automation', { method: 'POST' });
 
 async function refreshStatus() {
-    try {
-        const res = await fetch('/status');
-        const data = await res.json();
-
-        motor1Angle.textContent = parseFloat(data.motor1_angle).toFixed(2);
-        motor2Angle.textContent = parseFloat(data.motor2_angle).toFixed(2);
-        statusDisplay.textContent = `Status: ${data.pin_state}`;
-
-        drawMotorAngles(data.motor1_angle, data.motor2_angle);
-    } catch (err) {
-        console.log("Status update error:", err);
-    }
+    const r = await fetch('/status');
+    const d = await r.json();
+    document.getElementById("motor1Angle").textContent = d.motor1_angle.toFixed(2);
+    document.getElementById("motor2Angle").textContent = d.motor2_angle.toFixed(2);
 }
-
 setInterval(refreshStatus, 500);
-refreshStatus();
 </script>
+
 </body>
 </html>"""
 
