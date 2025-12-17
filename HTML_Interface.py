@@ -1,10 +1,11 @@
 import http.server
 import socketserver
 import json
-import time
+import threading
 import multiprocessing
+import time
 
-# Import your updated motor class
+# Import your updated Stepper_Motors class
 from Stich_Code import Stepper_Motors
 
 # -------------------- GPIO / Motor Wrapper --------------------
@@ -16,6 +17,7 @@ class GPIOSimulator:
         self.radius = 0
         self.theta = 0
         self.z = 0
+        self.automation_thread = None
 
     def toggle_pin(self):
         self.pin_state = not self.pin_state
@@ -39,16 +41,15 @@ class GPIOSimulator:
         }
 
     def initiate_automation(self):
-        print("Starting Automation...")
-        self.motors.Automated_Motors()
-        print("Automation Finished")
+        if self.automation_thread is None or not self.automation_thread.is_alive():
+            self.automation_thread = threading.Thread(target=self.motors.Automated_Motors, daemon=True)
+            self.automation_thread.start()
         return True
 
     def manual_move(self, x_angle, z_angle):
         print(f"Manual move request: x={x_angle}, z={z_angle}")
         self.motors.Manual_Motors(1, x_angle, z_angle)
         return True
-
 
 gpio = GPIOSimulator()
 
@@ -112,20 +113,23 @@ def generate_html():
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Turret Control Panel</title>
 <style>
-body { font-family: Arial, sans-serif; }
-canvas { display: block; margin: 20px 0; }
+body { font-family: Arial, sans-serif; margin: 20px; }
+h1, h2, h3 { margin-bottom: 10px; }
+canvas { display: block; margin: 20px 0; border: 1px solid #000; }
 input { width: 60px; margin-right: 10px; }
-button { margin: 5px; }
+button { margin: 5px; padding: 5px 10px; }
+.status { font-weight: bold; }
 </style>
 </head>
 <body>
+
 <h1>Team 18 Turret Control</h1>
 
 <h2>GPIO Toggle</h2>
 <button id="toggleBtn">Toggle ON/OFF</button>
-<div id="statusDisplay">Status: OFF</div>
+<div class="status" id="statusDisplay">Status: OFF</div>
 
-<h2>Set Origin / Calibration</h2>
+<h2>Calibration / Set Origin</h2>
 <button id="calibrateBtn">Calibrate Motors</button>
 
 <h2>Manual Control</h2>
@@ -133,12 +137,12 @@ button { margin: 5px; }
 <input type="number" id="zAngle" placeholder="Z Angle" value="0">
 <button id="manualBtn">Move Motors</button>
 
-<h3>Current Motor Values</h3>
+<h3>Current Motor Angles</h3>
 <div>Motor 1 (X): <span id="motor1Angle">0</span>°</div>
 <div>Motor 2 (Z): <span id="motor2Angle">0</span>°</div>
 
 <h3>Motor Angle Visualization</h3>
-<canvas id="angleCanvas" width="400" height="200" style="border:1px solid #000;"></canvas>
+<canvas id="angleCanvas" width="400" height="200"></canvas>
 
 <h2>Automation</h2>
 <button id="automationBtn">Start Automation</button>
@@ -147,7 +151,6 @@ button { margin: 5px; }
 const statusDisplay = document.getElementById('statusDisplay');
 const motor1Angle = document.getElementById('motor1Angle');
 const motor2Angle = document.getElementById('motor2Angle');
-
 const canvas = document.getElementById('angleCanvas');
 const ctx = canvas.getContext('2d');
 
@@ -162,14 +165,12 @@ function drawMotorAngles(x_angle, z_angle) {
     ctx.lineWidth = 2;
     ctx.strokeStyle = '#aaa';
 
-    // Motor 1 semicircle
     ctx.beginPath();
     ctx.arc(centerX1, centerY, radius, Math.PI, 0, false);
     ctx.stroke();
     ctx.fillStyle = 'black';
     ctx.fillText("Motor 1", centerX1 - 25, centerY + 20);
 
-    // Motor 2 semicircle
     ctx.beginPath();
     ctx.arc(centerX2, centerY, radius, Math.PI, 0, false);
     ctx.stroke();
@@ -190,7 +191,6 @@ function drawMotorAngles(x_angle, z_angle) {
     drawPointer(centerX2, centerY, z_angle, 'blue');
 }
 
-// ------------------ BUTTON LOGIC ------------------------
 document.getElementById("toggleBtn").onclick = async () => {
     const r = await fetch('/toggle', { method: 'POST' });
     const data = await r.json();
@@ -203,8 +203,9 @@ document.getElementById("calibrateBtn").onclick = async () => {
 };
 
 document.getElementById("manualBtn").onclick = async () => {
-    const x_angle = parseFloat(document.getElementById('xAngle').value);
-    const z_angle = parseFloat(document.getElementById('zAngle').value);
+    const x_angle = parseFloat(document.getElementById('xAngle').value) || 0;
+    const z_angle = parseFloat(document.getElementById('zAngle').value) || 0;
+
     await fetch('/manual', {
         method: 'POST',
         headers: { "Content-Type": "application/json" },
@@ -213,18 +214,17 @@ document.getElementById("manualBtn").onclick = async () => {
 };
 
 document.getElementById("automationBtn").onclick = async () => {
-    await fetch('/automation', { method: 'POST' });
     alert("Automation Started");
+    await fetch('/automation', { method: 'POST' });
 };
 
-// ------------------ AUTO REFRESH STATUS ------------------------
 async function refreshStatus() {
     try {
         const res = await fetch('/status');
         const data = await res.json();
 
-        motor1Angle.textContent = data.motor1_angle.toFixed(2);
-        motor2Angle.textContent = data.motor2_angle.toFixed(2);
+        motor1Angle.textContent = parseFloat(data.motor1_angle).toFixed(2);
+        motor2Angle.textContent = parseFloat(data.motor2_angle).toFixed(2);
         statusDisplay.textContent = `Status: ${data.pin_state}`;
 
         drawMotorAngles(data.motor1_angle, data.motor2_angle);
@@ -235,10 +235,10 @@ async function refreshStatus() {
 
 setInterval(refreshStatus, 500);
 refreshStatus();
-
 </script>
 </body>
 </html>"""
+
 # -------------------- SERVER STARTUP --------------------
 
 class ReusableTCPServer(socketserver.TCPServer):
@@ -249,5 +249,7 @@ def start_server(port=8080):
         print(f"Server running at http://localhost:{port}")
         httpd.serve_forever()
 
+if __name__ == "__main__":
+    start_server()
 if __name__ == "__main__":
     start_server()
