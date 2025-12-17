@@ -1,28 +1,17 @@
-import http.server
-import socketserver
-import json
-import threading
-import multiprocessing
-import time
-
-# Import your updated Stepper_Motors class
-from Stich_Code import Stepper_Motors
-
-# -------------------- GPIO / Motor Wrapper --------------------
-
 class GPIOSimulator:
     def __init__(self):
-        self.pin_state = False
         self.motors = Stepper_Motors()
         self.radius = 0
         self.theta = 0
         self.z = 0
         self.automation_thread = None
 
+    # ---- Laser (momentary fire) ----
     def fire_laser(self):
         self.motors.Engage_Laser()
         return True
 
+    # ---- Calibration ----
     def set_origin(self, radius, theta, z):
         self.radius = float(radius)
         self.theta = float(theta)
@@ -30,9 +19,9 @@ class GPIOSimulator:
         self.motors.Calibration(1)
         return True
 
+    # ---- Status ----
     def get_status(self):
         return {
-            'pin_state': 'ON' if self.pin_state else 'OFF',
             'radius': self.radius,
             'theta': self.theta,
             'z': self.z,
@@ -40,22 +29,29 @@ class GPIOSimulator:
             'motor2_angle': self.motors.z_angle_tracking
         }
 
+    # ---- Automation ----
     def initiate_automation(self):
         if self.automation_thread is None or not self.automation_thread.is_alive():
-            self.automation_thread = threading.Thread(target=self.motors.Automated_Motors, daemon=True)
+            self.automation_thread = threading.Thread(
+                target=self.motors.Automated_Motors,
+                daemon=True
+            )
             self.automation_thread.start()
         return True
 
+    # ---- Manual Control ----
     def manual_move(self, x_angle, z_angle):
         print(f"Manual move request: x={x_angle}, z={z_angle}")
         self.motors.Manual_Motors(1, x_angle, z_angle)
         return True
+
 
 gpio = GPIOSimulator()
 
 # -------------------- HTTP Request Handler --------------------
 
 class GPIORequestHandler(http.server.SimpleHTTPRequestHandler):
+
     def do_GET(self):
         if self.path == '/':
             self.send_response(200)
@@ -66,32 +62,28 @@ class GPIORequestHandler(http.server.SimpleHTTPRequestHandler):
             self.send_error(404)
 
     def do_POST(self):
-        content_length = int(self.headers['Content-Length'])
+        content_length = int(self.headers.get('Content-Length', 0))
         post_data = self.rfile.read(content_length).decode('utf-8')
         response = {}
 
-        if self.path == '/toggle':
-            new_state = gpio.toggle_pin()
-            response = {'status': 'ON' if new_state else 'OFF'}
-
-        elif self.path == '/set_origin':
-            data = json.loads(post_data)
-            success = gpio.set_origin(data['radius'], data['theta'], data['z'])
-            response = {'success': success}
-
-        elif self.path == '/automation':
-            success = gpio.initiate_automation()
-            response = {'success': success}
+        if self.path == '/fire':
+            gpio.fire_laser()
+            response = {'success': True}
 
         elif self.path == '/calibrate':
             gpio.motors.Calibration(1)
             response = {'success': True}
 
+        elif self.path == '/automation':
+            gpio.initiate_automation()
+            response = {'success': True}
+
         elif self.path == '/manual':
             data = json.loads(post_data)
-            x_angle = float(data.get("x_angle", 0))
-            z_angle = float(data.get("z_angle", 0))
-            gpio.manual_move(x_angle, z_angle)
+            gpio.manual_move(
+                float(data.get("x_angle", 0)),
+                float(data.get("z_angle", 0))
+            )
             response = {'success': True}
 
         elif self.path == '/status':
@@ -104,7 +96,6 @@ class GPIORequestHandler(http.server.SimpleHTTPRequestHandler):
         self.wfile.write(json.dumps(response).encode())
 
 # -------------------- HTML Generator --------------------
-
 
 def generate_html():
     return """<!DOCTYPE html>
@@ -184,6 +175,9 @@ def start_server(port=8080):
     with ReusableTCPServer(("", port), GPIORequestHandler) as httpd:
         print(f"Server running at http://localhost:{port}")
         httpd.serve_forever()
+
+if __name__ == "__main__":
+    start_server()
 
 if __name__ == "__main__":
     start_server()
