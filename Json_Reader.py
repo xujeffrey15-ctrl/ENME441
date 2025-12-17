@@ -32,8 +32,11 @@ def compute_angles(Previous_X, Previous_Y, Previous_Z, Target_X, Target_Y, Targe
     Side_a = (Previous_Y - Own_Y_Coord)/(Previous_X - Own_X_Coord)
     Side_b = (Target_Y - Previous_Y)/(Target_X - Previous_X)
     Side_c = (Own_Y_Coord - Target_Y)/(Own_X_Coord - Target_X)
-    Angle_diff_x = math.acos(((-1*Side_b**2) + (Side_a**2) + (Side_c**2))/(2*Side_c*Side_a))
 
+    cosine_val_x = ((-1*Side_b**2) + (Side_a**2) + (Side_c**2))/(2*Side_c*Side_a)
+    cosine_val_x = max(-1, min(1, cosine_val_x))
+    Angle_diff_x = math.acos(cosine_val_x)
+    
     if Target_Y > Previous_Y:
         Angle_diff_x = - Angle_diff_x
     if Target_Y <= Previous_Y:
@@ -41,12 +44,15 @@ def compute_angles(Previous_X, Previous_Y, Previous_Z, Target_X, Target_Y, Targe
 
     #For Out of Plane Rotations
     Side_z = Target_Z - Previous_Z
-    Height_Hypotenuse = sqrt((Side_c**2) + (Side_z**2))
-    Angle_diff_z = math.acos(((-1*Side_z**2) + (Side_c**2) + (Height_Hypotenuse**2))/(2*Side_c*Height_Hypotenuse))
+    Height_Hypotenuse = math.sqrt((Side_c**2) + (Side_z**2))
+    
+    cosine_val_z = ((-1*Side_z**2) + (Side_c**2) + (Height_Hypotenuse**2))/(2*Side_c*Height_Hypotenuse)
+    cosine_val_z = max(-1, min(1, cosine_val_x))
+    Angle_diff_z = math.acos(cosine_val_z)
 
-    if Target_z >= Previous_z:
+    if Target_Z >= Previous_Z:
         pass
-    if Target_z < Previous_z:
+    if Target_Z < Previous_Z:
         Angle_diff_z = - Angle_diff_z
 
     return Angle_diff_x, Angle_diff_z
@@ -94,6 +100,7 @@ AngleConversion()
 
 print("\nXY Angles:", goanglexy)
 print("\nZ Angles:", goanglez)
+
 
 
 
