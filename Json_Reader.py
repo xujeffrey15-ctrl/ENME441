@@ -43,7 +43,7 @@ def compute_angles(Previous_X, Previous_Y, Previous_Z, Target_X, Target_Y, Targe
         if Target_Y > Previous_Y:
             Angle_diff_x = - Angle_diff_x
         if Target_Y <= Previous_Y:
-            pass
+            Angle_diff_x = Angle_diff_x
     
         #For Out of Plane Rotations
         Side_z = Target_Z - Previous_Z
@@ -54,7 +54,7 @@ def compute_angles(Previous_X, Previous_Y, Previous_Z, Target_X, Target_Y, Targe
         Angle_diff_z = math.acos(cosine_val_z)
     
         if Target_Z >= Previous_Z:
-            pass
+            Angle_diff_z = Angle_diff_z
         if Target_Z < Previous_Z:
             Angle_diff_z = - Angle_diff_z
     
@@ -109,4 +109,5 @@ AngleConversion()
 
 print("\nXY Angles:", goanglexy)
 print("\nZ Angles:", goanglez)
+
 
