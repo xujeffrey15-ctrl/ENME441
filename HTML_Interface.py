@@ -20,8 +20,8 @@ class GPIOSimulator:
         self.automation_thread = None
 
     def toggle_pin(self):
-        self.pin_state = not self.pin_state
-        return self.pin_state
+        self.motors.Engage_Laser()
+        return True
 
     def set_origin(self, radius, theta, z):
         self.radius = float(radius)
