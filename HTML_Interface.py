@@ -14,21 +14,18 @@ class GPIOSimulator:
         self.theta = 0
         self.z = 0
         self.automation_thread = None
-
-    # ---- Laser (momentary fire) ----
+        
     def fire_laser(self):
         self.motors.Engage_Laser()
         return True
 
-    # ---- Calibration ----
     def set_origin(self, radius, theta, z):
         self.radius = float(radius)
         self.theta = float(theta)
         self.z = float(z)
         self.motors.Calibration(1)
         return True
-
-    # ---- Status ----
+        
     def get_status(self):
         return {
             'radius': self.radius,
@@ -56,8 +53,6 @@ class GPIOSimulator:
 
 
 gpio = GPIOSimulator()
-
-# -------------------- HTTP Request Handler --------------------
 
 class GPIORequestHandler(http.server.SimpleHTTPRequestHandler):
 
@@ -123,7 +118,7 @@ canvas { border: 1px solid black; margin-top: 10px; }
 <h1>Team 18 Turret Control</h1>
 
 <h2>Laser</h2>
-<button id="fireBtn">🔥 Fire Laser</button>
+<button id="fireBtn">Fire Laser</button>
 
 <h2>Calibration</h2>
 <button id="calibrateBtn">Calibrate Motors</button>
@@ -174,8 +169,6 @@ setInterval(refreshStatus, 500);
 
 </body>
 </html>"""
-
-# -------------------- SERVER STARTUP --------------------
 
 class ReusableTCPServer(socketserver.TCPServer):
     allow_reuse_address = True
