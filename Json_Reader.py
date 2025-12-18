@@ -9,11 +9,6 @@ response.raise_for_status()             # Raises an error for bad status codes
 
 data = response.json()                  # Parse JSON directly
 
-with open("backup_data.json", "r") as f:
-    data = json.load(f)
-
-print(data)
-
 TurretData = data["turrets"]        # dict of turret objects
 BallData = data["globes"]           # list of ball objects
 
@@ -109,6 +104,7 @@ AngleConversion()
 
 print("\nXY Angles:", goanglexy)
 print("\nZ Angles:", goanglez)
+
 
 
 
